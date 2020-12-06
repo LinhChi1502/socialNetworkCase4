@@ -13,17 +13,17 @@ public class PostLike {
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "userID")
-    private Users user;
+    private AppUser user;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "postID")
-    private Posts post;
+    private Post post;
 
 
     public PostLike() {
     }
 
-    public PostLike(int postLikeID, Users user, Posts post) {
+    public PostLike(int postLikeID, AppUser user, Post post) {
         this.postLikeID = postLikeID;
         this.user = user;
         this.post = post;
@@ -37,19 +37,19 @@ public class PostLike {
         this.postLikeID = postLikeID;
     }
 
-    public Users getUser() {
+    public AppUser getUser() {
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser(AppUser user) {
         this.user = user;
     }
 
-    public Posts getPost() {
+    public Post getPost() {
         return post;
     }
 
-    public void setPost(Posts post) {
+    public void setPost(Post post) {
         this.post = post;
     }
 

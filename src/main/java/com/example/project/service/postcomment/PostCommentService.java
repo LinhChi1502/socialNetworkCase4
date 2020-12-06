@@ -20,10 +20,7 @@ public class PostCommentService implements IPostCommnentService {
         return postCommentRepository.findById(id).get();
     }
 
-    @Override
-    public void update(PostComment model) {
-        postCommentRepository.save(model);
-    }
+
 
     @Override
     public void save(PostComment model) {

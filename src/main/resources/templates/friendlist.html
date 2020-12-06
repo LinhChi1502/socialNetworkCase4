@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>Friend Requests</title>
+
+<head th:replace="layout::head"></head>
+
+<body class="w3-theme-l5">
+<nav th:replace="layout::menu"></nav>
+
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+    <div class="w3-row">
+
+
+        <!-- Left Column -->
+        <div th:replace="layout::leftcolumn"></div>
+        <!-- Left Column End-->
+
+        <!-- Middle Column -->
+        <div class="w3-col m7">
+
+            <div class="w3-row-padding">
+                <div class="w3-col m12">
+                    <div class="w3-card w3-round w3-white">
+
+
+                        <!-- user 1-->
+                        <div class="w3-container w3-padding">
+                            <ul style="list-style-type: none">
+                                <li>
+                                    <div class="form-inline">
+                                        <img src="/img/avatar.jpg" alt="Avatar"
+                                             style="width:50px; height:50px; border-radius: 50%">
+                                        <a href="" style="padding-left: 15px">Jane Doe</a>
+                                        <button style="margin-left: 150px">Unfriend
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- user 1 end -->
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- End Middle Column -->
+        </div>
+        <!-- Middle Column End-->
+
+        <!-- Right Column -->
+        <div th:replace="layout::rightcolumn"></div>
+        <!-- End Right Column -->
+
+
+    </div>
+</div>
+<br>
+
+<!-- Footer -->
+<footer th:replace="layout::footer"></footer>
+<!-- Footer End -->
+</body>
+</html>

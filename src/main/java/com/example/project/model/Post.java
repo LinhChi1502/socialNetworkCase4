@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "posts")
-public class Posts {
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name ="postID")
@@ -27,7 +27,7 @@ public class Posts {
     //nhieu post co 1 user
     @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "userID",nullable = false)
-    private Users users;
+    private AppUser appUser;
 
     //postlike
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
@@ -35,17 +35,17 @@ public class Posts {
 
 
 
-    public Posts() {
+    public Post() {
     }
 
-    public Posts(int postID, String title, boolean status, Date date, String imageUrl, MultipartFile image, Users users) {
+    public Post(int postID, String title, boolean status, Date date, String imageUrl, MultipartFile image, AppUser appUser) {
         this.postID = postID;
         this.title = title;
         this.status = status;
         this.date = date;
         this.imageUrl = imageUrl;
         this.image = image;
-        this.users = users;
+        this.appUser = appUser;
     }
 
     public int getPostID() {
@@ -96,12 +96,12 @@ public class Posts {
         this.image = image;
     }
 
-    public Users getUsers() {
-        return users;
+    public AppUser getUsers() {
+        return appUser;
     }
 
-    public void setUsers(Users users) {
-        this.users = users;
+    public void setUsers(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public Set<PostLike> getPost() {

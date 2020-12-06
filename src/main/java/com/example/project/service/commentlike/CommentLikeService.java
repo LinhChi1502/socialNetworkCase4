@@ -22,10 +22,7 @@ public class CommentLikeService implements ICommentLikeService {
         return commentLikeRepository.findById(id).get();
     }
 
-    @Override
-    public void update(CommentLike model) {
-        commentLikeRepository.save(model);
-    }
+
 
     @Override
     public void save(CommentLike model) {

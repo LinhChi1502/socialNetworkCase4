@@ -13,19 +13,19 @@ public class Friendship {
     private int friendStatus;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user1ID")
-    private Users user1;
+    private AppUser user1;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user2ID")
-    private Users user2;
+    private AppUser user2;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "actionuserID")
-    private Users actionUser;
+    private AppUser actionUser;
 
 
     public Friendship() {
     }
 
-    public Friendship(int friendshipID, int friendStatus, Users user1, Users user2, Users actionUser) {
+    public Friendship(int friendshipID, int friendStatus, AppUser user1, AppUser user2, AppUser actionUser) {
         this.friendshipID = friendshipID;
         this.friendStatus = friendStatus;
         this.user1 = user1;
@@ -49,27 +49,27 @@ public class Friendship {
         this.friendStatus = friendStatus;
     }
 
-    public Users getUser1() {
+    public AppUser getUser1() {
         return user1;
     }
 
-    public void setUser1(Users user1) {
+    public void setUser1(AppUser user1) {
         this.user1 = user1;
     }
 
-    public Users getUser2() {
+    public AppUser getUser2() {
         return user2;
     }
 
-    public void setUser2(Users user2) {
+    public void setUser2(AppUser user2) {
         this.user2 = user2;
     }
 
-    public Users getActionUser() {
+    public AppUser getActionUser() {
         return actionUser;
     }
 
-    public void setActionUser(Users actionUser) {
+    public void setActionUser(AppUser actionUser) {
         this.actionUser = actionUser;
     }
 }

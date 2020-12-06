@@ -1,7 +1,6 @@
 package com.example.project.model;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,11 +24,11 @@ public class PostComment {
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "userID")
-    private Users user;
+    private AppUser user;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "postID")
-    private Posts post;
+    private Post post;
 
     //    //commentLike
     @OneToMany(mappedBy = "postComment",cascade = CascadeType.ALL)
@@ -60,19 +59,19 @@ public class PostComment {
         this.date = date;
     }
 
-    public Users getUser() {
+    public AppUser getUser() {
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser(AppUser user) {
         this.user = user;
     }
 
-    public Posts getPost() {
+    public Post getPost() {
         return post;
     }
 
-    public void setPost(Posts post) {
+    public void setPost(Post post) {
         this.post = post;
     }
 

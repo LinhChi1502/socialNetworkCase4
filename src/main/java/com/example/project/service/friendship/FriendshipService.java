@@ -21,10 +21,7 @@ public class FriendshipService implements IFriendshipService {
         return friendshipRepository.findById(id).get();
     }
 
-    @Override
-    public void update(Friendship model) {
-        friendshipRepository.save(model);
-    }
+
 
     @Override
     public void save(Friendship model) {

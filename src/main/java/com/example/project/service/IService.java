@@ -5,8 +5,6 @@ public interface IService<T> {
 
     T findById(Integer id) ;
 
-    void update(T model);
-
     void save(T model);
 
     void remove(Integer id);

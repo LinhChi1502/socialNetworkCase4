@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class Users {
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userID")
@@ -35,8 +35,8 @@ public class Users {
     private Date dateOfBirth;
 
     //1 user co nhieu post
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
-    private Set<Posts> posts;
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    private Set<Post> posts;
 
     //friendship
     @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL)
@@ -54,10 +54,17 @@ public class Users {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private Set<CommentLike> likes;
 
-    public Users() {
+    //role
+    @ManyToOne
+    private AppRole roll;
+
+    public AppUser() {
     }
 
-    public Users(int userId, String userName, String password, String avatarURL, boolean status, String firstName, String lastName, String city, String gender, String about, int phone, Date dateOfBirth) {
+    public AppUser(int userId, String userName, String password, String avatarURL, boolean status, String firstName,
+                   String lastName, String city, String gender, String about, int phone, Date dateOfBirth,
+                   Set<Post> posts, Set<Friendship> user1, Set<Friendship> user2, Set<Friendship> actionUser,
+                   Set<PostLike> postLikes, Set<CommentLike> likes, AppRole roll) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
@@ -69,15 +76,21 @@ public class Users {
         this.gender = gender;
         this.about = about;
         this.phone = phone;
-
         this.dateOfBirth = dateOfBirth;
+        this.posts = posts;
+        this.user1 = user1;
+        this.user2 = user2;
+        this.actionUser = actionUser;
+        this.postLikes = postLikes;
+        this.likes = likes;
+        this.roll = roll;
     }
 
-    public Set<Posts> getPosts() {
+    public Set<Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(Set<Posts> posts) {
+    public void setPosts(Set<Post> posts) {
         this.posts = posts;
     }
 
@@ -216,5 +229,19 @@ public class Users {
 
     public void setLikes(Set<CommentLike> likes) {
         this.likes = likes;
+    }
+
+    public AppRole getRoll() {
+        return roll;
+    }
+
+    public void setRoll(AppRole roll) {
+        this.roll = roll;
+    }
+
+
+    public AppUser(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
     }
 }

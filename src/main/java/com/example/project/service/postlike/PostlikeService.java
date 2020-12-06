@@ -22,10 +22,7 @@ public class PostlikeService implements IPostlikeService {
         return postlikeRepository.findById(id).get();
     }
 
-    @Override
-    public void update(PostLike model) {
-        postlikeRepository.save(model);
-    }
+
 
     @Override
     public void save(PostLike model) {
