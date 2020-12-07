@@ -45,15 +45,6 @@ public class HomeController {
     }
 
 
-
-    //register
-    @GetMapping("/register")
-    public ModelAndView register() {
-        ModelAndView modelAndView = new ModelAndView("register");
-        modelAndView.addObject("user", new AppUser());
-        return modelAndView;
-    }
-
     @PostMapping("/register")
     public ModelAndView register(@Valid @ModelAttribute AppUser user) {
         ModelAndView modelAndView;
@@ -61,32 +52,10 @@ public class HomeController {
             usersService.signUpUser(user);
             modelAndView = new ModelAndView("login");
         } catch (Exception e) {
-            modelAndView = new ModelAndView("register");
+            modelAndView = new ModelAndView("login");
             modelAndView.addObject("user", new AppUser());
             modelAndView.addObject("message", "Username has already exist");
         }
-//        if (usersService.getUserByName(user.getUserName()) == null) {
-//            usersService.signUpUser(user);
-//            modelAndView = new ModelAndView("login");
-//        } else {
-//            modelAndView = new ModelAndView("register");
-//            modelAndView.addObject("message", "Username already exist!");
-//        }
-        return modelAndView;
-    }
-
-
-    @GetMapping("/")
-    public ModelAndView home5() {
-        ModelAndView modelAndView = new ModelAndView();
-//      CommentLike commentLike=new CommentLike();
-
-//        Iterable<PostLike> all = postlikeService.findAll();
-//        Iterable<CommentLike> all1 = commentLikeService.findAll();
-
-
-//        modelAndView.addObject("commentLike", commentLike);
-        modelAndView.setViewName("home");
         return modelAndView;
     }
 
