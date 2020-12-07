@@ -17,7 +17,7 @@ public class AppUser {
     private int userId;
     @NotNull
     @NotEmpty
-    @Column(name = "username")
+    @Column(name = "username", unique = true, columnDefinition = "varchar(50)")
     private String userName;
     @Column(name = "password")
     private String password;
