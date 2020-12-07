@@ -25,32 +25,43 @@
                         <div class="w3-container w3-padding">
                             <ul style="list-style-type: none">
                                 <li>
-                                    <div class="form-inline">
-                                        <img src="/img/avatar.jpg" alt="Avatar"
-                                             style="width:50px; height:50px; border-radius: 50%">
-                                        <a href="" style="padding-left: 10px"> Jane Doe Jane Doe</a>
-                                        <button style="margin-left: 150px">Add friend
-                                        </button>
-                                    </div>
+<!--                                    <div class="form-inline">-->
+<!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
+<!--                                             style="width:50px; height:50px; border-radius: 50%">-->
+<!--                                        <a href="" style="padding-left: 10px"> Jane Doe Jane Doe</a>-->
+<!--                                        <button style="margin-left: 150px">Add friend-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+                                    <table>
+                                        <tr th:each="user:${searchLists}">
+
+                                            <td><img th:src="@{img/__${user.getAvatarURL()}__}" alt="Avatar"
+                                                     style="width:50px; height:50px; border-radius: 50%"></td>
+                                            <td><a href="" style="padding-left: 10px" th:text="${user.getUserName()}" > </a> </td>
+                                            <td><button style="margin-left: 150px">Add friend
+                                            </button></td>
+                                        </tr>
+
+                                    </table>
                                 </li>
                             </ul>
                         </div>
                         <!-- user 1 end -->
 
                         <!-- user 2-->
-                        <div class="w3-container w3-padding">
-                            <ul style="list-style-type: none">
-                                <li>
-                                    <div class="form-inline">
-                                        <img src="/img/avatar.jpg" alt="Avatar"
-                                             style="width:50px; height:50px; border-radius: 50%">
-                                        <a href="" style="padding-left: 10px">Jane Doe</a>
-                                        <button style="margin-left: 150px">Unfriend
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+<!--                        <div class="w3-container w3-padding">-->
+<!--                            <ul style="list-style-type: none">-->
+<!--                                <li>-->
+<!--                                    <div class="form-inline">-->
+<!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
+<!--                                             style="width:50px; height:50px; border-radius: 50%">-->
+<!--                                        <a href="" style="padding-left: 10px">Jane Doe</a>-->
+<!--                                        <button style="margin-left: 150px">Unfriend-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
                         <!-- user 2 end -->
                     </div>
                 </div>

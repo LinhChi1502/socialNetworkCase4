@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +54,29 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         return appUserRepository.getAppUsersByUserName(name);
     }
 
+
+    //Toan
+    @Override
+    public Iterable<AppUser> getAppUserByUserNameContaining(String keySearch) {
+        return appUserRepository.getAppUserByUserNameContaining(keySearch);
+    }
+
+    @Override
+    public Iterable<AppUser> getUser1Friends(int id) {
+       return appUserRepository.getUser1Friends(id);
+    }
+
+    @Override
+    public Iterable<AppUser> getUser2Friends(int id) {
+        return appUserRepository.getUser2Friends(id);
+    }
+
+
+
+
+
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = this.getUserByName(username);
@@ -70,17 +92,16 @@ public class AppUserService implements IAppUserService, UserDetailsService {
 
     public void signUpUser(AppUser appUser) {
 
-         String encryptedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
+        String encryptedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
 
         appUser.setPassword(encryptedPassword);
         AppRole appRole = new AppRole();
         appRole.setId(1);
         appUser.setRole(appRole);
 
-         appUserRepository.save(appUser);
+        appUserRepository.save(appUser);
 
     }
-
 
 
 }
