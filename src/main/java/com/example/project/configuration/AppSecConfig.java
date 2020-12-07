@@ -33,17 +33,21 @@ public class AppSecConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService((UserDetailsService) appUserService).passwordEncoder(NoOpPasswordEncoder.getInstance());
+        auth.userDetailsService((UserDetailsService) appUserService).passwordEncoder(bCryptPasswordEncoder());
     }
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/register", "/login")
-                .permitAll().antMatchers("/**").hasRole("USER")
+        http.authorizeRequests()
+                .antMatchers("/register", "/login").permitAll()
+                .antMatchers("/**").hasRole("USER")
                 .and()
                 .formLogin().
                 loginPage("/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .loginProcessingUrl("/login")
                 .successHandler(customSuccessHandler)
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

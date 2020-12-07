@@ -11,10 +11,14 @@ import com.example.project.service.postlike.PostlikeService;
 import com.example.project.service.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 public class HomeController {
@@ -33,9 +37,13 @@ public class HomeController {
 
     // login page
     @GetMapping("/login")
-    public String login() {
-        return "login";
+    public ModelAndView login() {
+        ModelAndView modelAndView = new ModelAndView("/login");
+        modelAndView.addObject("user", new AppUser());
+        return modelAndView;
     }
+
+
 
     //register
     @GetMapping("/register")
@@ -46,9 +54,12 @@ public class HomeController {
     }
 
     @PostMapping("/register")
-    public ModelAndView register(@ModelAttribute AppUser user) {
-        usersService.save(user);
-        ModelAndView modelAndView = new ModelAndView("/login");
+    public ModelAndView register(@Valid @ModelAttribute AppUser user){
+        ModelAndView modelAndView;
+
+            usersService.signUpUser(user);
+           modelAndView = new ModelAndView("login");
+
         return modelAndView;
     }
 
@@ -67,39 +78,10 @@ public class HomeController {
         return modelAndView;
     }
 
-    @GetMapping
-    public String home() {
-        return "personal";
-    }
-
     @GetMapping("/home")
-    public String home1() {
+    public String home() {
         return "home";
     }
 
-    @GetMapping("/fr")
-    public String home2() {
-        return "friendrequest";
-    }
-
-    @GetMapping("/ss")
-    public String home3() {
-        return "usersearchresult";
-    }
-
-    @GetMapping("/fp")
-    public String home4() {
-        return "friendpage";
-    }
-
-    @GetMapping("/fl")
-    public String home6() {
-        return "friendlist";
-    }
-
-    @GetMapping("/ep")
-    public String home7() {
-        return "editprofile";
-    }
 }
 

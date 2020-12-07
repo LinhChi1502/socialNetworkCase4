@@ -1,6 +1,10 @@
 package com.example.project.model;
 
+import com.sun.istack.NotNull;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.Set;
 
@@ -11,27 +15,33 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userID")
     private int userId;
+    @NotNull
+    @NotEmpty
     @Column(name = "username")
     private String userName;
     @Column(name = "password")
     private String password;
-    @Column(name = "avatarURL")
+    @Column(name = "avatarURL", nullable = true)
     private String avatarURL;
+
+    @Transient
+    private MultipartFile avatar;
+
     @Column(name = "status", nullable = true)
     private boolean status;
-    @Column(name = "firstname")
+    @Column(name = "firstname", nullable = true)
     private String firstName;
-    @Column(name = "lastname")
+    @Column(name = "lastname", nullable = true)
     private String lastName;
-    @Column(name = "city")
+    @Column(name = "city", nullable = true)
     private String city;
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = true)
     private String gender;
-    @Column(name = "about", columnDefinition = "longtext")
+    @Column(name = "about", columnDefinition = "longtext", nullable = true)
     private String about;
-    @Column(name = "phone")
+    @Column(name = "phone", nullable = true)
     private int phone;
-    @Column(name = "dob")
+    @Column(name = "dob", nullable = true)
     private Date dateOfBirth;
 
     //1 user co nhieu post
@@ -47,28 +57,26 @@ public class AppUser {
     private Set<Friendship> actionUser;
 
     //postLike
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<PostLike> postLikes;
 
     //commentLike
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<CommentLike> likes;
 
     //role
     @ManyToOne
-    private AppRole roll;
+    private AppRole role;
 
     public AppUser() {
     }
 
-    public AppUser(int userId, String userName, String password, String avatarURL, boolean status, String firstName,
-                   String lastName, String city, String gender, String about, int phone, Date dateOfBirth,
-                   Set<Post> posts, Set<Friendship> user1, Set<Friendship> user2, Set<Friendship> actionUser,
-                   Set<PostLike> postLikes, Set<CommentLike> likes, AppRole roll) {
+    public AppUser(int userId, @NotEmpty String userName, String password, String avatarURL, MultipartFile avatar, boolean status, String firstName, String lastName, String city, String gender, String about, int phone, Date dateOfBirth, Set<Post> posts, Set<Friendship> user1, Set<Friendship> user2, Set<Friendship> actionUser, Set<PostLike> postLikes, Set<CommentLike> likes, AppRole role) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
         this.avatarURL = avatarURL;
+        this.avatar = avatar;
         this.status = status;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -83,15 +91,7 @@ public class AppUser {
         this.actionUser = actionUser;
         this.postLikes = postLikes;
         this.likes = likes;
-        this.roll = roll;
-    }
-
-    public Set<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Set<Post> posts) {
-        this.posts = posts;
+        this.role = role;
     }
 
     public int getUserId() {
@@ -190,6 +190,13 @@ public class AppUser {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
+    }
 
     public Set<Friendship> getUser1() {
         return user1;
@@ -231,17 +238,19 @@ public class AppUser {
         this.likes = likes;
     }
 
-    public AppRole getRoll() {
-        return roll;
+    public AppRole getRole() {
+        return role;
     }
 
-    public void setRoll(AppRole roll) {
-        this.roll = roll;
+    public void setRole(AppRole role) {
+        this.role = role;
     }
 
+    public MultipartFile getAvatar() {
+        return avatar;
+    }
 
-    public AppUser(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
+    public void setAvatar(MultipartFile avatar) {
+        this.avatar = avatar;
     }
 }
