@@ -2,7 +2,9 @@ package com.example.project.service.users;
 
 import com.example.project.model.AppRole;
 import com.example.project.model.AppUser;
+import com.example.project.model.Friendship;
 import com.example.project.repository.AppUserRepository;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -21,6 +23,8 @@ public class AppUserService implements IAppUserService, UserDetailsService {
     private AppUserRepository appUserRepository;
     @Autowired
     private PasswordEncoder bCryptPasswordEncoder;
+
+
 
     @Override
     public Iterable<AppUser> findAll() {
@@ -60,21 +64,6 @@ public class AppUserService implements IAppUserService, UserDetailsService {
     public Iterable<AppUser> getAppUserByUserNameContaining(String keySearch) {
         return appUserRepository.getAppUserByUserNameContaining(keySearch);
     }
-
-    @Override
-    public Iterable<AppUser> getUser1Friends(int id) {
-       return appUserRepository.getUser1Friends(id);
-    }
-
-    @Override
-    public Iterable<AppUser> getUser2Friends(int id) {
-        return appUserRepository.getUser2Friends(id);
-    }
-
-
-
-
-
 
 
     @Override

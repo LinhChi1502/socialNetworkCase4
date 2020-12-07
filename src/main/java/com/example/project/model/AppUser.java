@@ -27,8 +27,20 @@ public class AppUser {
     @Transient
     private MultipartFile avatar;
 
+    @Transient
+    private boolean flag;
+
     @Column(name = "status", nullable = true)
     private boolean status;
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
     @Column(name = "firstname", nullable = true)
     private String firstName;
     @Column(name = "lastname", nullable = true)

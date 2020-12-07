@@ -1,6 +1,7 @@
 package com.example.project.controller;
 
 import com.example.project.model.AppUser;
+import com.example.project.model.Friendship;
 import com.example.project.service.commentlike.CommentLikeService;
 import com.example.project.service.friendship.FriendshipService;
 import com.example.project.service.post.PostService;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @SessionAttributes("user")
 @Controller
@@ -74,19 +77,39 @@ public class HomeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
         AppUser appUser = usersService.getUserByName(name);
-
+        List<AppUser> listFriendOfUser=new ArrayList<>();
 
         //listall user search
         Iterable<AppUser> searchLists = usersService.getAppUserByUserNameContaining(keySearch);
 
-        //
+        //user friends list
+        Iterable<Friendship> friendships = friendshipService.getAllByFriendshipIDIsAndUser1IsOrUser2Is(1, appUser, appUser);
+        for (Friendship friendship:friendships
+             ) {
+            if (friendship.getUser1().getUserId()==8){
+                listFriendOfUser.add(friendship.getUser2());
+            }
+            if (friendship.getUser2().getUserId()==8){
+                listFriendOfUser.add(friendship.getUser1());
+            }
+        }
+        for (AppUser user : searchLists
+        ){
+            user.setFlag(false);
+        }
+        for (AppUser user:listFriendOfUser
+             ) {
+            user.setFlag(true);
+        }
+
+
+
+
 
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("usersearchresult");
         modelAndView.addObject("searchLists",searchLists);
-
-
         return modelAndView;
 
     }

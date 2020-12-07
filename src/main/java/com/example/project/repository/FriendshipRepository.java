@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 public interface FriendshipRepository extends JpaRepository<Friendship,Integer> {
-
+    Iterable<Friendship> getAllByFriendshipIDIsAndUser1IsOrUser2Is(int status,AppUser user1,AppUser user2);
 }

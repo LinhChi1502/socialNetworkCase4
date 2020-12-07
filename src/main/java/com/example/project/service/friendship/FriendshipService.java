@@ -1,5 +1,6 @@
 package com.example.project.service.friendship;
 
+import com.example.project.model.AppUser;
 import com.example.project.model.Friendship;
 import com.example.project.repository.FriendshipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,10 @@ public class FriendshipService implements IFriendshipService {
     @Override
     public void remove(Integer id) {
         friendshipRepository.deleteById(id);
+    }
+
+    @Override
+    public Iterable<Friendship> getAllByFriendshipIDIsAndUser1IsOrUser2Is(int status, AppUser user1, AppUser user2) {
+     return friendshipRepository.getAllByFriendshipIDIsAndUser1IsOrUser2Is(1,user1,user2);
     }
 }
