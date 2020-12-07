@@ -21,6 +21,8 @@ public class Post {
     private Date date;
     @Column(name = "imageURL")
     private String imageUrl;
+    @Column(name = "tag")
+    private String tag;
     @Transient
     private MultipartFile image;
 
@@ -38,14 +40,16 @@ public class Post {
     public Post() {
     }
 
-    public Post(int postID, String title, boolean status, Date date, String imageUrl, MultipartFile image, AppUser appUser) {
+    public Post(int postID, String title, boolean status, Date date, String imageUrl, String tag, MultipartFile image, AppUser appUser, Set<PostLike> post) {
         this.postID = postID;
         this.title = title;
         this.status = status;
         this.date = date;
         this.imageUrl = imageUrl;
+        this.tag = tag;
         this.image = image;
         this.appUser = appUser;
+        this.post = post;
     }
 
     public int getPostID() {
@@ -110,5 +114,21 @@ public class Post {
 
     public void setPost(Set<PostLike> post) {
         this.post = post;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public AppUser getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }

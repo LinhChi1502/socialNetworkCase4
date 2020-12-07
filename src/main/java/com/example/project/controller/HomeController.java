@@ -10,19 +10,29 @@ import com.example.project.service.postcomment.PostCommentService;
 import com.example.project.service.postlike.PostlikeService;
 import com.example.project.service.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.sql.SQLException;
 
+@SessionAttributes("user")
 @Controller
 public class HomeController {
+
+
+
     @Autowired
     private AppUserService usersService;
     @Autowired
@@ -60,9 +70,15 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String home() {
-        return "home";
+    public ModelAndView home() {
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+        AppUser appUser = usersService.getUserByName(name);
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("user", appUser);
+        return modelAndView;
     }
+
 
 }
 
