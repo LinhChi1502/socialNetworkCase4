@@ -42,12 +42,13 @@
 
             <!--search user-->
             <div class="w3-dropdown-hover w3-hide-small" style="padding-left: 50px">
-                <form>
+                <form th:action="@{/usersearch}" >
                     <div style="width: fit-content;margin:auto; height: fit-content">
                         <div class="input-icons">
-                            <input class="input-field" type="text" placeholder="Search user">
+                            <input class="input-field" type="text" th:name="keySearch" placeholder="Search user">
                             <i class="fa fa-search icon fa-lg"></i>
                         </div>
+                        <input type="submit" value="Search">
                     </div>
                 </form>
             </div>
