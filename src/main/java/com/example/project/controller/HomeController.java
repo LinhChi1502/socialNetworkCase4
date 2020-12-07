@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.sql.SQLException;
 
 @Controller
 public class HomeController {
@@ -54,12 +55,23 @@ public class HomeController {
     }
 
     @PostMapping("/register")
-    public ModelAndView register(@Valid @ModelAttribute AppUser user){
+    public ModelAndView register(@Valid @ModelAttribute AppUser user) {
         ModelAndView modelAndView;
-
+        try {
             usersService.signUpUser(user);
-           modelAndView = new ModelAndView("login");
-
+            modelAndView = new ModelAndView("login");
+        } catch (Exception e) {
+            modelAndView = new ModelAndView("register");
+            modelAndView.addObject("user", new AppUser());
+            modelAndView.addObject("message", "Username has already exist");
+        }
+//        if (usersService.getUserByName(user.getUserName()) == null) {
+//            usersService.signUpUser(user);
+//            modelAndView = new ModelAndView("login");
+//        } else {
+//            modelAndView = new ModelAndView("register");
+//            modelAndView.addObject("message", "Username already exist!");
+//        }
         return modelAndView;
     }
 
