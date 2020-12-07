@@ -34,6 +34,4 @@ public class AppRole implements GrantedAuthority {
     public String getAuthority() {
         return this.name;
     }
-
-
 }

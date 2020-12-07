@@ -38,7 +38,9 @@ public class AppUserService implements IAppUserService, UserDetailsService {
 
     @Override
     public void save(AppUser appUser) {
-        appUser.setRoll(new AppRole());
+        AppRole appRole = new AppRole();
+        appRole.setId(1);
+        appUser.setRole(appRole);
         appUserRepository.save(appUser);
     }
 
@@ -57,7 +59,7 @@ public class AppUserService implements IAppUserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = this.getUserByName(username);
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(user.getRoll());
+        authorities.add(user.getRole());
         UserDetails userDetails = new User(
                 user.getUserName(),
                 user.getPassword(),
@@ -66,14 +68,17 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         return userDetails;
     }
 
-//    public void signUpUser(AppUser appUser) {
-//
-//         String encryptedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
-//
-//        appUser.setPassword(encryptedPassword);
-//
-//         appUserRepository.save(appUser);
-//
-//    }
+    public void signUpUser(AppUser appUser) {
+
+         String encryptedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
+
+        appUser.setPassword(encryptedPassword);
+        AppRole appRole = new AppRole();
+        appRole.setId(1);
+        appUser.setRole(appRole);
+
+         appUserRepository.save(appUser);
+
+    }
 
 }
