@@ -2,6 +2,7 @@ package com.example.project.controller;
 
 import com.example.project.model.AppUser;
 import com.example.project.model.CommentLike;
+import com.example.project.model.Post;
 import com.example.project.model.PostLike;
 import com.example.project.service.commentlike.CommentLikeService;
 import com.example.project.service.friendship.FriendshipService;
@@ -11,27 +12,31 @@ import com.example.project.service.postlike.PostlikeService;
 import com.example.project.service.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.List;
 
 @SessionAttributes("user")
 @Controller
 public class HomeController {
-
-
 
     @Autowired
     private AppUserService usersService;
@@ -45,8 +50,16 @@ public class HomeController {
     private PostCommentService postCommentService;
     @Autowired
     private CommentLikeService commentLikeService;
+    @Autowired
+    Environment env;
 
-    // login page
+    @ModelAttribute("user")
+    public AppUser user() {
+        return usersService.getCurrentUser();
+    }
+
+
+    // login page //Chi
     @GetMapping("/login")
     public ModelAndView login() {
         ModelAndView modelAndView = new ModelAndView("/login");
@@ -54,7 +67,7 @@ public class HomeController {
         return modelAndView;
     }
 
-
+    // register // Chi
     @PostMapping("/register")
     public ModelAndView register(@Valid @ModelAttribute AppUser user) {
         ModelAndView modelAndView;
@@ -69,15 +82,83 @@ public class HomeController {
         return modelAndView;
     }
 
+    //Chi
     @GetMapping("/home")
     public ModelAndView home() {
-        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
-        String name = authentication.getName();
-        AppUser appUser = usersService.getUserByName(name);
+        List<Post> posts = postService.findAllByFriendAndUser(usersService.findById(1));
         ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("user", appUser);
+        modelAndView.addObject("user", user());
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("post", new Post());
         return modelAndView;
     }
+
+    //Chi
+    @GetMapping("/editprofile")
+    public ModelAndView editProfile() {
+        ModelAndView modelAndView = new ModelAndView("editprofile");
+        modelAndView.addObject("user", user());
+        return modelAndView;
+    }
+
+    //Chi
+    @PostMapping("/editprofile")
+    public ModelAndView editProfile(@ModelAttribute AppUser appUser) {
+        MultipartFile avatar = appUser.getAvatar();
+        String avatarURL = avatar.getOriginalFilename();
+        appUser.setAvatarURL(avatarURL);
+
+        String fileUpload = env.getProperty("upload.path").toString();
+        try {
+            FileCopyUtils.copy(appUser.getAvatar().getBytes(), new File(fileUpload + avatarURL));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        usersService.save(appUser);
+
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("user", user());
+        modelAndView.addObject("post", new Post());
+
+        return modelAndView;
+    }
+
+    @PostMapping("/create-post")
+    public ModelAndView createPost(@ModelAttribute Post post, @ModelAttribute AppUser appUser) {
+        // lấy ra tag
+       String content = post.getContent();
+       String[] splitContent = content.split("\r\n");
+       String splitTag = splitContent[0];
+       String tag = splitTag.substring(1,splitTag.length());
+       post.setTag(tag);
+       //lưu content
+        String concatContent = "";
+        for (int i = 1; i < splitContent.length; i++) {
+            concatContent += splitContent[i] + "\r\n";
+        }
+        post.setContent(concatContent);
+       // lưu ảnh và set image cho post
+        MultipartFile image = post.getImage();
+        String imageURL = image.getOriginalFilename();
+        post.setImageUrl(imageURL);
+        String fileUpload = env.getProperty("upload.path").toString();
+        try {
+            FileCopyUtils.copy(post.getImage().getBytes(), new File(fileUpload + imageURL));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        appUser = usersService.getCurrentUser();
+        post.setUsers(appUser);
+        //lưu post
+        postService.save(post);
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("user", user());
+        modelAndView.addObject("post", new Post());
+        List<Post> posts = postService.findAllByFriendAndUser(usersService.findById(1));
+        modelAndView.addObject("posts", posts);
+        return modelAndView;
+    }
+
 
 
 }

@@ -3,8 +3,11 @@ package com.example.project.service.users;
 import com.example.project.model.AppRole;
 import com.example.project.model.AppUser;
 import com.example.project.repository.AppUserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +25,8 @@ public class AppUserService implements IAppUserService, UserDetailsService {
     private AppUserRepository appUserRepository;
     @Autowired
     private PasswordEncoder bCryptPasswordEncoder;
+
+
 
     @Override
     public Iterable<AppUser> findAll() {
@@ -70,17 +75,23 @@ public class AppUserService implements IAppUserService, UserDetailsService {
 
     public void signUpUser(AppUser appUser) {
 
-         String encryptedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
+        String encryptedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
 
         appUser.setPassword(encryptedPassword);
         AppRole appRole = new AppRole();
         appRole.setId(1);
         appUser.setRole(appRole);
 
-         appUserRepository.save(appUser);
+        appUserRepository.save(appUser);
 
     }
 
+    public AppUser getCurrentUser(){
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+       AppUser appUser = this.getUserByName(name);
+       return appUser;
+    }
 
 
 }

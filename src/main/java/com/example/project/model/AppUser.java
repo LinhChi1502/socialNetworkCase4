@@ -15,8 +15,6 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userID")
     private int userId;
-    @NotNull
-    @NotEmpty
     @Column(name = "username", unique = true, columnDefinition = "varchar(50)")
     private String userName;
     @Column(name = "password")
@@ -40,9 +38,9 @@ public class AppUser {
     @Column(name = "about", columnDefinition = "longtext", nullable = true)
     private String about;
     @Column(name = "phone", nullable = true)
-    private int phone;
+    private String phone;
     @Column(name = "dob", nullable = true)
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     //1 user co nhieu post
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
@@ -71,7 +69,7 @@ public class AppUser {
     public AppUser() {
     }
 
-    public AppUser(int userId, @NotEmpty String userName, String password, String avatarURL, MultipartFile avatar, boolean status, String firstName, String lastName, String city, String gender, String about, int phone, Date dateOfBirth, Set<Post> posts, Set<Friendship> user1, Set<Friendship> user2, Set<Friendship> actionUser, Set<PostLike> postLikes, Set<CommentLike> likes, AppRole role) {
+    public AppUser(int userId, @NotEmpty String userName, String password, String avatarURL, MultipartFile avatar, boolean status, String firstName, String lastName, String city, String gender, String about, String phone, String dateOfBirth, Set<Post> posts, Set<Friendship> user1, Set<Friendship> user2, Set<Friendship> actionUser, Set<PostLike> postLikes, Set<CommentLike> likes, AppRole role) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
@@ -174,19 +172,19 @@ public class AppUser {
         this.about = about;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public Date getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -252,5 +250,12 @@ public class AppUser {
 
     public void setAvatar(MultipartFile avatar) {
         this.avatar = avatar;
+    }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (avatarURL == null) return null;
+
+        return "/user-photos/" + userId + "/" + avatarURL;
     }
 }
