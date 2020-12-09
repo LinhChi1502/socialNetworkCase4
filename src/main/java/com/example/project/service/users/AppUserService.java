@@ -61,6 +61,11 @@ public class AppUserService implements IAppUserService, UserDetailsService {
     }
 
     @Override
+    public Iterable<AppUser> getAppUserByUserNameContaining(String keySearch) {
+        return null;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = this.getUserByName(username);
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -92,6 +97,7 @@ public class AppUserService implements IAppUserService, UserDetailsService {
        AppUser appUser = this.getUserByName(name);
        return appUser;
     }
+
 
 
 }
