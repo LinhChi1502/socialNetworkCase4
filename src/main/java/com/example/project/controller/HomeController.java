@@ -78,7 +78,11 @@ public class HomeController {
         }
         return modelAndView;
     }
-
+//Chi //page 403
+    @GetMapping("/page403")
+    public String page403() {
+        return "403";
+    }
     //Chi
     @GetMapping("/home")
     public ModelAndView home() {
@@ -269,6 +273,13 @@ public class HomeController {
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
         modelAndView.addObject("post", new Post());
+        return modelAndView;
+    }
+
+    @PostMapping("/search-user-by-name")
+    public ModelAndView searchUserByName(@RequestParam(value = "searchName") String searchName) {
+        ModelAndView modelAndView = new ModelAndView("usersearchresult");
+        modelAndView.addObject("user", user());
         return modelAndView;
     }
 }

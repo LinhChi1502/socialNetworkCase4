@@ -27,7 +27,6 @@ public class AppUserService implements IAppUserService, UserDetailsService {
     private PasswordEncoder bCryptPasswordEncoder;
 
 
-
     @Override
     public Iterable<AppUser> findAll() {
         Iterable<AppUser> users = appUserRepository.findAll();
@@ -86,11 +85,11 @@ public class AppUserService implements IAppUserService, UserDetailsService {
 
     }
 
-    public AppUser getCurrentUser(){
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+    public AppUser getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
-       AppUser appUser = this.getUserByName(name);
-       return appUser;
+        AppUser appUser = this.getUserByName(name);
+        return appUser;
     }
 
     @Override

@@ -241,10 +241,4 @@ public class AppUser {
         this.avatar = avatar;
     }
 
-    @Transient
-    public String getPhotosImagePath() {
-        if (avatarURL == null) return null;
-
-        return "/user-photos/" + userId + "/" + avatarURL;
-    }
 }
