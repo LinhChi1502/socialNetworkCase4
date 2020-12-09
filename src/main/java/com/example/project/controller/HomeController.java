@@ -273,13 +273,18 @@ public class HomeController {
 
 
     @PostMapping("/search-user-by-name")
-    public ModelAndView searchUserByName(@RequestParam(name = "searchContent") String keySearch) {
+    public ModelAndView searchUserByName(@RequestParam(name = "searchName") String keySearch) {
         List<AppUser> appUsers = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("listUsers", appUsers);
         modelAndView.addObject("user",user());
         modelAndView.setViewName("usersearchresult");
         return modelAndView;
+    }
+
+    @GetMapping("/layout2")
+    public String layout2(){
+        return "layout2";
     }
 
 
