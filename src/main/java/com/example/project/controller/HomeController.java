@@ -1,9 +1,7 @@
 package com.example.project.controller;
 
 import com.example.project.model.AppUser;
-import com.example.project.model.CommentLike;
 import com.example.project.model.Post;
-import com.example.project.model.PostLike;
 import com.example.project.service.commentlike.CommentLikeService;
 import com.example.project.service.friendship.FriendshipService;
 import com.example.project.service.post.PostService;
@@ -11,24 +9,16 @@ import com.example.project.service.postcomment.PostCommentService;
 import com.example.project.service.postlike.PostlikeService;
 import com.example.project.service.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.security.Principal;
-import java.sql.SQLException;
 import java.util.List;
 
 @SessionAttributes("user")
@@ -131,7 +121,8 @@ public class HomeController {
 
         return modelAndView;
     }
-// Chi
+
+    // Chi
     @PostMapping("/create-post")
     public ModelAndView createPost(@ModelAttribute Post post) {
         // lấy ra tag
@@ -167,7 +158,8 @@ public class HomeController {
         modelAndView.addObject("posts", posts);
         return modelAndView;
     }
-// show trang cá nhân của mình hoặc của bạn bè // Chi
+
+    // show trang cá nhân của mình hoặc của bạn bè // Chi
     @GetMapping("/show-personal-page/{userID}")
     public ModelAndView showPersonalPage(@PathVariable(name = "userID") int userID) {
         ModelAndView modelAndView;
@@ -184,6 +176,7 @@ public class HomeController {
         modelAndView.addObject("user", user());
         return modelAndView;
     }
+
     //Chi edit post
     @GetMapping("/edit-post/{postID}")
     public ModelAndView editPost(@PathVariable(name = "postID") int postID) {
@@ -235,6 +228,7 @@ public class HomeController {
         modelAndView.addObject("post", new Post());
         return modelAndView;
     }
+
     // CHi //Tìm tất cả bài viết theo tag trong trang cá nhân của mình
     @GetMapping("/find-by-tag-personal/{postID}")
     public ModelAndView findByTagPersonal(@PathVariable(name = "postID") int postID) {
@@ -248,6 +242,7 @@ public class HomeController {
 
         return modelAndView;
     }
+
     // CHi //Tìm tất cả bài viết theo tag trong trang cá nhân của friend
     @GetMapping("/find-by-tag-friend/{postID}")
     public ModelAndView findByTagFriend(@PathVariable(name = "postID") int postID) {
@@ -271,5 +266,18 @@ public class HomeController {
         modelAndView.addObject("post", new Post());
         return modelAndView;
     }
+
+
+    @PostMapping("/search-user-by-name")
+    public ModelAndView searchUserByName(@RequestParam(name = "searchContent") String keySearch) {
+        List<AppUser> appUsers = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("listUsers", appUsers);
+        modelAndView.addObject("user",user());
+        modelAndView.setViewName("usersearchresult");
+        return modelAndView;
+    }
+
+
 }
 

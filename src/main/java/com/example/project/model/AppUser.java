@@ -21,6 +21,8 @@ public class AppUser {
     private String password;
     @Column(name = "avatarURL", nullable = true)
     private String avatarURL;
+    @Column(name = "flag")
+    private boolean flag;
 
     @Transient
     private MultipartFile avatar;
@@ -239,6 +241,14 @@ public class AppUser {
 
     public void setAvatar(MultipartFile avatar) {
         this.avatar = avatar;
+    }
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 
     @Transient
