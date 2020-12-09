@@ -1,5 +1,7 @@
 package com.example.project.model;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -13,10 +15,11 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name ="postID")
     private int postID;
-    @Column(name = "title")
-    private String title;
+    @Column(name = "content", columnDefinition = "longtext")
+    private String content;
     @Column(name = "status")
     private boolean status;
+    @UpdateTimestamp
     @Column(name = "date")
     private Date date;
     @Column(name = "imageURL")
@@ -40,9 +43,9 @@ public class Post {
     public Post() {
     }
 
-    public Post(int postID, String title, boolean status, Date date, String imageUrl, String tag, MultipartFile image, AppUser appUser, Set<PostLike> post) {
+    public Post(int postID, String content, boolean status, Date date, String imageUrl, String tag, MultipartFile image, AppUser appUser, Set<PostLike> post) {
         this.postID = postID;
-        this.title = title;
+        this.content = content;
         this.status = status;
         this.date = date;
         this.imageUrl = imageUrl;
@@ -60,12 +63,12 @@ public class Post {
         this.postID = postID;
     }
 
-    public String getTitle() {
-        return title;
+    public String getContent() {
+        return content;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public boolean isStatus() {

@@ -12,7 +12,7 @@
         <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-            <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img src="/img/logo1.png" alt=""
+            <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}" alt=""
                                                                                         width="35px" height="35px"></a>
             <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
                title="Friend Requests"><i class="fa fa-user"></i><span
@@ -29,11 +29,11 @@
 
             <!--search post-->
             <div class="w3-dropdown-hover w3-hide-small">
-                <form>
+                <form th:action="@{/search-post-by-content}" method="post">
                     <div style="width: fit-content;margin:auto; height: fit-content">
                         <div class="input-icons">
-                            <input class="input-field" type="text" placeholder="Search post" style="font-size: small">
-                            <i class="fa fa-search icon fa-lg"></i>
+                            <input class="input-field" type="text" th:name="searchContent" placeholder="Search post" style="font-size: small;">
+                            <button type="submit"><i class="fa fa-search icon fa-lg"></i></button>
                         </div>
                     </div>
                 </form>
@@ -42,13 +42,12 @@
 
             <!--search user-->
             <div class="w3-dropdown-hover w3-hide-small" style="padding-left: 50px">
-                <form th:action="@{/usersearch}" >
+                <form>
                     <div style="width: fit-content;margin:auto; height: fit-content">
                         <div class="input-icons">
-                            <input class="input-field" type="text" th:name="keySearch" placeholder="Search user">
+                            <input class="input-field" type="text" placeholder="Search user" style="font-size: small">
                             <i class="fa fa-search icon fa-lg"></i>
                         </div>
-                        <input type="submit" value="Search">
                     </div>
                 </form>
             </div>
@@ -56,9 +55,9 @@
 
 
             <!--logout button-->
-            <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large"
+            <a th:href="@{/logout}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large"
                title="Logout">
-                <img src="/img/avatar.jpg" class="w3-circle" style="height:30px;width:30px" alt="Avatar">
+                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px" alt="Avatar">
             </a>
             <!--logout button end-->
 
@@ -73,51 +72,77 @@
     <!-- The Grid -->
     <div class="w3-row">
         <!-- Left Column -->
-        <div th:replace="layout::leftcolumn"></div>
+        <div th:fragment="leftcolumn" class="w3-col m3">
+            <!-- Profile -->
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container">
+                    <h4 class="w3-center" th:text="${user.userName}"></h4>
+                    <p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
+                                              style="height:106px;width:106px" alt="Avatar"></p>
+                    <hr>
+                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span th:if="${user.firstName != null}" th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
+                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.city}"></span></p>
+                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.dateOfBirth}"></span></p>
+                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.gender}"></span></p>
+                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span  th:text="${user.phone}"></span></p>
+                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.about}"></span></p>
+                    <br>
+                    <i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><a th:href="@{/editprofile}">edit</a>
+
+                </div>
+            </div>
+        </div>
         <!-- Left Column End-->
 
         <!-- Middle Column-->
-        <div class="w3-col m7">
+        <div class="w3-col m7"
+        >
 
             <!--Write something-->
             <div class="w3-row-padding">
                 <div class="w3-col m12">
                     <div class="w3-card w3-round w3-white">
-                        <form class="w3-container w3-padding" enctype="multipart/form-data">
-                            <p contenteditable="true" class="w3-border w3-padding"></p>
+                        <form class="w3-container w3-padding" th:action="@{/create-post}" enctype="multipart/form-data" method="post" th:object="${post}">
+                            <textarea id="content" cols="93" rows="3" th:field="*{content}" ></textarea>
                             <div class="form-inline">
                                 <div class="control-group custom-control-inline">
                                     <label for="FileInput">
                                         <i class="fa fa-camera" aria-hidden="true"></i>
                                     </label>
-                                    <input type="file" id="FileInput" style="display: none">
+                                    <input type="file" id="FileInput" style="display: none" th:field="*{image}">
 
 
                                     <div class="radio" style="padding-left: 15px">
-                                        <label><input type="radio" name="optradio" checked>Public</label>
+                                        <label><input type="radio" th:field="*{status}" checked value="true">Public</label>
                                     </div>
                                     <div class="radio" style="padding-left: 15px">
-                                        <label><input type="radio" name="optradio">Friend</label>
+                                        <label><input type="radio" th:field="*{status}" value="false">Friend</label>
                                     </div>
 
 
                                 </div>
                             </div>
                             <br>
-                            <button type="button" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Post</button>
+                           <input type="submit" class="w3-button w3-theme" th:value="Post">
                         </form>
                     </div>
                 </div>
             </div>
             <!--Write something end-->
+<th:block th:each="post:${posts}">
 
             <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                <img src="/img/avatar.jpg" alt="Avatar" class="w3-left w3-circle w3-margin-right" width="50px">
-                <span class="w3-right w3-opacity">16 min</span>
-                <h4>Lee Min Ho</h4><br>
+                <img th:src="${'../'+post.users.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px" height="65px">
+                <span class="w3-right w3-opacity" th:text="${post.date}"></span>
+                <a th:href="@{/show-personal-page/__${post.users.userId}__}"><h4 th:text="${post.users.userName}"></h4></a><br>
                 <hr class="w3-clear">
-                <p>Hôm nay tôi buồn quá</p>
-                <p><img src="/img/avatar.jpg" alt="img" width="600px" height="300px" style="padding-left: 75px"></p>
+                <p>#<a th:href="@{/find-by-tag/__${post.postID}__}"><span th:text="${post.tag}"></span></a></p>
+                <p style="white-space: pre;" th:utext="${post.content}"></p>
+
+                <p th:if="${!#strings.isEmpty(post.imageUrl)}">
+                    <img th:src="${'../'+post.imageUrl}" class="postimage"/>
+                </p>
+
 
                 <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i
                         class="fa fa-thumbs-up"></i><span>1000</span>
@@ -135,6 +160,7 @@
                         </td>
                     </tr>
                 </div>
+
                 <!--                    Comment area end-->
 
 
@@ -153,6 +179,7 @@
 
             </div>
 
+</th:block>
 
         </div>
         <!-- Middle Column End-->
@@ -166,4 +193,8 @@
 <!--       Footer -->
 <footer th:replace="layout::footer"></footer>
 <!--       Footer End -->
+
+<script>
+    $('textarea').filter('[id*=content]').val('');
+</script>
 </body>

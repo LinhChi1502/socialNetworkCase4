@@ -43,6 +43,11 @@
         tr.spaceUnder>td {
             padding-bottom: 1em;
         }
+        .postimage {
+            padding-left: 75px;
+            width: 600px;
+            height: 300px;
+        }
     </style>
 </head>
 
@@ -55,7 +60,7 @@
         <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-            <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img src="/img/logo1.png" alt=""
+            <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{../logo1.png}" alt=""
                                                                                         width="35px" height="35px"></a>
             <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
                title="Friend Requests"><i class="fa fa-user"></i><span
@@ -88,7 +93,7 @@
                 <form>
                     <div style="width: fit-content;margin:auto; height: fit-content">
                         <div class="input-icons">
-                            <input class="input-field" type="text" placeholder="Search user">
+                            <input class="input-field" type="text" placeholder="Search user" style="font-size: small">
                             <i class="fa fa-search icon fa-lg"></i>
                         </div>
                     </div>
@@ -120,21 +125,18 @@
             <!-- Profile -->
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
-                    <h4 class="w3-center"></h4>
-                    <p class="w3-center"><img src="/img/avatar.jpg" class="w3-circle"
+                    <h4 class="w3-center" th:text="${user.userName}"></h4>
+                    <p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
                                               style="height:106px;width:106px" alt="Avatar"></p>
                     <hr>
-                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i>Nguyen Thi Linh Chi</p>
-                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i>Ha noi, Viet Nam</p>
-                    <p><i class="fa fa-envelope-o fa-fw w3-margin-right w3-text-theme"></i>linhchidkc@gmail.com</p>
-                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i>15/02/1995</p>
-                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i>Female</p>
-                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i>035 833 9265</p>
-                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i>Yêu màu hồng, sống nội
-                        tâm,
-                        hay khóc thầm và ghét sự giả dối</p>
+                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
+                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.city}"></span></p>
+                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.dateOfBirth}"></span></p>
+                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.gender}"></span></p>
+                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span  th:text="${user.phone}"></span></p>
+                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.about}"></span></p>
                     <br>
-                    <a href=""><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i>edit</a>
+                    <i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><a th:href="@{/editprofile}">edit</a>
 
                 </div>
             </div>

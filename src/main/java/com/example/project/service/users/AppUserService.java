@@ -2,15 +2,17 @@ package com.example.project.service.users;
 
 import com.example.project.model.AppRole;
 import com.example.project.model.AppUser;
-import com.example.project.model.Friendship;
 import com.example.project.repository.AppUserRepository;
-import net.bytebuddy.asm.Advice;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -58,14 +60,6 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         return appUserRepository.getAppUsersByUserName(name);
     }
 
-
-    //Toan
-    @Override
-    public Iterable<AppUser> getAppUserByUserNameContaining(String keySearch) {
-        return appUserRepository.getAppUserByUserNameContaining(keySearch);
-    }
-
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = this.getUserByName(username);
@@ -90,6 +84,13 @@ public class AppUserService implements IAppUserService, UserDetailsService {
 
         appUserRepository.save(appUser);
 
+    }
+
+    public AppUser getCurrentUser(){
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+       AppUser appUser = this.getUserByName(name);
+       return appUser;
     }
 
 
