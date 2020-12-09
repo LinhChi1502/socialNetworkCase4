@@ -95,14 +95,15 @@
         <!-- Left Column End-->
 
         <!-- Middle Column-->
-        <div class="w3-col m7">
+        <div class="w3-col m7"
+        >
 
             <!--Write something-->
             <div class="w3-row-padding">
                 <div class="w3-col m12">
                     <div class="w3-card w3-round w3-white">
                         <form class="w3-container w3-padding" th:action="@{/create-post}" enctype="multipart/form-data" method="post" th:object="${post}">
-                            <textarea id="content" cols="53" rows="3" th:field="*{content}" ></textarea>
+                            <textarea id="content" cols="93" rows="3" th:field="*{content}" ></textarea>
                             <div class="form-inline">
                                 <div class="control-group custom-control-inline">
                                     <label for="FileInput">
@@ -131,13 +132,17 @@
 <th:block th:each="post:${posts}">
 
             <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                <img th:src="${'../'+user.getAvatarURL()}" alt="Avatar" class="w3-left w3-circle w3-margin-right" width="50px">
+                <img th:src="${'../'+post.users.getAvatarURL()}" class="w3-left w3-circle w3-margin-right" width="65px" height="65px">
                 <span class="w3-right w3-opacity" th:text="${post.date}"></span>
-                <h4 th:text="${user.userName}"></h4><br>
+                <a th:href="@{/show-personal-page/__${post.users.getUserId()}__}"><h4 th:text="${post.users.userName}"></h4></a><br>
                 <hr class="w3-clear">
                 <p>#<a href=""><span th:text="${post.tag}"></span></a></p>
-                <p th:text="${post.content}"></p>
-                <p><img th:src="${'../'+post.imageUrl}" alt="img" width="600px" height="300px" style="padding-left: 75px"></p>
+                <p style="white-space: pre;" th:utext="${post.content}"></p>
+
+                <p th:if="${!#strings.isEmpty(post.imageUrl)}">
+                    <img th:src="${'../'+post.imageUrl}" class="postimage"/>
+                </p>
+
 
                 <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i
                         class="fa fa-thumbs-up"></i><span>1000</span>

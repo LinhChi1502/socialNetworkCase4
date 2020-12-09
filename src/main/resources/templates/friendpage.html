@@ -75,17 +75,16 @@
             <!-- Profile -->
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
-                    <h4 class="w3-center">Lee Min Ho</h4>
-                    <p class="w3-center"><img src="/img/leeminho.jpg" class="w3-circle"
+                    <h4 class="w3-center" th:text="${friend.userName}"></h4>
+                    <p class="w3-center"><img th:src="${'../' + friend.getAvatarURL()}" class="w3-circle"
                                               style="height:106px;width:106px" alt="Avatar"></p>
                     <hr>
-                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i>Lee Min Ho</p>
-                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i>Hàn Quốc</p>
-                    <p><i class="fa fa-envelope-o fa-fw w3-margin-right w3-text-theme"></i>leeminho@gmail.com</p>
-                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i>22/06/1987</p>
-                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i>Male</p>
-                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i>012 345 6789</p>
-                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i></p>
+                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span th:if="${friend.firstName != null}" th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
+                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span th:text="${friend.city}"></span></p>
+                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span th:text="${friend.dateOfBirth}"></span></p>
+                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span th:text="${friend.gender}"></span></p>
+                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span  th:text="${friend.phone}"></span></p>
+                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span th:text="${friend.about}"></span></p>
                 </div>
             </div>
         </div>
@@ -93,49 +92,62 @@
 
         <!-- Middle Column-->
         <div class="w3-col m7">
-            <!--post-->
-            <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                <img src="/img/avatar.jpg" alt="Avatar" class="w3-left w3-circle w3-margin-right" width="50px">
-                <span class="w3-right w3-opacity">16 min</span>
-                <h4>Lee Min Ho</h4><br>
-                <hr class="w3-clear">
-                <p>Hôm nay tôi buồn quá</p>
-                <p><img src="/img/avatar.jpg" alt="img" width="600px" height="300px" style="padding-left: 75px"></p>
 
-                <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i
-                        class="fa fa-thumbs-up"></i><span>1000</span>
-                </button>
-                <hr>
+            <th:block th:each="post:${posts}">
 
-                <!--                    Comment area-->
-                <div>
-                    <tr>
-                        <td><img src="/img/avatar.jpg" width="50px" height="50px" style="border-radius: 50%"></td>
-                        <td>
-                            <span style="padding-left: 10px">Bi Rain</span><span
-                                style="padding-left: 10px;font-size: small">3 phút trước</span>
-                            <p style="padding-left: 100px">Tớ cũng buồn</p>
-                        </td>
-                    </tr>
+                <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+                    <img th:src="${'../'+post.users.getAvatarURL()}" class="w3-left w3-circle w3-margin-right"
+                         width="65px" height="65px">
+                    <span class="w3-right w3-opacity" th:text="${post.date}"></span><br>
+
+                    <a th:href="@{/show-personal-page/__${post.users.getUserId()}__}"><h4
+                            th:text="${post.users.userName}"></h4></a><br>
+                    <hr class="w3-clear">
+                    <p>#<a href=""><span th:text="${post.tag}"></span></a></p>
+                    <p style="white-space: pre;" th:utext="${post.content}"></p>
+
+                    <p th:if="${!#strings.isEmpty(post.imageUrl)}">
+                        <img th:src="${'../'+post.imageUrl}" class="postimage"/>
+                    </p>
+
+
+                    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i
+                            class="fa fa-thumbs-up"></i><span>1000</span>
+                    </button>
+                    <hr>
+
+                    <!--                    Comment area-->
+                    <div>
+                        <tr>
+                            <td><img src="/img/avatar.jpg" width="50px" height="50px" style="border-radius: 50%"></td>
+                            <td>
+                                <span style="padding-left: 10px">Bi Rain</span><span
+                                    style="padding-left: 10px;font-size: small">3 phút trước</span>
+                                <p style="padding-left: 100px">Tớ cũng buồn</p>
+                            </td>
+                        </tr>
+                    </div>
+
+                    <!--                    Comment area end-->
+
+
+                    <!--                    post your comment-->
+                    <div>
+                        <tr>
+                            <td><img src="/img/avatar.jpg" width="50px" height="50px" style="border-radius: 50%"></td>
+                            <td style="padding-left: 20px">
+                                <input type="text" placeholder="Post your comment" style="width: 350px">
+                                <button><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+
+                    </div>
+                    <!--                    post your comment end-->
+
                 </div>
-                <!--                    Comment area end-->
 
+            </th:block>
 
-                <!--                    post your comment-->
-                <div>
-                    <tr>
-                        <td><img src="/img/avatar.jpg" width="50px" height="50px" style="border-radius: 50%"></td>
-                        <td style="padding-left: 20px">
-                            <input type="text" placeholder="Post your comment" style="width: 350px">
-                            <button><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                        </td>
-                    </tr>
-
-                </div>
-                <!--                    post your comment end-->
-
-            </div>
-            <!--post end-->
         </div>
         <!-- Middle Column End-->
 

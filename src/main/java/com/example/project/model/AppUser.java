@@ -25,8 +25,6 @@ public class AppUser {
     @Transient
     private MultipartFile avatar;
 
-    @Column(name = "status", nullable = true)
-    private boolean status;
     @Column(name = "firstname", nullable = true)
     private String firstName;
     @Column(name = "lastname", nullable = true)
@@ -69,13 +67,12 @@ public class AppUser {
     public AppUser() {
     }
 
-    public AppUser(int userId, @NotEmpty String userName, String password, String avatarURL, MultipartFile avatar, boolean status, String firstName, String lastName, String city, String gender, String about, String phone, String dateOfBirth, Set<Post> posts, Set<Friendship> user1, Set<Friendship> user2, Set<Friendship> actionUser, Set<PostLike> postLikes, Set<CommentLike> likes, AppRole role) {
+    public AppUser(int userId, String userName, String password, String avatarURL, MultipartFile avatar, String firstName, String lastName, String city, String gender, String about, String phone, String dateOfBirth, Set<Post> posts, Set<Friendship> user1, Set<Friendship> user2, Set<Friendship> actionUser, Set<PostLike> postLikes, Set<CommentLike> likes, AppRole role) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
         this.avatarURL = avatarURL;
         this.avatar = avatar;
-        this.status = status;
         this.firstName = firstName;
         this.lastName = lastName;
         this.city = city;
@@ -122,14 +119,6 @@ public class AppUser {
 
     public void setAvatarURL(String avatarURL) {
         this.avatarURL = avatarURL;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
     }
 
     public String getFirstName() {

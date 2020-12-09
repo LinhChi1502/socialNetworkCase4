@@ -158,7 +158,9 @@
     </style>
 </head>
 <body>
-
+<div th:if="${message != null}">
+    <span th:text="${message}" style="color: red; margin-left: 530px"></span>
+</div>
 <div class="login-wrap">
     <div class="login-html">
         <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>

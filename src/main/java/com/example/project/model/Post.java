@@ -1,6 +1,7 @@
 package com.example.project.model;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ public class Post {
     private String content;
     @Column(name = "status")
     private boolean status;
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "date")
     private Date date;
     @Column(name = "imageURL")
