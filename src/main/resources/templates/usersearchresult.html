@@ -102,13 +102,7 @@
                         <div class="w3-container w3-padding">
                             <ul style="list-style-type: none">
                                 <li>
-<!--                                    <div class="form-inline">-->
-<!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
-<!--                                             style="width:50px; height:50px; border-radius: 50%">-->
-<!--                                        <a href="" style="padding-left: 10px"> Jane Doe Jane Doe</a>-->
-                                        <button style="margin-left: 150px">Add friend
-                                        </button>
-<!--                                    </div>-->
+
                                     <table>
                                         <tr th:each="user:${listUsers}">
 
@@ -116,35 +110,17 @@
                                                      style="width:50px; height:50px; border-radius: 50%"></td>
                                             <td><a th:href="@{/show-personal-page/__${user.userId}__}" style="padding-left: 10px" th:text="${user.getUserName()}" > </a> </td>
 
-                                            <td  th:if="${user.isFlag()}"> <button style="margin-left: 150px">Add friend
+                                            <td  th:if="${user.isFlag()}"> <button style="margin-left: 150px" th:href="${user.userId}" onclick="addfriend(this)">Add friend
                                             </button></td>
                                             <td  th:if="${!user.isFlag()}">  <button style="margin-left: 150px">Unfriend
                                             </button></td>
 
-
-<!--                                            <td><div th:if="${#lists.containsAll(user.userId, friendLists)}"> is present</div></td>-->
                                         </tr>
 
                                     </table>
                                 </li>
                             </ul>
                         </div>
-                        <!-- user 1 end -->
-
-                        <!-- user 2-->
-<!--                        <div class="w3-container w3-padding">-->
-<!--                            <ul style="list-style-type: none">-->
-<!--                                <li>-->
-<!--                                    <div class="form-inline">-->
-<!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
-<!--                                             style="width:50px; height:50px; border-radius: 50%">-->
-<!--                                        <a href="" style="padding-left: 10px">Jane Doe</a>-->
-
-<!--                                    </div>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-                        <!-- user 2 end -->
                     </div>
                 </div>
             </div>

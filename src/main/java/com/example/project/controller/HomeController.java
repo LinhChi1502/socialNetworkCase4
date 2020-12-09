@@ -269,7 +269,7 @@ public class HomeController {
 
 
     @PostMapping("/search-user-by-name")
-    public ModelAndView searchUserByName(@RequestParam(name = "searchContent") String keySearch) {
+    public ModelAndView searchUserByName(@RequestParam(name = "searchName") String keySearch) {
         List<AppUser> appUsers = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("listUsers", appUsers);
