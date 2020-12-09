@@ -31,24 +31,30 @@
             <div class="w3-dropdown-hover w3-hide-small">
                 <form th:action="@{/search-post-by-content}" method="post">
                     <div style="width: fit-content;margin:auto; height: fit-content">
-                        <div class="input-icons">
-                            <input class="input-field" type="text" th:name="searchContent" placeholder="Search post" style="font-size: small;">
-                            <button type="submit"><i class="fa fa-search icon fa-lg"></i></button>
-                        </div>
+
+
+                            <input type="text" th:name="searchContent" placeholder="Search post" style="color: black;width: 130px"/>
+                            <label for="mySubmit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
+                            <input id="mySubmit" type="submit" class="hidden" />
                     </div>
+                </form>
+
                 </form>
             </div>
             <!--search post end-->
 
             <!--search user-->
-            <div class="w3-dropdown-hover w3-hide-small" style="padding-left: 50px">
-                <form>
+            <div class="w3-dropdown-hover w3-hide-small">
+                <form th:action="@{/search-user-by-name}" method="post">
                     <div style="width: fit-content;margin:auto; height: fit-content">
-                        <div class="input-icons">
-                            <input class="input-field" type="text" placeholder="Search user" style="font-size: small">
-                            <i class="fa fa-search icon fa-lg"></i>
-                        </div>
+
+
+                        <input type="text" th:name="searchContent" placeholder="Search user" style="color: black;width: 130px"/>
+                        <label for="Submit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
+                        <input id="Submit" type="submit" class="hidden" />
                     </div>
+                </form>
+
                 </form>
             </div>
             <!--search user end-->

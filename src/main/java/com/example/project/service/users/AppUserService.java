@@ -93,5 +93,8 @@ public class AppUserService implements IAppUserService, UserDetailsService {
        return appUser;
     }
 
-
+    @Override
+    public Iterable<AppUser> getAppUserByUserNameContaining(String keySearch) {
+        return null;
+    }
 }
