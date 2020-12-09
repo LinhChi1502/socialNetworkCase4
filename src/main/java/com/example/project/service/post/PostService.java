@@ -77,4 +77,19 @@ public class PostService implements IPostService {
             });
             return allPost;
     }
+
+    @Override
+    public Iterable<Post> getAllByTag(String tag) {
+        return postRepository.getAllByTag(tag);
+    }
+
+    @Override
+    public Iterable<Post> getAllPostByTagIsAndAndAppUserIs(String tag, AppUser user) {
+        return postRepository.getAllByTagIsAndAndAppUserIs(tag,user);
+    }
+
+    @Override
+    public Iterable<Post> getAllPostByContentContaining(String searchContent) {
+        return postRepository.getAllByContentContaining(searchContent);
+    }
 }

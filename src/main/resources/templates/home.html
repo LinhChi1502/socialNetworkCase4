@@ -29,11 +29,11 @@
 
             <!--search post-->
             <div class="w3-dropdown-hover w3-hide-small">
-                <form>
+                <form th:action="@{/search-post-by-content}" method="post">
                     <div style="width: fit-content;margin:auto; height: fit-content">
                         <div class="input-icons">
-                            <input class="input-field" type="text" placeholder="Search post" style="font-size: small">
-                            <i class="fa fa-search icon fa-lg"></i>
+                            <input class="input-field" type="text" th:name="searchContent" placeholder="Search post" style="font-size: small;">
+                            <button type="submit"><i class="fa fa-search icon fa-lg"></i></button>
                         </div>
                     </div>
                 </form>
@@ -132,11 +132,11 @@
 <th:block th:each="post:${posts}">
 
             <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                <img th:src="${'../'+post.users.getAvatarURL()}" class="w3-left w3-circle w3-margin-right" width="65px" height="65px">
+                <img th:src="${'../'+post.users.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px" height="65px">
                 <span class="w3-right w3-opacity" th:text="${post.date}"></span>
-                <a th:href="@{/show-personal-page/__${post.users.getUserId()}__}"><h4 th:text="${post.users.userName}"></h4></a><br>
+                <a th:href="@{/show-personal-page/__${post.users.userId}__}"><h4 th:text="${post.users.userName}"></h4></a><br>
                 <hr class="w3-clear">
-                <p>#<a href=""><span th:text="${post.tag}"></span></a></p>
+                <p>#<a th:href="@{/find-by-tag/__${post.postID}__}"><span th:text="${post.tag}"></span></a></p>
                 <p style="white-space: pre;" th:utext="${post.content}"></p>
 
                 <p th:if="${!#strings.isEmpty(post.imageUrl)}">

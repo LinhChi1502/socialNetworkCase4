@@ -101,16 +101,26 @@ public class HomeController {
     //Chi
     @PostMapping("/editprofile")
     public ModelAndView editProfile(@ModelAttribute AppUser appUser) {
-        MultipartFile avatar = appUser.getAvatar();
-        String avatarURL = avatar.getOriginalFilename();
-        appUser.setAvatarURL(avatarURL);
+        AppUser appUserDB = usersService.findById(appUser.getUserId());
+        String avatarURLDB = appUserDB.getAvatarURL();
 
-        String fileUpload = env.getProperty("upload.path").toString();
-        try {
-            FileCopyUtils.copy(appUser.getAvatar().getBytes(), new File(fileUpload + avatarURL));
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        MultipartFile avatar = appUser.getAvatar();
+
+        if (!avatar.getOriginalFilename().equals("")) {
+            String avatarURL = avatar.getOriginalFilename();
+            appUser.setAvatarURL(avatarURL);
+            String fileUpload = env.getProperty("upload.path").toString();
+            try {
+                FileCopyUtils.copy(appUser.getAvatar().getBytes(), new File(fileUpload + avatarURL));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            appUser.setAvatarURL(avatarURLDB);
         }
+
+
         usersService.save(appUser);
 
         ModelAndView modelAndView = new ModelAndView("home");
@@ -186,22 +196,79 @@ public class HomeController {
     @PostMapping("/edit-post/{postID}")
     public ModelAndView editPost(@ModelAttribute Post post) {
         post.setUsers(user());
-post.setDate(null);
         MultipartFile image = post.getImage();
         String imageURL = image.getOriginalFilename();
-        post.setImageUrl(imageURL);
-        String fileUpload = env.getProperty("upload.path").toString();
-        try {
-            FileCopyUtils.copy(post.getImage().getBytes(), new File(fileUpload + imageURL));
-        } catch (IOException e) {
-            e.printStackTrace();
+        // lấy link ảnh trong DB
+        Post postDB = postService.findById(post.getPostID());
+        String imageUrlDB = postDB.getImageUrl();
+
+        if (!imageURL.equals("")) {
+            post.setImageUrl(imageURL);
+            String fileUpload = env.getProperty("upload.path").toString();
+            try {
+                FileCopyUtils.copy(post.getImage().getBytes(), new File(fileUpload + imageURL));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            post.setImageUrl(imageUrlDB);
         }
+
 
         postService.save(post);
         Iterable<Post> posts = postService.getAllByAppUserIs(user());
         ModelAndView modelAndView = new ModelAndView("personal");
         modelAndView.addObject("user", user());
         modelAndView.addObject("posts", posts);
+        return modelAndView;
+    }
+
+    // CHi //Tìm tất cả bài viết theo tag
+    @GetMapping("/find-by-tag/{postID}")
+    public ModelAndView findByTag(@PathVariable(name = "postID") int postID) {
+        Post post = postService.findById(postID);
+        String tag = post.getTag();
+        Iterable<Post> posts = postService.getAllByTag(tag);
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("user", user());
+        modelAndView.addObject("post", new Post());
+        return modelAndView;
+    }
+    // CHi //Tìm tất cả bài viết theo tag trong trang cá nhân của mình
+    @GetMapping("/find-by-tag-personal/{postID}")
+    public ModelAndView findByTagPersonal(@PathVariable(name = "postID") int postID) {
+        Post post = postService.findById(postID);
+        String tag = post.getTag();
+        Iterable<Post> posts = postService.getAllPostByTagIsAndAndAppUserIs(tag, user());
+
+        ModelAndView modelAndView = new ModelAndView("personal");
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("user", user());
+
+        return modelAndView;
+    }
+    // CHi //Tìm tất cả bài viết theo tag trong trang cá nhân của friend
+    @GetMapping("/find-by-tag-friend/{postID}")
+    public ModelAndView findByTagFriend(@PathVariable(name = "postID") int postID) {
+        Post post = postService.findById(postID);
+        String tag = post.getTag();
+        Iterable<Post> posts = postService.getAllPostByTagIsAndAndAppUserIs(tag, post.getAppUser());
+
+        ModelAndView modelAndView = new ModelAndView("friendpage");
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("friend", post.getAppUser());
+
+        return modelAndView;
+    }
+
+    @PostMapping("/search-post-by-content")
+    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent") String searchContent) {
+        Iterable<Post> posts = postService.getAllPostByContentContaining(searchContent);
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("user", user());
+        modelAndView.addObject("post", new Post());
         return modelAndView;
     }
 }
