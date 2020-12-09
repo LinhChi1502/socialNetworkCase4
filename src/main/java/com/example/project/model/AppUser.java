@@ -21,6 +21,8 @@ public class AppUser {
     private String password;
     @Column(name = "avatarURL", nullable = true)
     private String avatarURL;
+    @Transient
+    private boolean flag;
 
     @Transient
     private MultipartFile avatar;
@@ -241,4 +243,18 @@ public class AppUser {
         this.avatar = avatar;
     }
 
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (avatarURL == null) return null;
+
+        return "/user-photos/" + userId + "/" + avatarURL;
+    }
 }
