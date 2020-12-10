@@ -25,7 +25,6 @@ public class FriendshipService implements IFriendshipService {
         return friendshipRepository.findById(id).get();
     }
 
-
     @Override
     public void save(Friendship model) {
         friendshipRepository.save(model);
@@ -56,6 +55,4 @@ public class FriendshipService implements IFriendshipService {
     public Iterable<Friendship> findAllByFriendStatusIsAndUser1IsOrUser2Is(int status, AppUser user1, AppUser user2) {
         return friendshipRepository.findAllByFriendStatusIsAndUser1IsOrUser2Is(status, user1, user2);
     }
-
-
 }

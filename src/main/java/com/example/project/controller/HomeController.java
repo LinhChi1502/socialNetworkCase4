@@ -297,6 +297,5 @@ public class HomeController {
         return "layout2";
     }
 
-
 }
 

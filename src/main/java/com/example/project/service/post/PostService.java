@@ -41,9 +41,7 @@ public class PostService implements IPostService {
 
     @Override
     public void remove(Integer id) {
-
         postRepository.deleteById(id);
-
     }
 
     @Override

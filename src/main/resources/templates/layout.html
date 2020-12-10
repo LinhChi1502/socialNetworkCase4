@@ -40,9 +40,10 @@
             text-align: center;
         }
 
-        tr.spaceUnder>td {
+        tr.spaceUnder > td {
             padding-bottom: 1em;
         }
+
         .postimage {
             padding-left: 75px;
             width: 600px;
@@ -129,14 +130,21 @@
                     <p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
                                               style="height:106px;width:106px" alt="Avatar"></p>
                     <hr>
-                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
-                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.city}"></span></p>
-                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.dateOfBirth}"></span></p>
-                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.gender}"></span></p>
-                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span  th:text="${user.phone}"></span></p>
-                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.about}"></span></p>
+                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
+                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.city}"></span></p>
+                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.dateOfBirth}"></span></p>
+                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.gender}"></span></p>
+                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.phone}"></span></p>
+                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.about}"></span></p>
                     <br>
-                    <i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><a th:href="@{/editprofile}">edit</a>
+                    <i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><a
+                        th:href="@{/editprofile}">edit</a>
 
                 </div>
             </div>
@@ -158,6 +166,7 @@
 
         <!-- Right Column -->
         <div th:fragment="rightcolumn" class="w3-col m2">
+            <script src="../static/js/rightbar_friend.js"></script>
             <div class="w3-card w3-round w3-white w3-center">
                 <div class="w3-container">
                     <!--                    search friends-->
@@ -180,17 +189,23 @@
                     <!--list 5 friends-->
                     <table>
                         <tr class="spaceUnder">
-                            <td><img src="/img/avatar.jpg" alt="" width="30px" height="30px" style="border-radius: 50%">
+                            <td><img src="../default.png" alt="" width="30px" height="30px" style="border-radius: 50%">
                             </td>
-                            <td style="padding-left: 2px"><a href="#"><span style="font-size: 13px">David Beckham</span></a></td>
-                            <td style="padding-left: 5px"><button style="font-size: xx-small">Unfriend</button></td>
+                            <td style="padding-left: 2px"><a href="#"><span style="font-size: 13px">David Beckham</span></a>
+                            </td>
+                            <td style="padding-left: 5px">
+                                <button style="font-size: xx-small">Unfriend</button>
+                            </td>
                         </tr>
 
                         <tr class="spaceUnder">
-                            <td><img src="/img/avatar.jpg" alt="" width="30px" height="30px" style="border-radius: 50%">
+                            <td><img src="../default.png" alt="" width="30px" height="30px" style="border-radius: 50%">
                             </td>
-                            <td style="padding-left: 2px"><a href="#"><span style="font-size: 13px">David Beckham</span></a></td>
-                            <td style="padding-left: 5px"><button style="font-size: xx-small">Unfriend</button></td>
+                            <td style="padding-left: 2px"><a href="#"><span style="font-size: 13px">David Beckham</span></a>
+                            </td>
+                            <td style="padding-left: 5px">
+                                <button style="font-size: xx-small">Unfriend</button>
+                            </td>
                         </tr>
 
                     </table>
