@@ -289,22 +289,23 @@ public class HomeController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("listUsers", appUsers);
         modelAndView.addObject("user",user());
+        modelAndView.addObject("keySearch",keySearch);
         modelAndView.setViewName("usersearchresult");
         return modelAndView;
     }
-
+//Toan
     @GetMapping("/sending-friend-request/{friendId}")
     public ResponseEntity<AppUser>sendingFriendRequest(@PathVariable(name = "friendId")int id){
             friendshipService.sendFriendRequest(id);
             return new ResponseEntity<>(HttpStatus.OK);
     }
-
+//Toan
     @GetMapping("/search-user-by-name")
     public ResponseEntity< List<AppUser>> searchUserByNameAPI() {
         List<AppUser> appUserss = usersService.searchAllUserByNameAndGiveFlagToFriend("c");
         return new ResponseEntity<>(appUserss,HttpStatus.OK);
     }
-
+//Toan
     @GetMapping("/remove-friend/{friendId}")
     public ResponseEntity<AppUser>removeFriendRequestAndRemoveFriend(@PathVariable(name = "friendId")int id){
         usersService.removeFriendshipsByUser1IsAndUser2Is(id);
