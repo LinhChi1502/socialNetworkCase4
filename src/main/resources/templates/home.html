@@ -7,7 +7,7 @@
 </head>
 
 
-<body class="w3-theme-l5">
+<body class="w3-theme-l5" onload="loadUserFriend()">
 <!--Narbar-->
 <nav th:fragment="menu">
     <div class="w3-top">
@@ -192,7 +192,7 @@
         <!-- Middle Column End-->
 
         <!--        Right Column-->
-        <div th:replace="layout::rightcolumn"></div>
+        <div th:replace="layout::rightcolumn" ></div>
         <!--        Right Column End-->
     </div>
 </div>
@@ -204,5 +204,41 @@
 <script>
     $('textarea').filter('[id*=content]').val('');
 </script>
-<script th:src="@{../rightbarfriend.js}"></script>
+<script>
+    function loadUserFriend() {
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: 'GET',
+            url: "/api/getuserfriend/",
+            success: function (list) {
+                let content = '';
+                let length;
+                if (list.length < 5) {
+                    length = list.length
+                } else {
+                    length = 5
+                }
+                for (let i = 0; i < length; i++) {
+                    content += fillFriendTable(list[i]);
+                }
+                document.getElementById('listUserFriend').innerHTML = content;
+            }
+        })
+    }
+
+    function fillFriendTable(friend) {
+        return  `<tr class="spaceUnder">`+
+            `<td><img src="${'../' + friend.avatarURL}" alt="" width="30px" height="30px" style="border-radius: 50%">`+
+            `</td>`+
+            `<td style="padding-left: 2px"><a href="#"><span style="font-size: 13px">${friend.userName}</span></a>` +
+            `</td>` +
+            `<td style="padding-left: 5px">` +
+                `<button style="font-size: xx-small" onclick="loadUserFriend()">Unfriend</button>` +
+            `</td>` +
+        `</tr>`
+    }
+</script>
 </body>
