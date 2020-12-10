@@ -70,11 +70,13 @@ public class HomeController {
         }
         return modelAndView;
     }
-//Chi //page 403
+
+    //Chi //page 403
     @GetMapping("/page403")
     public String page403() {
         return "403";
     }
+
     //Chi
     @GetMapping("/home")
     public ModelAndView home() {
@@ -270,7 +272,7 @@ public class HomeController {
     }
 
     @PostMapping("/search-post-by-content")
-    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent") String searchContent) {
+    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent", required = false) String searchContent) {
         Iterable<Post> posts = postService.getAllPostByContentContaining(searchContent);
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("posts", posts);
@@ -281,18 +283,13 @@ public class HomeController {
 
 
     @PostMapping("/search-user-by-name")
-    public ModelAndView searchUserByName(@RequestParam(name = "searchName") String keySearch) {
+    public ModelAndView searchUserByName(@RequestParam(name = "searchName", required = false) String keySearch) {
         List<AppUser> appUsers = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("listUsers", appUsers);
-        modelAndView.addObject("user",user());
+        modelAndView.addObject("user", user());
         modelAndView.setViewName("usersearchresult");
         return modelAndView;
-    }
-
-    @GetMapping("/layout2")
-    public String layout2(){
-        return "layout2";
     }
 
 
