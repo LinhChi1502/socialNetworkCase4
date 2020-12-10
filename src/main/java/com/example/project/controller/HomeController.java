@@ -10,6 +10,8 @@ import com.example.project.service.postlike.PostlikeService;
 import com.example.project.service.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-@SessionAttributes("user")
 @Controller
 public class HomeController {
 
@@ -39,7 +40,7 @@ public class HomeController {
     private CommentLikeService commentLikeService;
     @Autowired
     Environment env;
-
+    //lay thong tin nguoi dung dang dang nhap
     @ModelAttribute("user")
     public AppUser user() {
         return usersService.getCurrentUser();
@@ -271,7 +272,7 @@ public class HomeController {
         return modelAndView;
     }
 
-
+        //Toan, tim` kiem danh sach nguoi dung, neu la ban co nut unfriend, neu ko la ban co nut add friend.
     @PostMapping("/search-user-by-name")
     public ModelAndView searchUserByName(@RequestParam(name = "searchName") String keySearch) {
         List<AppUser> appUsers = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
@@ -281,6 +282,26 @@ public class HomeController {
         modelAndView.setViewName("usersearchresult");
         return modelAndView;
     }
+
+    @GetMapping("/sending-friend-request/{friendId}")
+    public ResponseEntity<AppUser>sendingFriendRequest(@PathVariable(name = "friendId")int id){
+            friendshipService.sendFriendRequest(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/search-user-by-name")
+    public ResponseEntity< List<AppUser>> searchUserByNameAPI() {
+        List<AppUser> appUserss = usersService.searchAllUserByNameAndGiveFlagToFriend("c");
+        return new ResponseEntity<>(appUserss,HttpStatus.OK);
+    }
+
+    @GetMapping("/remove-friend/{friendId}")
+    public ResponseEntity<AppUser>removeFriendRequestAndRemoveFriend(@PathVariable(name = "friendId")int id){
+        usersService.removeFriendshipsByUser1IsAndUser2Is(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 
     @GetMapping("/layout2")
     public String layout2(){
