@@ -198,6 +198,7 @@ public class HomeController {
         }
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
+        modelAndView.addObject("size", size);
         return modelAndView;
     }
 
@@ -282,7 +283,7 @@ public class HomeController {
     }
 
     @PostMapping("/search-post-by-content")
-    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent") String searchContent) {
+    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent", required = false) String searchContent) {
         Iterable<Post> posts = postService.getAllPostByContentContaining(searchContent);
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("posts", posts);
@@ -297,23 +298,24 @@ public class HomeController {
         List<AppUser> appUsers = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("listUsers", appUsers);
-        modelAndView.addObject("user", user());
+        modelAndView.addObject("user",user());
+        modelAndView.addObject("keySearch",keySearch);
         modelAndView.setViewName("usersearchresult");
         return modelAndView;
     }
-
+//Toan
     @GetMapping("/sending-friend-request/{friendId}")
     public ResponseEntity<AppUser>sendingFriendRequest(@PathVariable(name = "friendId")int id){
             friendshipService.sendFriendRequest(id);
             return new ResponseEntity<>(HttpStatus.OK);
     }
-
+//Toan
     @GetMapping("/search-user-by-name")
     public ResponseEntity< List<AppUser>> searchUserByNameAPI() {
         List<AppUser> appUserss = usersService.searchAllUserByNameAndGiveFlagToFriend("c");
         return new ResponseEntity<>(appUserss,HttpStatus.OK);
     }
-
+//Toan
     @GetMapping("/remove-friend/{friendId}")
     public ResponseEntity<AppUser>removeFriendRequestAndRemoveFriend(@PathVariable(name = "friendId")int id){
         usersService.removeFriendshipsByUser1IsAndUser2Is(id);
