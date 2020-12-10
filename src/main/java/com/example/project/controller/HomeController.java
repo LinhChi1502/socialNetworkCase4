@@ -84,6 +84,16 @@ public class HomeController {
         modelAndView.addObject("post", new Post());
         return modelAndView;
     }
+    // anhnbt
+    @GetMapping("/home2")
+    public ModelAndView home2() {
+        List<Post> posts = postService.findAllByFriendAndUser(user());
+        ModelAndView modelAndView = new ModelAndView("home2");
+        modelAndView.addObject("user", user());
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("post", new Post());
+        return modelAndView;
+    }
 
     //Chi
     @GetMapping("/editprofile")
