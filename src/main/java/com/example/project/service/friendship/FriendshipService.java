@@ -48,12 +48,14 @@ public class FriendshipService implements IFriendshipService {
                 appUsers.add(friendship.getUser1());
             }
 
-            }
-        return appUsers;
         }
+        return appUsers;
+    }
 
     @Override
     public Iterable<Friendship> findAllByFriendStatusIsAndUser1IsOrUser2Is(int status, AppUser user1, AppUser user2) {
         return friendshipRepository.findAllByFriendStatusIsAndUser1IsOrUser2Is(status, user1, user2);
     }
+
+
 }

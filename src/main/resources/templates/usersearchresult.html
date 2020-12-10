@@ -11,7 +11,7 @@
         <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-            <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}" alt=""
+            <a th:href="@{/home}" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}" alt=""
                                                                                         width="35px" height="35px"></a>
             <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
                title="Friend Requests"><i class="fa fa-user"></i><span
@@ -102,32 +102,38 @@
                         <div class="w3-container w3-padding">
                             <ul style="list-style-type: none">
                                 <li>
-                                    <div class="form-inline">
-                                        <img src="/img/avatar.jpg" alt="Avatar"
-                                             style="width:50px; height:50px; border-radius: 50%">
-                                        <a href="" style="padding-left: 10px"> Jane Doe Jane Doe</a>
-                                        <button style="margin-left: 150px">Add friend
-                                        </button>
-                                    </div>
+                                    <table>
+                                        <tr th:each="user:${listUsers}">
+
+                                            <td><img th:src="${'../'+user.avatarURL}" alt="Avatar"
+                                                     style="width:50px; height:50px; border-radius: 50%"></td>
+                                            <td><a th:href="@{/show-personal-page/__${user.userId}__}" style="padding-left: 10px" th:text="${user.getUserName()}" > </a> </td>
+
+                                            <td  th:if="${user.isFlag()}"> <button style="margin-left: 150px">Add friend
+                                            </button></td>
+                                            <td  th:if="${!user.isFlag()}">  <button style="margin-left: 150px">Unfriend
+                                            </button></td>
+                                        </tr>
+
+                                    </table>
                                 </li>
                             </ul>
                         </div>
                         <!-- user 1 end -->
 
                         <!-- user 2-->
-                        <div class="w3-container w3-padding">
-                            <ul style="list-style-type: none">
-                                <li>
-                                    <div class="form-inline">
-                                        <img src="/img/avatar.jpg" alt="Avatar"
-                                             style="width:50px; height:50px; border-radius: 50%">
-                                        <a href="" style="padding-left: 10px">Jane Doe</a>
-                                        <button style="margin-left: 150px">Unfriend
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+<!--                        <div class="w3-container w3-padding">-->
+<!--                            <ul style="list-style-type: none">-->
+<!--                                <li>-->
+<!--                                    <div class="form-inline">-->
+<!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
+<!--                                             style="width:50px; height:50px; border-radius: 50%">-->
+<!--                                        <a href="" style="padding-left: 10px">Jane Doe</a>-->
+
+<!--                                    </div>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
                         <!-- user 2 end -->
                     </div>
                 </div>
