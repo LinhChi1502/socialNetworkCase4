@@ -1,18 +1,16 @@
 package com.example.project.service.post;
 
 import com.example.project.model.AppUser;
-import com.example.project.model.Friendship;
 import com.example.project.model.Post;
-import com.example.project.repository.FriendshipRepository;
 import com.example.project.repository.PostRepository;
 import com.example.project.service.friendship.FriendshipService;
-import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.expression.Lists;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -53,29 +51,29 @@ public class PostService implements IPostService {
         return postRepository.getAllByAppUserIs(user);
     }
 
-        @Override
+    @Override
     public List<Post> findAllByFriendAndUser(AppUser user) {
         List<Post> allPost = new ArrayList<Post>();
         Iterable<AppUser> friendList = friendshipService.findUserFriendByOtherUser(user);
-        for (AppUser friend: friendList
-             ) {
+        for (AppUser friend : friendList
+        ) {
             List<Post> friendPosts;
             Iterable<Post> iterablePosts = this.getAllByAppUserIs(friend);
             friendPosts = StreamSupport.stream(iterablePosts.spliterator(), true).collect(Collectors.toList());
             allPost.addAll(friendPosts);
         }
-            List<Post> userPosts;
+        List<Post> userPosts;
         Iterable<Post> iterable = this.getAllByAppUserIs(user);
         userPosts = StreamSupport.stream(iterable.spliterator(), true).collect(Collectors.toList());
         allPost.addAll(userPosts);
 
-            Collections.sort(allPost, new Comparator<Post>() {
-                @Override
-                public int compare(Post o1, Post o2) {
-                    return o2.getDate().compareTo(o1.getDate());
-                }
-            });
-            return allPost;
+        Collections.sort(allPost, new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+        return allPost;
     }
 
     @Override
@@ -85,7 +83,7 @@ public class PostService implements IPostService {
 
     @Override
     public Iterable<Post> getAllPostByTagIsAndAndAppUserIs(String tag, AppUser user) {
-        return postRepository.getAllByTagIsAndAndAppUserIs(tag,user);
+        return postRepository.getAllByTagIsAndAndAppUserIs(tag, user);
     }
 
     @Override

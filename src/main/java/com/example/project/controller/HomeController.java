@@ -26,6 +26,8 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
+    Environment env;
+    @Autowired
     private AppUserService usersService;
     @Autowired
     private PostService postService;
@@ -37,8 +39,6 @@ public class HomeController {
     private PostCommentService postCommentService;
     @Autowired
     private CommentLikeService commentLikeService;
-    @Autowired
-    Environment env;
 
     @ModelAttribute("user")
     public AppUser user() {
@@ -68,11 +68,13 @@ public class HomeController {
         }
         return modelAndView;
     }
-//Chi //page 403
+
+    //Chi //page 403
     @GetMapping("/page403")
     public String page403() {
         return "403";
     }
+
     //Chi
     @GetMapping("/home")
     public ModelAndView home() {
@@ -277,13 +279,13 @@ public class HomeController {
         List<AppUser> appUsers = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("listUsers", appUsers);
-        modelAndView.addObject("user",user());
+        modelAndView.addObject("user", user());
         modelAndView.setViewName("usersearchresult");
         return modelAndView;
     }
 
     @GetMapping("/layout2")
-    public String layout2(){
+    public String layout2() {
         return "layout2";
     }
 
