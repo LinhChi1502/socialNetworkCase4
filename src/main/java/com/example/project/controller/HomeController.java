@@ -8,8 +8,11 @@ import com.example.project.service.post.PostService;
 import com.example.project.service.postcomment.PostCommentService;
 import com.example.project.service.postlike.PostlikeService;
 import com.example.project.service.users.AppUserService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +49,6 @@ public class HomeController {
     public AppUser user() {
         return usersService.getCurrentUser();
     }
-
 
     // login page //Chi
     @GetMapping("/login")
@@ -297,5 +299,10 @@ public class HomeController {
         return "layout2";
     }
 
+    @GetMapping("/api/getuserfriend/")
+    public ResponseEntity<AppUser> getUserFriends(){
+        AppUser user = user();
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }
 

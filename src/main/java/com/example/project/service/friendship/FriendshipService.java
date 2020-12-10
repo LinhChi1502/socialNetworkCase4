@@ -46,7 +46,6 @@ public class FriendshipService implements IFriendshipService {
             } else {
                 appUsers.add(friendship.getUser1());
             }
-
         }
         return appUsers;
     }

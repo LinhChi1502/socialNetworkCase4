@@ -166,7 +166,7 @@
 
         <!-- Right Column -->
         <div th:fragment="rightcolumn" class="w3-col m2">
-            <script src="../static/js/rightbar_friend.js"></script>
+<!--            <script src="../static/js/rightbarfriend.js"></script>-->
             <div class="w3-card w3-round w3-white w3-center">
                 <div class="w3-container">
                     <!--                    search friends-->
@@ -187,7 +187,7 @@
 
 
                     <!--list 5 friends-->
-                    <table>
+                    <table id="listUserFriend" onload="loadUserFriend()">
                         <tr class="spaceUnder">
                             <td><img src="../default.png" alt="" width="30px" height="30px" style="border-radius: 50%">
                             </td>
