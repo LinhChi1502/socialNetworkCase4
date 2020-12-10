@@ -3,8 +3,10 @@ package com.example.project.service.friendship;
 import com.example.project.model.AppUser;
 import com.example.project.model.Friendship;
 import com.example.project.repository.FriendshipRepository;
+import com.example.project.service.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +15,25 @@ import java.util.List;
 public class FriendshipService implements IFriendshipService {
     @Autowired
     private FriendshipRepository friendshipRepository;
+    @Autowired
+    private AppUserService userService;
+    @ModelAttribute
+    private AppUser currentUser(){
+        return userService.getCurrentUser();
+    }
+
+
 
     @Override
     public Iterable<Friendship> findAll() {
         return friendshipRepository.findAll();
-
     }
 
     @Override
     public Friendship findById(Integer id) {
         return friendshipRepository.findById(id).get();
     }
+
 
     @Override
     public void save(Friendship model) {
@@ -46,12 +56,30 @@ public class FriendshipService implements IFriendshipService {
             } else {
                 appUsers.add(friendship.getUser1());
             }
+
         }
         return appUsers;
     }
 
+
     @Override
-    public Iterable<Friendship> findAllByFriendStatusIsAndUser1IsOrUser2Is(int status, AppUser user1, AppUser user2) {
-        return friendshipRepository.findAllByFriendStatusIsAndUser1IsOrUser2Is(status, user1, user2);
+    public void sendFriendRequest(int beSendUserId) {
+        AppUser beSendUser = userService.findById(beSendUserId);
+        Friendship friendship  =new Friendship();
+        friendship.setActionUser(currentUser());
+        friendship.setFriendStatus(0);
+        if (beSendUser.getUserId()>currentUser().getUserId()){
+            friendship.setUser1(currentUser());
+            friendship.setUser2(beSendUser);
+        }
+        else {
+            friendship.setUser1(beSendUser);
+            friendship.setUser2(currentUser());
+        }
+
+        friendshipRepository.save(friendship);
+
+
+
     }
 }

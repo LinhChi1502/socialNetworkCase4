@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <title>Friend Requests</title>
 
-<head th:replace="layout::head"></head>
+<head th:replace="layout::head">
+
+</head>
 
 <body class="w3-theme-l5">
 <!--Narbar-->
@@ -11,8 +13,10 @@
         <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-            <a th:href="@{/home}" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}" alt=""
-                                                                                        width="35px" height="35px"></a>
+            <a th:href="@{/home}" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}"
+                                                                                                  alt=""
+                                                                                                  width="35px"
+                                                                                                  height="35px"></a>
             <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
                title="Friend Requests"><i class="fa fa-user"></i><span
                     class="w3-badge w3-right w3-small w3-green">3</span></a>
@@ -56,7 +60,8 @@
             <!--logout button-->
             <a th:href="@{/logout}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large"
                title="Logout">
-                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px" alt="Avatar">
+                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px"
+                     alt="Avatar">
             </a>
             <!--logout button end-->
 
@@ -64,6 +69,7 @@
     </div>
 </nav>
 <!--Narbar End-->
+
 
 <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
     <div class="w3-row">
@@ -78,14 +84,21 @@
                     <p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
                                               style="height:106px;width:106px" alt="Avatar"></p>
                     <hr>
-                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
-                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.city}"></span></p>
-                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.dateOfBirth}"></span></p>
-                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.gender}"></span></p>
-                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span  th:text="${user.phone}"></span></p>
-                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.about}"></span></p>
+                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
+                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.city}"></span></p>
+                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.dateOfBirth}"></span></p>
+                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.gender}"></span></p>
+                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.phone}"></span></p>
+                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.about}"></span></p>
                     <br>
-                    <i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><a th:href="@{/editprofile}">edit</a>
+                    <i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><a
+                        th:href="@{/editprofile}">edit</a>
 
                 </div>
             </div>
@@ -102,39 +115,40 @@
                         <div class="w3-container w3-padding">
                             <ul style="list-style-type: none">
                                 <li>
-                                    <table>
+
+                                    <table id="table">
+                                        <thead>
+                                        </thead>
+
+                                        <tbody>
                                         <tr th:each="user:${listUsers}">
 
                                             <td><img th:src="${'../'+user.avatarURL}" alt="Avatar"
                                                      style="width:50px; height:50px; border-radius: 50%"></td>
-                                            <td><a th:href="@{/show-personal-page/__${user.userId}__}" style="padding-left: 10px" th:text="${user.getUserName()}" > </a> </td>
+                                            <td><a th:href="@{/show-personal-page/__${user.userId}__}"
+                                                   style="padding-left: 10px" th:text="${user.getUserName()}"> </a></td>
 
-                                            <td  th:if="${user.isFlag()}"> <button style="margin-left: 150px">Add friend
-                                            </button></td>
-                                            <td  th:if="${!user.isFlag()}">  <button style="margin-left: 150px">Unfriend
-                                            </button></td>
+                                            <td th:if="${user.getFlag()==1}">
+                                                <button style="margin-left: 150px" th:href="${user.userId}"
+                                                        onclick="removeFriend(this)">Unfriend
+                                                </button>
+                                            </td>
+                                            <td th:if="${user.getFlag()==0}">
+                                                <button style="margin-left: 150px" th:href="${user.userId}"
+                                                        onclick="removeFriend(this)">Remove
+                                                </button>
+                                            </td>
+                                            <td th:if="${user.getFlag()==2}">
+                                                <button style="margin-left: 150px" th:href="${user.userId}"
+                                                        onclick="addFriend(this)">AddFriend
+                                                </button>
+                                            </td>
                                         </tr>
-
+                                        </tbody>
                                     </table>
                                 </li>
                             </ul>
                         </div>
-                        <!-- user 1 end -->
-
-                        <!-- user 2-->
-<!--                        <div class="w3-container w3-padding">-->
-<!--                            <ul style="list-style-type: none">-->
-<!--                                <li>-->
-<!--                                    <div class="form-inline">-->
-<!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
-<!--                                             style="width:50px; height:50px; border-radius: 50%">-->
-<!--                                        <a href="" style="padding-left: 10px">Jane Doe</a>-->
-
-<!--                                    </div>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-                        <!-- user 2 end -->
                     </div>
                 </div>
             </div>
@@ -152,9 +166,92 @@
     </div>
 </div>
 <br>
+<script rel="javascript" type="text/javascript" href="js/jquery-1.11.3.min.js">
+    function addFriend(e) {
+        let idFriend = e.getAttribute("href");
+        $.ajax({
+            type: "GET",
+            url: "/sending-friend-request/" + idFriend,
+            success: function () {
+                successHandler();
+            }
+        })
+        event.preventDefault();
+    }
 
+    function successHandler() {
+        $.ajax({
+            type: "GET",
+            //tên API
+            url: "/search-user-by-name",
+            //xử lý khi thành công5
+            success: function (data) {
+                // hien thi danh sach o day
+                let content = "";
+                for (let i = 0; i < data.length; i++) {
+                    content += getUsers(data[i]);
+
+                }
+                content = `<table id="table"> <thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
+                document.getElementById('table').innerHTML = content;
+            }
+        });
+    };
+
+    function getUsers(user) {
+        let content = `<tr><td><img src="../${user.avatarURL}" alt="Avatar"
+                          style="width:50px; height:50px; border-radius: 50%"></td>
+        <td><a href="/show-personal-page/${user.userId}}" style="padding-left: 10px" >${user.userName} </a> </td>`;
+        if (user.flag === 1) {
+            content += `<td> <button style="margin-left: 150px" href="${user.userId}" onclick="removeFriend(this)">Unfriend
+        </button></td>`
+        } else if (user.flag === 0) {
+            content += ` <td>  <button style="margin-left: 150px" href="${user.userId}" onclick="removeFriend(this)">Remove
+        </button></td></tr>`
+        } else if (user.flag === 2) {
+            content += ` <td>  <button style="margin-left: 150px" href="${user.userId}" onclick="addFriend(this)">Add friend
+        </button></td></tr>`
+        }
+        return content;
+    }
+
+
+    function removeFriend(e) {
+        let idFriend = e.getAttribute("href");
+        $.ajax({
+            type: "GET",
+            url: "/remove-friend/" + idFriend,
+            success: function () {
+                successHandler();
+            }
+        })
+        event.preventDefault();
+    }
+
+    function successHandler() {
+        $.ajax({
+            type: "GET",
+            //tên API
+            url: "/search-user-by-name",
+            //xử lý khi thành công5
+            success: function (data) {
+                // hien thi danh sach o day
+                let content;
+                for (let i = 0; i < data.length; i++) {
+                    content += getUsers(data[i]);
+                }
+                content = `<table id="table"><thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
+                document.getElementById('table').innerHTML = content;
+            }
+        });
+    };
+
+
+</script>
 <!-- Footer -->
 <footer th:replace="layout::footer"></footer>
 <!-- Footer End -->
+
+
 </body>
 </html>

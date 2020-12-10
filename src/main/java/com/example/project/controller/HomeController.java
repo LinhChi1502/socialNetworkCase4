@@ -8,7 +8,6 @@ import com.example.project.service.post.PostService;
 import com.example.project.service.postcomment.PostCommentService;
 import com.example.project.service.postlike.PostlikeService;
 import com.example.project.service.users.AppUserService;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -23,15 +22,10 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-@SessionAttributes("user")
 @Controller
 public class HomeController {
 
-    @Autowired
-    Environment env;
     @Autowired
     private AppUserService usersService;
     @Autowired
@@ -44,11 +38,14 @@ public class HomeController {
     private PostCommentService postCommentService;
     @Autowired
     private CommentLikeService commentLikeService;
-
+    @Autowired
+    Environment env;
+    //lay thong tin nguoi dung dang dang nhap
     @ModelAttribute("user")
     public AppUser user() {
         return usersService.getCurrentUser();
     }
+
 
     // login page //Chi
     @GetMapping("/login")
@@ -72,18 +69,26 @@ public class HomeController {
         }
         return modelAndView;
     }
-
-    //Chi //page 403
+//Chi //page 403
     @GetMapping("/page403")
     public String page403() {
         return "403";
     }
-
     //Chi
     @GetMapping("/home")
     public ModelAndView home() {
         List<Post> posts = postService.findAllByFriendAndUser(user());
         ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("user", user());
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("post", new Post());
+        return modelAndView;
+    }
+    // anhnbt
+    @GetMapping("/home2")
+    public ModelAndView home2() {
+        List<Post> posts = postService.findAllByFriendAndUser(user());
+        ModelAndView modelAndView = new ModelAndView("home2");
         modelAndView.addObject("user", user());
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("post", new Post());
@@ -174,22 +179,16 @@ public class HomeController {
     public ModelAndView showPersonalPage(@PathVariable(name = "userID") int userID) {
         ModelAndView modelAndView;
         Iterable<Post> posts = postService.getAllByAppUserIs(usersService.findById(userID));
-        List<Post> userPosts = StreamSupport.stream(posts.spliterator(), true).collect(Collectors.toList());
-        int size = userPosts.size();
         if (userID == user().getUserId()) {
             // chuyển sang trang cá nhân của mình
             modelAndView = new ModelAndView("personal");
-
-
         } else {
             // chuyển sang trang cá nhận của friend
             modelAndView = new ModelAndView("friendpage");
             modelAndView.addObject("friend", usersService.findById(userID));
-
         }
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
-        modelAndView.addObject("size", size);
         return modelAndView;
     }
 
@@ -283,19 +282,39 @@ public class HomeController {
         return modelAndView;
     }
 
-
+        //Toan, tim` kiem danh sach nguoi dung, neu la ban co nut unfriend, neu ko la ban co nut add friend.
     @PostMapping("/search-user-by-name")
     public ModelAndView searchUserByName(@RequestParam(name = "searchName") String keySearch) {
         List<AppUser> appUsers = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("listUsers", appUsers);
-        modelAndView.addObject("user", user());
+        modelAndView.addObject("user",user());
         modelAndView.setViewName("usersearchresult");
         return modelAndView;
     }
 
+    @GetMapping("/sending-friend-request/{friendId}")
+    public ResponseEntity<AppUser>sendingFriendRequest(@PathVariable(name = "friendId")int id){
+            friendshipService.sendFriendRequest(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/search-user-by-name")
+    public ResponseEntity< List<AppUser>> searchUserByNameAPI() {
+        List<AppUser> appUserss = usersService.searchAllUserByNameAndGiveFlagToFriend("c");
+        return new ResponseEntity<>(appUserss,HttpStatus.OK);
+    }
+
+    @GetMapping("/remove-friend/{friendId}")
+    public ResponseEntity<AppUser>removeFriendRequestAndRemoveFriend(@PathVariable(name = "friendId")int id){
+        usersService.removeFriendshipsByUser1IsAndUser2Is(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
     @GetMapping("/layout2")
-    public String layout2() {
+    public String layout2(){
         return "layout2";
     }
 

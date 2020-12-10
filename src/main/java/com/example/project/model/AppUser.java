@@ -1,5 +1,6 @@
 package com.example.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,8 +22,8 @@ public class AppUser {
     private String password;
     @Column(name = "avatarURL", nullable = true)
     private String avatarURL;
-    @Column(name = "flag")
-    private boolean flag;
+    @Transient
+    private int flag;
 
     @Transient
     private MultipartFile avatar;
@@ -43,22 +44,28 @@ public class AppUser {
     private String dateOfBirth;
 
     //1 user co nhieu post
+    @JsonIgnore
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     private Set<Post> posts;
 
     //friendship
+    @JsonIgnore
     @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL)
     private Set<Friendship> user1;
+    @JsonIgnore
     @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL)
     private Set<Friendship> user2;
+    @JsonIgnore
     @OneToMany(mappedBy = "actionUser", cascade = CascadeType.ALL)
     private Set<Friendship> actionUser;
 
     //postLike
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<PostLike> postLikes;
 
     //commentLike
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<CommentLike> likes;
 
@@ -243,11 +250,11 @@ public class AppUser {
         this.avatar = avatar;
     }
 
-    public boolean isFlag() {
+    public int getFlag() {
         return flag;
     }
 
-    public void setFlag(boolean flag) {
+    public void setFlag(int flag) {
         this.flag = flag;
     }
 
