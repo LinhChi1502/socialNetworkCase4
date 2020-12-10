@@ -311,9 +311,10 @@ public class HomeController {
     }
 
     @GetMapping("/api/getuserfriend/")
-    public ResponseEntity<AppUser> getUserFriends(){
+    public ResponseEntity<Iterable<AppUser>> getUserFriends(){
         AppUser user = user();
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        Iterable<AppUser> listUserFriend = usersService.searchAllFriendsByAppUser(user);
+        return new ResponseEntity<>(listUserFriend, HttpStatus.OK);
     }
 }
 
