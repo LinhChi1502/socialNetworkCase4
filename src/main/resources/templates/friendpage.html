@@ -12,8 +12,10 @@
         <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-            <a th:href="@{/home}" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}" alt=""
-                                                                                        width="35px" height="35px"></a>
+            <a th:href="@{/home}" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}"
+                                                                                                  alt=""
+                                                                                                  width="35px"
+                                                                                                  height="35px"></a>
             <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
                title="Friend Requests"><i class="fa fa-user"></i><span
                     class="w3-badge w3-right w3-small w3-green">3</span></a>
@@ -57,7 +59,8 @@
             <!--logout button-->
             <a th:href="@{/logout}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large"
                title="Logout">
-                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px" alt="Avatar">
+                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px"
+                     alt="Avatar">
             </a>
             <!--logout button end-->
 
@@ -79,12 +82,19 @@
                     <p class="w3-center"><img th:src="${'../' + friend.getAvatarURL()}" class="w3-circle"
                                               style="height:106px;width:106px" alt="Avatar"></p>
                     <hr>
-                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span th:if="${friend.firstName != null}" th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
-                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span th:text="${friend.city}"></span></p>
-                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span th:text="${friend.dateOfBirth}"></span></p>
-                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span th:text="${friend.gender}"></span></p>
-                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span  th:text="${friend.phone}"></span></p>
-                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span th:text="${friend.about}"></span></p>
+                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:if="${friend.firstName != null}"
+                            th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
+                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${friend.city}"></span></p>
+                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${friend.dateOfBirth}"></span></p>
+                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${friend.gender}"></span></p>
+                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${friend.phone}"></span></p>
+                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${friend.about}"></span></p>
                 </div>
             </div>
         </div>
@@ -107,7 +117,8 @@
                     <a th:href="@{/show-personal-page/__${post.users.getUserId()}__}"><h4
                             th:text="${post.users.userName}"></h4></a><br>
                     <hr class="w3-clear">
-                    <p>#<a th:href="@{/find-by-tag-friend/__${post.postID}__}"><span th:text="${post.tag}"></span></a></p>
+                    <p>#<a th:href="@{/find-by-tag-friend/__${post.postID}__}"><span th:text="${post.tag}"></span></a>
+                    </p>
                     <p style="white-space: pre;" th:utext="${post.content}"></p>
 
                     <p th:if="${!#strings.isEmpty(post.imageUrl)}">
