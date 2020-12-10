@@ -22,6 +22,8 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 public class HomeController {
@@ -69,11 +71,13 @@ public class HomeController {
         }
         return modelAndView;
     }
-//Chi //page 403
+
+    //Chi //page 403
     @GetMapping("/page403")
     public String page403() {
         return "403";
     }
+
     //Chi
     @GetMapping("/home")
     public ModelAndView home() {
@@ -179,16 +183,22 @@ public class HomeController {
     public ModelAndView showPersonalPage(@PathVariable(name = "userID") int userID) {
         ModelAndView modelAndView;
         Iterable<Post> posts = postService.getAllByAppUserIs(usersService.findById(userID));
+        List<Post> userPosts = StreamSupport.stream(posts.spliterator(), true).collect(Collectors.toList());
+        int size = userPosts.size();
         if (userID == user().getUserId()) {
             // chuyển sang trang cá nhân của mình
             modelAndView = new ModelAndView("personal");
+
+
         } else {
             // chuyển sang trang cá nhận của friend
             modelAndView = new ModelAndView("friendpage");
             modelAndView.addObject("friend", usersService.findById(userID));
+
         }
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
+        modelAndView.addObject("size", size);
         return modelAndView;
     }
 
@@ -273,7 +283,7 @@ public class HomeController {
     }
 
     @PostMapping("/search-post-by-content")
-    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent") String searchContent) {
+    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent", required = false) String searchContent) {
         Iterable<Post> posts = postService.getAllPostByContentContaining(searchContent);
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("posts", posts);
@@ -284,7 +294,7 @@ public class HomeController {
 
         //Toan, tim` kiem danh sach nguoi dung, neu la ban co nut unfriend, neu ko la ban co nut add friend.
     @PostMapping("/search-user-by-name")
-    public ModelAndView searchUserByName(@RequestParam(name = "searchName") String keySearch) {
+    public ModelAndView searchUserByName(@RequestParam(name = "searchName", required = false) String keySearch) {
         List<AppUser> appUsers = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("listUsers", appUsers);
