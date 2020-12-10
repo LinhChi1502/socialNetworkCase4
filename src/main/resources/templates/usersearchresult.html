@@ -37,9 +37,10 @@
                     <div style="width: fit-content;margin:auto; height: fit-content">
 
 
-                        <input type="text" th:name="searchContent" placeholder="Search post" style="color: black;width: 130px"/>
+                        <input type="text" th:name="searchContent" placeholder="Search post"
+                               style="color: black;width: 130px"/>
                         <label for="mySubmit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
-                        <input id="mySubmit" type="submit" class="hidden" />
+                        <input id="mySubmit" type="submit" class="hidden"/>
                     </div>
                 </form>
 
@@ -53,9 +54,10 @@
                     <div style="width: fit-content;margin:auto; height: fit-content">
 
 
-                        <input type="text" th:name="searchName" placeholder="Search user" style="color: black;width: 130px"/>
+                        <input type="text" th:name="searchName" placeholder="Search user"
+                               style="color: black;width: 130px"/>
                         <label for="Submit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
-                        <input id="Submit" type="submit" class="hidden" />
+                        <input id="Submit" type="submit" class="hidden"/>
                     </div>
                 </form>
 
@@ -67,7 +69,8 @@
             <!--logout button-->
             <a th:href="@{/logout}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large"
                title="Logout">
-                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px" alt="Avatar">
+                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px"
+                     alt="Avatar">
             </a>
             <!--logout button end-->
 
@@ -86,9 +89,11 @@
             <!-- Profile -->
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
-                    <h4 class="w3-center" th:text="${user.userName}"></h4>
-                    <p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
-                                              style="height:106px;width:106px" alt="Avatar"></p>
+                    <a th:href="@{/show-personal-page/__${user.userId}__}"><h4 class="w3-center"
+                                                                               th:text="${user.userName}"></h4></a>
+                    <a th:href="@{/show-personal-page/__${user.userId}__}"><p class="w3-center"><img
+                            th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
+                            style="height:106px;width:106px" alt="Avatar"></p></a>
                     <hr>
                     <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span
                             th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
@@ -158,18 +163,18 @@
                         <!-- user 1 end -->
 
                         <!-- user 2-->
-<!--                        <div class="w3-container w3-padding">-->
-<!--                            <ul style="list-style-type: none">-->
-<!--                                <li>-->
-<!--                                    <div class="form-inline">-->
-<!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
-<!--                                             style="width:50px; height:50px; border-radius: 50%">-->
-<!--                                        <a href="" style="padding-left: 10px">Jane Doe</a>-->
+                        <!--                        <div class="w3-container w3-padding">-->
+                        <!--                            <ul style="list-style-type: none">-->
+                        <!--                                <li>-->
+                        <!--                                    <div class="form-inline">-->
+                        <!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
+                        <!--                                             style="width:50px; height:50px; border-radius: 50%">-->
+                        <!--                                        <a href="" style="padding-left: 10px">Jane Doe</a>-->
 
-<!--                                    </div>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
+                        <!--                                    </div>-->
+                        <!--                                </li>-->
+                        <!--                            </ul>-->
+                        <!--                        </div>-->
                         <!-- user 2 end -->
                     </div>
                 </div>

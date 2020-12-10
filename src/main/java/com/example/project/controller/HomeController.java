@@ -64,6 +64,7 @@ public class HomeController {
         try {
             usersService.signUpUser(user);
             modelAndView = new ModelAndView("login");
+            modelAndView.addObject("user", new AppUser());
         } catch (Exception e) {
             modelAndView = new ModelAndView("login");
             modelAndView.addObject("user", new AppUser());
@@ -321,14 +322,6 @@ public class HomeController {
         usersService.removeFriendshipsByUser1IsAndUser2Is(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
-    @GetMapping("/layout2")
-    public String layout2(){
-        return "layout2";
-    }
-
 
 }
 
