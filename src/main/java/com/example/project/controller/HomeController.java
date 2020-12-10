@@ -20,6 +20,8 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @SessionAttributes("user")
 @Controller
@@ -168,16 +170,22 @@ public class HomeController {
     public ModelAndView showPersonalPage(@PathVariable(name = "userID") int userID) {
         ModelAndView modelAndView;
         Iterable<Post> posts = postService.getAllByAppUserIs(usersService.findById(userID));
+        List<Post> userPosts = StreamSupport.stream(posts.spliterator(), true).collect(Collectors.toList());
+        int size = userPosts.size();
         if (userID == user().getUserId()) {
             // chuyển sang trang cá nhân của mình
             modelAndView = new ModelAndView("personal");
+
+
         } else {
             // chuyển sang trang cá nhận của friend
             modelAndView = new ModelAndView("friendpage");
             modelAndView.addObject("friend", usersService.findById(userID));
+
         }
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
+        modelAndView.addObject("size", size);
         return modelAndView;
     }
 
