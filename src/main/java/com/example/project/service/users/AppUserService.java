@@ -141,16 +141,10 @@ public class AppUserService implements IAppUserService, UserDetailsService {
     }
 
     @Override
-    @Transactional
     public void removeFriendshipsByUser1IsAndUser2Is(int beRemoveFriendId) {
-        AppUser beRemoveUser = appUserRepository.findById(beRemoveFriendId).get();
-        AppUser currentUser = this.getCurrentUser();
-        if (beRemoveFriendId > currentUser.getUserId()) {
-            friendshipRepository.deleteByUser1AndUser2(currentUser,beRemoveUser);
-        } else {
-            friendshipRepository.deleteByUser1AndUser2(beRemoveUser,currentUser);
-        }
+
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

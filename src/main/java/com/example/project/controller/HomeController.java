@@ -305,14 +305,6 @@ public class HomeController {
         return new ResponseEntity<>(appUserss,HttpStatus.OK);
     }
 
-    @GetMapping("/remove-friend/{friendId}")
-    public ResponseEntity<AppUser>removeFriendRequestAndRemoveFriend(@PathVariable(name = "friendId")int id){
-        usersService.removeFriendshipsByUser1IsAndUser2Is(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
-
     @GetMapping("/layout2")
     public String layout2(){
         return "layout2";
