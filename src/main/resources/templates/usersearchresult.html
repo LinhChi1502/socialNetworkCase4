@@ -9,7 +9,8 @@
 <body class="w3-theme-l5">
 <!--Narbar-->
 <nav th:fragment="menu">
-    <div class="w3-top">
+
+    <div class="w3-top" >
         <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
@@ -53,7 +54,7 @@
                     <div style="width: fit-content;margin:auto; height: fit-content">
 
 
-                        <input type="text" th:name="searchName" placeholder="Search user" style="color: black;width: 130px"/>
+                        <input id="searchHole" type="text" th:name="searchName" th:value="${keySearch}"  placeholder="Search user" style="color: black;width: 130px"/>
                         <label for="Submit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
                         <input id="Submit" type="submit" class="hidden" />
                     </div>
@@ -202,10 +203,11 @@
     }
 
     function successHandler() {
+        let searchName = $('#searchHole').val();
         $.ajax({
             type: "GET",
             //tên API
-            url: "/search-user-by-name",
+            url: `/search-user-by-name?name=${searchName}`,
             //xử lý khi thành công5
             success: function (data) {
                 // hien thi danh sach o day
@@ -251,10 +253,11 @@
     }
 
     function successHandler() {
+        let searchName = $('#searchHole').val();
         $.ajax({
             type: "GET",
             //tên API
-            url: "/search-user-by-name",
+            url: `/search-user-by-name?name=${searchName}`,
             //xử lý khi thành công5
             success: function (data) {
                 // hien thi danh sach o day
@@ -267,6 +270,12 @@
             }
         });
     };
+
+    let myVar = setInterval(myTimer, 1000);
+
+    function myTimer() {
+        alert("Hello world!");
+    }
 
 
 </script>
