@@ -76,11 +76,11 @@ public class AppUserService implements IAppUserService, UserDetailsService {
 
             List<AppUser> friendList=new ArrayList<>();
 
-            for (Friendship friendship :listFriend1
+            for (Friendship friendship :listFriend2
             ) {
                 friendList.add(friendship.getUser2());
             }
-            for (Friendship friendship : listFriend2
+            for (Friendship friendship : listFriend1
             ){
                 friendList.add(friendship.getUser1());
             }
@@ -111,10 +111,7 @@ public class AppUserService implements IAppUserService, UserDetailsService {
             user.setFlag(true);
         }
 
-
-
-
-
+        listAllAppUser.remove(currentUser);
 
         return listAllAppUser;
     }
