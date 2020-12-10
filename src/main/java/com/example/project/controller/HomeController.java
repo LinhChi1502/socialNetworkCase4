@@ -64,7 +64,6 @@ public class HomeController {
         try {
             usersService.signUpUser(user);
             modelAndView = new ModelAndView("login");
-            modelAndView.addObject("user", new AppUser());
         } catch (Exception e) {
             modelAndView = new ModelAndView("login");
             modelAndView.addObject("user", new AppUser());
@@ -72,13 +71,11 @@ public class HomeController {
         }
         return modelAndView;
     }
-
-    //Chi //page 403
+//Chi //page 403
     @GetMapping("/page403")
     public String page403() {
         return "403";
     }
-
     //Chi
     @GetMapping("/home")
     public ModelAndView home() {
@@ -284,7 +281,7 @@ public class HomeController {
     }
 
     @PostMapping("/search-post-by-content")
-    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent", required = false) String searchContent) {
+    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent") String searchContent) {
         Iterable<Post> posts = postService.getAllPostByContentContaining(searchContent);
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("posts", posts);
@@ -323,5 +320,17 @@ public class HomeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @GetMapping("/layout2")
+    public String layout2(){
+        return "layout2";
+    }
+
+    @GetMapping("/api/getuserfriend/")
+    public ResponseEntity<Iterable<AppUser>> getUserFriends(){
+        AppUser user = user();
+        Iterable<AppUser> listUserFriend = usersService.searchAllFriendsByAppUser(user);
+        return new ResponseEntity<>(listUserFriend, HttpStatus.OK);
+    }
 }
 
