@@ -22,6 +22,8 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 public class HomeController {
@@ -40,7 +42,6 @@ public class HomeController {
     private CommentLikeService commentLikeService;
     @Autowired
     Environment env;
-
     //lay thong tin nguoi dung dang dang nhap
     @ModelAttribute("user")
     public AppUser user() {
@@ -64,6 +65,8 @@ public class HomeController {
         modelAndView.setViewName("login");
         try {
             usersService.signUpUser(user);
+            modelAndView = new ModelAndView("login");
+            modelAndView.addObject("user", new AppUser());
         } catch (Exception e) {
             modelAndView.addObject("message", "Username has already exist");
         }

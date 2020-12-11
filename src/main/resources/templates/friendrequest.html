@@ -11,8 +11,10 @@
         <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-            <a th:href="@{/home}" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}" alt=""
-                                                                                                  width="35px" height="35px"></a>
+            <a th:href="@{/home}" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}"
+                                                                                                  alt=""
+                                                                                                  width="35px"
+                                                                                                  height="35px"></a>
             <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
                title="Friend Requests"><i class="fa fa-user"></i><span
                     class="w3-badge w3-right w3-small w3-green">3</span></a>
@@ -32,9 +34,10 @@
                     <div style="width: fit-content;margin:auto; height: fit-content">
 
 
-                        <input type="text" th:name="searchContent" placeholder="Search post" style="color: black;width: 130px"/>
+                        <input type="text" th:name="searchContent" placeholder="Search post"
+                               style="color: black;width: 130px"/>
                         <label for="mySubmit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
-                        <input id="mySubmit" type="submit" class="hidden" />
+                        <input id="mySubmit" type="submit" class="hidden"/>
                     </div>
                 </form>
 
@@ -48,9 +51,10 @@
                     <div style="width: fit-content;margin:auto; height: fit-content">
 
 
-                        <input type="text" th:name="searchName" placeholder="Search user" style="color: black;width: 130px"/>
+                        <input type="text" th:name="searchName" placeholder="Search user"
+                               style="color: black;width: 130px"/>
                         <label for="Submit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
-                        <input id="Submit" type="submit" class="hidden" />
+                        <input id="Submit" type="submit" class="hidden"/>
                     </div>
                 </form>
 
@@ -62,7 +66,7 @@
             <!--logout button-->
             <a th:href="@{/logout}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large"
                title="Logout">
-                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px" alt="Avatar">
+                <img th:src="${'../'+ user.avatarURL}" class="w3-circle" style="height:30px;width:30px" alt="Avatar">
             </a>
             <!--logout button end-->
 
@@ -106,8 +110,6 @@
                                 </div>
                             </div>
                             <!--                            end chen request-->
-
-
 
 
                         </div>
