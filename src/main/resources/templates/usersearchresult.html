@@ -137,17 +137,17 @@
 
                                             <td th:if="${user.getFlag()==1}">
                                                 <button style="margin-left: 150px" th:href="${user.userId}"
-                                                        onclick="toan_removeFriend(this)">Unfriend
+                                                        onclick="removeFriend(this)">Unfriend
                                                 </button>
                                             </td>
                                             <td th:if="${user.getFlag()==0}">
                                                 <button style="margin-left: 150px" th:href="${user.userId}"
-                                                        onclick="toan_removeFriend(this)">Remove
+                                                        onclick="removeFriend(this)">Remove
                                                 </button>
                                             </td>
                                             <td th:if="${user.getFlag()==2}">
                                                 <button style="margin-left: 150px" th:href="${user.userId}"
-                                                        onclick="toan_addFriend(this)">AddFriend
+                                                        onclick="addFriend(this)">AddFriend
                                                 </button>
                                             </td>
                                         </tr>
@@ -174,8 +174,10 @@
     </div>
 </div>
 <br>
-<script rel="javascript" type="text/javascript" href="js/jquery-1.11.3.min.js">
-    function toan_addFriend(e) {
+
+//toan
+<script >
+    function addFriend(e) {
         let idFriend = e.getAttribute("href");
         $.ajax({
             type: "GET",
@@ -213,23 +215,22 @@
                           style="width:50px; height:50px; border-radius: 50%"></td>
         <td><a href="/show-personal-page/${user.userId}}" style="padding-left: 10px" >${user.userName} </a> </td>`;
         if (user.flag === 1) {
-            content += `<td> <button style="margin-left: 150px" href="${user.userId}" onclick="toan_removeFriend(this)">Unfriend
+            content += `<td> <button style="margin-left: 150px" href="${user.userId}" onclick="removeFriend(this)">Unfriend
         </button></td>`
         } else if (user.flag === 0) {
-            content += ` <td>  <button style="margin-left: 150px" href="${user.userId}" onclick="toan_removeFriend(this)">Remove
+            content += ` <td>  <button style="margin-left: 150px" href="${user.userId}" onclick="removeFriend(this)">Remove
         </button></td></tr>`
         } else if (user.flag === 2) {
-            content += ` <td>  <button style="margin-left: 150px" href="${user.userId}" onclick="toan_addFriend(this)">Add friend
+            content += ` <td>  <button style="margin-left: 150px" href="${user.userId}" onclick="addFriend(this)">Add friend
         </button></td></tr>`
         }
         return content;
     }
 
-
-    function toan_removeFriend(e) {
+    function removeFriend(e) {
         let idFriend = e.getAttribute("href");
         $.ajax({
-            type: "GET",
+            type: "DELETE",
             url: "/remove-friend/" + idFriend,
             success: function () {
                 toan_successHandler1();
@@ -237,25 +238,6 @@
         })
         event.preventDefault();
     }
-
-    function successHandler() {
-        let searchName = $('#searchHole').val();
-        $.ajax({
-            type: "GET",
-            //tên API
-            url: `/search-user-by-name?name=${searchName}`,
-            //xử lý khi thành công5
-            success: function (data) {
-                // hien thi danh sach o day
-                let content;
-                for (let i = 0; i < data.length; i++) {
-                    content += getUsers(data[i]);
-                }
-                content = `<table id="table"><thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
-                document.getElementById('table').innerHTML = content;
-            }
-        });
-    };
 </script>
 <!-- Footer -->
 <footer th:replace="layout::footer"></footer>
