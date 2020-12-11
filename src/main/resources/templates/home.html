@@ -14,18 +14,26 @@
         <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-            <a th:href="@{/home}" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}" alt=""
-                                                                                        width="35px" height="35px"></a>
+            <a th:href="@{/home}" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img th:src="@{/logo1.png}"
+                                                                                                  alt=""
+                                                                                                  width="35px"
+                                                                                                  height="35px"></a>
             <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
                title="Friend Requests"><i class="fa fa-user"></i><span
                     class="w3-badge w3-right w3-small w3-green">3</span></a>
 
-
+            <!--        TOAN QUẢ CHUÔNG-->
             <div class="w3-dropdown-hover w3-hide-small">
                 <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-bell"></i><span
-                        class="w3-badge w3-right w3-small w3-green">3</span></button>
+                        class="w3-badge w3-right w3-small w3-green" >3
+
+
+
+
+
+                </span></button>
                 <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
-                    <a href="#" class="w3-bar-item w3-button">One new friend request</a>
+                    <a href="#" class="w3-bar-item w3-button"><table id="table"></table></a>
                 </div>
             </div>
 
@@ -35,9 +43,10 @@
                     <div style="width: fit-content;margin:auto; height: fit-content">
 
 
-                            <input type="text" th:name="searchContent" placeholder="Search post" style="color: black;width: 130px"/>
-                            <label for="mySubmit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
-                            <input id="mySubmit" type="submit" class="hidden" />
+                        <input type="text" th:name="searchContent" placeholder="Search post"
+                               style="color: black;width: 130px"/>
+                        <label for="mySubmit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
+                        <input id="mySubmit" type="submit" class="hidden"/>
                     </div>
                 </form>
 
@@ -51,9 +60,10 @@
                     <div style="width: fit-content;margin:auto; height: fit-content">
 
 
-                        <input type="text" th:name="searchName" placeholder="Search user" style="color: black;width: 130px"/>
+                        <input type="text" th:name="searchName" placeholder="Search user"
+                               style="color: black;width: 130px"/>
                         <label for="Submit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
-                        <input id="Submit" type="submit" class="hidden" />
+                        <input id="Submit" type="submit" class="hidden"/>
                     </div>
                 </form>
 
@@ -65,7 +75,8 @@
             <!--logout button-->
             <a th:href="@{/logout}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large"
                title="Logout">
-                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px" alt="Avatar">
+                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px"
+                     alt="Avatar">
             </a>
             <!--logout button end-->
 
@@ -84,18 +95,28 @@
             <!-- Profile -->
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
-                    <a th:href="@{/show-personal-page/__${user.userId}__}"><h4 class="w3-center" th:text="${user.userName}"></h4></a>
-                    <a th:href="@{/show-personal-page/__${user.userId}__}"><p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
-                                              style="height:106px;width:106px" alt="Avatar"></p></a>
+                    <a th:href="@{/show-personal-page/__${user.userId}__}"><h4 class="w3-center"
+                                                                               th:text="${user.userName}"></h4></a>
+                    <a th:href="@{/show-personal-page/__${user.userId}__}"><p class="w3-center"><img
+                            th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
+                            style="height:106px;width:106px" alt="Avatar"></p></a>
                     <hr>
-                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span th:if="${user.firstName != null}" th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
-                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.city}"></span></p>
-                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.dateOfBirth}"></span></p>
-                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.gender}"></span></p>
-                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span  th:text="${user.phone}"></span></p>
-                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.about}"></span></p>
+                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:if="${user.firstName != null}"
+                            th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
+                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.city}"></span></p>
+                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.dateOfBirth}"></span></p>
+                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.gender}"></span></p>
+                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.phone}"></span></p>
+                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span
+                            th:text="${user.about}"></span></p>
                     <br>
-                    <i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><a th:href="@{/editprofile}">edit</a>
+                    <i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><a
+                        th:href="@{/editprofile}">edit</a>
 
                 </div>
             </div>
@@ -110,8 +131,9 @@
             <div class="w3-row-padding">
                 <div class="w3-col m12">
                     <div class="w3-card w3-round w3-white">
-                        <form class="w3-container w3-padding" th:action="@{/create-post}" enctype="multipart/form-data" method="post" th:object="${post}">
-                            <textarea id="content" cols="93" rows="3" th:field="*{content}" ></textarea>
+                        <form class="w3-container w3-padding" th:action="@{/create-post}" enctype="multipart/form-data"
+                              method="post" th:object="${post}">
+                            <textarea id="content" cols="93" rows="3" th:field="*{content}"></textarea>
                             <div class="form-inline">
                                 <div class="control-group custom-control-inline">
                                     <label for="FileInput">
@@ -121,7 +143,8 @@
 
 
                                     <div class="radio" style="padding-left: 15px">
-                                        <label><input type="radio" th:field="*{status}" checked value="true">Public</label>
+                                        <label><input type="radio" th:field="*{status}" checked
+                                                      value="true">Public</label>
                                     </div>
                                     <div class="radio" style="padding-left: 15px">
                                         <label><input type="radio" th:field="*{status}" value="false">Friend</label>
@@ -131,42 +154,44 @@
                                 </div>
                             </div>
                             <br>
-                           <input type="submit" class="w3-button w3-theme" th:value="Post">
+                            <input type="submit" class="w3-button w3-theme" th:value="Post">
                         </form>
                     </div>
                 </div>
             </div>
-<th:block th:each="post:${posts}">
+            <th:block th:each="post:${posts}">
 
-            <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                <img th:src="${'../'+post.users.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px" height="65px">
-                <span class="w3-right w3-opacity" th:text="${post.date}"></span>
-                <a th:href="@{/show-personal-page/__${post.users.userId}__}"><h4 th:text="${post.users.userName}"></h4></a><br>
-                <hr class="w3-clear">
-                <p>#<a th:href="@{/find-by-tag/__${post.postID}__}"><span th:text="${post.tag}"></span></a></p>
-                <p style="white-space: pre;" th:utext="${post.content}"></p>
+                <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+                    <img th:src="${'../'+post.users.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px"
+                         height="65px">
+                    <span class="w3-right w3-opacity" th:text="${post.date}"></span>
+                    <a th:href="@{/show-personal-page/__${post.users.userId}__}"><h4
+                            th:text="${post.users.userName}"></h4></a><br>
+                    <hr class="w3-clear">
+                    <p>#<a th:href="@{/find-by-tag/__${post.postID}__}"><span th:text="${post.tag}"></span></a></p>
+                    <p style="white-space: pre;" th:utext="${post.content}"></p>
 
-                <p th:if="${!#strings.isEmpty(post.imageUrl)}">
-                    <img th:src="${'../'+post.imageUrl}" class="postimage"/>
-                </p>
+                    <p th:if="${!#strings.isEmpty(post.imageUrl)}">
+                        <img th:src="${'../'+post.imageUrl}" class="postimage"/>
+                    </p>
 
 
-                <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i
-                        class="fa fa-thumbs-up"></i><span>1000</span>
-                </button>
-                <hr>
+                    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i
+                            class="fa fa-thumbs-up"></i><span>1000</span>
+                    </button>
+                    <hr>
 
-                <!--                    Comment area-->
-                <div>
-                    <tr>
-                        <td><img  width="50px" height="50px" style="border-radius: 50%"></td>
-                        <td>
-                            <span style="padding-left: 10px">Bi Rain</span><span
-                                style="padding-left: 10px;font-size: small">3 phút trước</span>
-                            <p style="padding-left: 100px">Tớ cũng buồn</p>
-                        </td>
-                    </tr>
-                </div>
+                    <!--                    Comment area-->
+                    <div>
+                        <tr>
+                            <td><img width="50px" height="50px" style="border-radius: 50%"></td>
+                            <td>
+                                <span style="padding-left: 10px">Bi Rain</span><span
+                                    style="padding-left: 10px;font-size: small">3 phút trước</span>
+                                <p style="padding-left: 100px">Tớ cũng buồn</p>
+                            </td>
+                        </tr>
+                    </div>
 
                 <!--                    Comment area end-->
 

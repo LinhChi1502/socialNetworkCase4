@@ -59,7 +59,7 @@ public class HomeController {
     // register // Chi
     @PostMapping("/register")
     public ModelAndView register(@Valid @ModelAttribute AppUser user) {
-        ModelAndView modelAndView=new ModelAndView();
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", new AppUser());
         modelAndView.setViewName("login");
         try {
@@ -306,7 +306,7 @@ public class HomeController {
 
     //Toan
     @GetMapping("/search-user-by-name")
-    public ResponseEntity<List<AppUser>> searchUserByNameAPI(@RequestParam(name ="name",required = false)String keySearch) {
+    public ResponseEntity<List<AppUser>> searchUserByNameAPI(@RequestParam(name = "name", required = false) String keySearch) {
         List<AppUser> appUserss = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         return new ResponseEntity<>(appUserss, HttpStatus.OK);
     }
@@ -324,11 +324,20 @@ public class HomeController {
         return "layout2";
     }
 
+
+
     @GetMapping("/api/getuserfriend/")
-    public ResponseEntity<Iterable<AppUser>> getUserFriends(){
+    public ResponseEntity<Iterable<AppUser>> getUserFriends() {
         AppUser user = user();
         Iterable<AppUser> listUserFriend = usersService.searchAllFriendsByAppUser(user);
         return new ResponseEntity<>(listUserFriend, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/bell-notification")
+    public ResponseEntity<Iterable<AppUser>> bellNotification() {
+        List<AppUser> pendingUsers = usersService.searchAllPendingFriendsByUser(user());
+        return new ResponseEntity<>(pendingUsers, HttpStatus.OK);
     }
 }
 
