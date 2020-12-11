@@ -12,5 +12,6 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Integer> 
     Iterable<Friendship>getAllByFriendStatusIsAndUser2Is(int status,AppUser user2);
     void deleteByUser1AndUser2(AppUser user, AppUser user2);
 
-
+    //Minh
+    void removeFriendshipByUser1UserIdAndUser2UserId(int user1Id, int user2Id);
 }

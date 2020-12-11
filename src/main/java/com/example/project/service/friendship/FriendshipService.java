@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,6 @@ public class FriendshipService implements IFriendshipService {
     public Friendship findById(Integer id) {
         return friendshipRepository.findById(id).get();
     }
-
 
     @Override
     public void save(Friendship model) {
@@ -74,5 +74,10 @@ public class FriendshipService implements IFriendshipService {
             friendship.setUser2(currentUser());
         }
         friendshipRepository.save(friendship);
+    }
+
+    @Transactional
+    public void deleteByUser1UserIdAndUser2UserId(int userId1, int userId2){
+        friendshipRepository.removeFriendshipByUser1UserIdAndUser2UserId(userId1, userId2);
     }
 }

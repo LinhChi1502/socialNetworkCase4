@@ -340,11 +340,23 @@ public class HomeController {
     }
 
     //Minh
-    @GetMapping("/searchfriendbyname")
+    @GetMapping("/searchfriendbyname**")
     public ModelAndView getFriendByName(@RequestParam(name = "input", required = false) String inputName){
         ModelAndView modelAndView = new ModelAndView("friendlist");
-
+        List<AppUser> listFriendByName = usersService.searchAllFriendByNameContaining(inputName);
+        modelAndView.addObject("listFriendByName", listFriendByName);
         return modelAndView;
+    }
+
+    //Minh
+    @GetMapping("/api/removefriend/{friendId}")
+    public ResponseEntity<AppUser> deleteFriendInList(@PathVariable (name = "friendId") int id){
+        if (user().getUserId() < id){
+            friendshipService.deleteByUser1UserIdAndUser2UserId(user().getUserId(), id);
+        } else {
+            friendshipService.deleteByUser1UserIdAndUser2UserId(id, user().getUserId());
+        }
+        return  new ResponseEntity<>(HttpStatus.OK);
     }
 }
 

@@ -100,25 +100,29 @@
 
         <!-- Middle Column -->
         <div class="w3-col m7">
-
             <div class="w3-row-padding">
                 <div class="w3-col m12">
                     <div class="w3-card w3-round w3-white">
-
-
                         <!-- user 1-->
                         <div class="w3-container w3-padding">
-                            <ul style="list-style-type: none">
-                                <li>
-                                    <div class="form-inline">
-                                        <img src="/img/avatar.jpg" alt="Avatar"
-                                             style="width:50px; height:50px; border-radius: 50%">
-                                        <a href="" style="padding-left: 15px">Jane Doe</a>
-                                        <button style="margin-left: 150px">Unfriend
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
+                            <table id="friendListTableMiddle">
+                                <tr th:each="friend:${listFriendByName}">
+                                    <td><img th:src="${'../' + friend.avatarURL}" alt="Avatar" style="width:50px; height:50px; border-radius: 50%"></td>
+                                    <td><a th:href="@{/show-personal-page/__${friend.userId}__}" style="padding-left: 10px" th:text="${friend.getUserName()}"></a></td>
+                                    <td><button style="margin-left: 150px" th:href="${friend.userId}" onclick="removeFriendInList(this)">Unfriend</button></td>
+                                </tr>
+                            </table>
+<!--                            <ul style="list-style-type: none">-->
+<!--                                <li>-->
+<!--                                    <div class="form-inline">-->
+<!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
+<!--                                             style="width:50px; height:50px; border-radius: 50%">-->
+<!--                                        <a href="" style="padding-left: 15px">Jane Doe</a>-->
+<!--                                        <button style="margin-left: 150px">Unfriend-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+<!--                                </li>-->
+<!--                            </ul>-->
                         </div>
                         <!-- user 1 end -->
                     </div>
