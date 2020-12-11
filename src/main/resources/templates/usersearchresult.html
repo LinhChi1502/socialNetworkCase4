@@ -9,7 +9,8 @@
 <body class="w3-theme-l5">
 <!--Narbar-->
 <nav th:fragment="menu">
-    <div class="w3-top">
+
+    <div class="w3-top" >
         <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
@@ -17,6 +18,7 @@
                                                                                                   alt=""
                                                                                                   width="35px"
                                                                                                   height="35px"></a>
+
             <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
                title="Friend Requests"><i class="fa fa-user"></i><span
                     class="w3-badge w3-right w3-small w3-green">3</span></a>
@@ -32,26 +34,32 @@
 
             <!--search post-->
             <div class="w3-dropdown-hover w3-hide-small">
-                <form>
+                <form th:action="@{/search-post-by-content}" method="post">
                     <div style="width: fit-content;margin:auto; height: fit-content">
-                        <div class="input-icons">
-                            <input class="input-field" type="text" placeholder="Search post" style="font-size: small">
-                            <i class="fa fa-search icon fa-lg"></i>
-                        </div>
+
+
+                        <input type="text" th:name="searchContent" placeholder="Search post" style="color: black;width: 130px"/>
+                        <label for="mySubmit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
+                        <input id="mySubmit" type="submit" class="hidden" />
                     </div>
+                </form>
+
                 </form>
             </div>
             <!--search post end-->
 
             <!--search user-->
-            <div class="w3-dropdown-hover w3-hide-small" style="padding-left: 50px">
-                <form>
+            <div class="w3-dropdown-hover w3-hide-small">
+                <form th:action="@{/search-user-by-name}" method="post">
                     <div style="width: fit-content;margin:auto; height: fit-content">
-                        <div class="input-icons">
-                            <input class="input-field" type="text" placeholder="Search user" style="font-size: small">
-                            <i class="fa fa-search icon fa-lg"></i>
-                        </div>
+
+
+                        <input id="searchHole" type="text" th:name="searchName" th:value="${keySearch}"  placeholder="Search user" style="color: black;width: 130px"/>
+                        <label for="Submit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
+                        <input id="Submit" type="submit" class="hidden" />
                     </div>
+                </form>
+
                 </form>
             </div>
             <!--search user end-->
@@ -60,8 +68,7 @@
             <!--logout button-->
             <a th:href="@{/logout}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large"
                title="Logout">
-                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px"
-                     alt="Avatar">
+                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px" alt="Avatar">
             </a>
             <!--logout button end-->
 
@@ -149,6 +156,22 @@
                                 </li>
                             </ul>
                         </div>
+                        <!-- user 1 end -->
+
+                        <!-- user 2-->
+<!--                        <div class="w3-container w3-padding">-->
+<!--                            <ul style="list-style-type: none">-->
+<!--                                <li>-->
+<!--                                    <div class="form-inline">-->
+<!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
+<!--                                             style="width:50px; height:50px; border-radius: 50%">-->
+<!--                                        <a href="" style="padding-left: 10px">Jane Doe</a>-->
+
+<!--                                    </div>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+                        <!-- user 2 end -->
                     </div>
                 </div>
             </div>
@@ -180,10 +203,11 @@
     }
 
     function successHandler() {
+        let searchName = $('#searchHole').val();
         $.ajax({
             type: "GET",
             //tên API
-            url: "/search-user-by-name",
+            url: `/search-user-by-name?name=${searchName}`,
             //xử lý khi thành công5
             success: function (data) {
                 // hien thi danh sach o day
@@ -229,10 +253,11 @@
     }
 
     function successHandler() {
+        let searchName = $('#searchHole').val();
         $.ajax({
             type: "GET",
             //tên API
-            url: "/search-user-by-name",
+            url: `/search-user-by-name?name=${searchName}`,
             //xử lý khi thành công5
             success: function (data) {
                 // hien thi danh sach o day
@@ -245,6 +270,12 @@
             }
         });
     };
+
+    // let myVar = setInterval(myTimer, 1000);
+
+    // function myTimer() {
+    //     alert("Hello world!");
+    // }
 
 
 </script>

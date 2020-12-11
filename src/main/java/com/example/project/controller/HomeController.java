@@ -40,6 +40,7 @@ public class HomeController {
     private CommentLikeService commentLikeService;
     @Autowired
     Environment env;
+
     //lay thong tin nguoi dung dang dang nhap
     @ModelAttribute("user")
     public AppUser user() {
@@ -58,22 +59,23 @@ public class HomeController {
     // register // Chi
     @PostMapping("/register")
     public ModelAndView register(@Valid @ModelAttribute AppUser user) {
-        ModelAndView modelAndView;
+        ModelAndView modelAndView=new ModelAndView();
+        modelAndView.addObject("user", new AppUser());
+        modelAndView.setViewName("login");
         try {
             usersService.signUpUser(user);
-            modelAndView = new ModelAndView("login");
         } catch (Exception e) {
-            modelAndView = new ModelAndView("login");
-            modelAndView.addObject("user", new AppUser());
             modelAndView.addObject("message", "Username has already exist");
         }
         return modelAndView;
     }
-//Chi //page 403
+
+    //Chi //page 403
     @GetMapping("/page403")
     public String page403() {
         return "403";
     }
+
     //Chi
     @GetMapping("/home")
     public ModelAndView home() {
@@ -84,6 +86,7 @@ public class HomeController {
         modelAndView.addObject("post", new Post());
         return modelAndView;
     }
+
     // anhnbt
     @GetMapping("/home2")
     public ModelAndView home2() {
@@ -273,7 +276,7 @@ public class HomeController {
     }
 
     @PostMapping("/search-post-by-content")
-    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent") String searchContent) {
+    public ModelAndView searchPostByContent(@RequestParam(value = "searchContent", required = false) String searchContent) {
         Iterable<Post> posts = postService.getAllPostByContentContaining(searchContent);
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("posts", posts);
@@ -282,31 +285,42 @@ public class HomeController {
         return modelAndView;
     }
 
-        //Toan, tim` kiem danh sach nguoi dung, neu la ban co nut unfriend, neu ko la ban co nut add friend.
+    //Toan, tim` kiem danh sach nguoi dung, neu la ban co nut unfriend, neu ko la ban co nut add friend.
     @PostMapping("/search-user-by-name")
-    public ModelAndView searchUserByName(@RequestParam(name = "searchName") String keySearch) {
+    public ModelAndView searchUserByName(@RequestParam(name = "searchName", required = false) String keySearch) {
         List<AppUser> appUsers = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("listUsers", appUsers);
-        modelAndView.addObject("user",user());
+        modelAndView.addObject("user", user());
+        modelAndView.addObject("keySearch", keySearch);
         modelAndView.setViewName("usersearchresult");
         return modelAndView;
     }
 
+    //Toan
     @GetMapping("/sending-friend-request/{friendId}")
-    public ResponseEntity<AppUser>sendingFriendRequest(@PathVariable(name = "friendId")int id){
-            friendshipService.sendFriendRequest(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<AppUser> sendingFriendRequest(@PathVariable(name = "friendId") int id) {
+        friendshipService.sendFriendRequest(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //Toan
     @GetMapping("/search-user-by-name")
-    public ResponseEntity< List<AppUser>> searchUserByNameAPI() {
-        List<AppUser> appUserss = usersService.searchAllUserByNameAndGiveFlagToFriend("c");
-        return new ResponseEntity<>(appUserss,HttpStatus.OK);
+    public ResponseEntity<List<AppUser>> searchUserByNameAPI(@RequestParam(name ="name",required = false)String keySearch) {
+        List<AppUser> appUserss = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
+        return new ResponseEntity<>(appUserss, HttpStatus.OK);
     }
+
+    //Toan
+    @GetMapping("/remove-friend/{friendId}")
+    public ResponseEntity<AppUser> removeFriendRequestAndRemoveFriend(@PathVariable(name = "friendId") int id) {
+        usersService.removeFriendshipsByUser1IsAndUser2Is(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @GetMapping("/layout2")
-    public String layout2(){
+    public String layout2() {
         return "layout2";
     }
 
