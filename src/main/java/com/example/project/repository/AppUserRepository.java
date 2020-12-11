@@ -11,8 +11,5 @@ public interface AppUserRepository extends JpaRepository<AppUser,Integer> {
     AppUser getAppUsersByUserName(String name);
     //Toan
     Iterable<AppUser> getAllByUserNameContaining(String keySearch);
-
-
-
 }
 

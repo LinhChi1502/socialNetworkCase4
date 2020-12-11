@@ -23,7 +23,6 @@ public class FriendshipService implements IFriendshipService {
         return userService.getCurrentUser();
     }
 
-
     @Override
     public Iterable<Friendship> findAll() {
         return friendshipRepository.findAll();
@@ -61,7 +60,6 @@ public class FriendshipService implements IFriendshipService {
         return appUsers;
     }
 
-
     @Override
     public void sendFriendRequest(int beSendUserId) {
         AppUser beSendUser = userService.findById(beSendUserId);
@@ -75,9 +73,6 @@ public class FriendshipService implements IFriendshipService {
             friendship.setUser1(beSendUser);
             friendship.setUser2(currentUser());
         }
-
         friendshipRepository.save(friendship);
-
-
     }
 }

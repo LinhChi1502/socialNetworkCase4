@@ -169,23 +169,22 @@
             <!--            <script src="../static/js/rightbarfriend.js"></script>-->
             <div class="w3-card w3-round w3-white w3-center">
                 <div class="w3-container">
-                    <!--                    search friends-->
-                    <form>
-                        <div style="width: auto;margin:auto; height: auto">
+                    <!--search friends-->
+
+                    <div style="width: auto;margin:auto; height: auto">
+                        <form th:action="@{/searchfriendbyname}" method="get">
                             <div class="input-icons">
-                                <a href="#">
+                                <input class="input-field" type="text" placeholder="Search friend" th:name="input">
+                                <label for="searchFriend" style="float: left">
                                     <i class="fa fa-search icon fa-lg" style="padding-bottom: 25px"></i>
-                                </a>
-                                <input class="input-field" type="text" placeholder="Search friend">
-
+                                </label>
+                                <input type="submit" id="searchFriend" class="hidden">
                             </div>
-                        </div>
-                    </form>
-                    <!--
-                                      end search friends-->
+                        </form>
+                    </div>
+
+                    <!--end search friends-->
                     <br>
-
-
                     <!--list 5 friends-->
                     <table id="listUserFriend">
                         <script>
@@ -277,7 +276,7 @@
 <br>
 
 <!-- Footer -->
-<footer th:fragment="footer" class="w3-container w3-theme-d3 w3-padding-16">
+<footer th:fragment="footer" class="w3-container w3-theme-d3 w3-padding-16" style="position: fixed; bottom: 0px; width: 100%">
     <h5>C0720I2</h5>
 </footer>
 <!--Footer end-->

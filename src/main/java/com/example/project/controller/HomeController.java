@@ -324,11 +324,27 @@ public class HomeController {
         return "layout2";
     }
 
+    //Minh
     @GetMapping("/api/getuserfriend/")
     public ResponseEntity<Iterable<AppUser>> getUserFriends(){
         AppUser user = user();
         Iterable<AppUser> listUserFriend = usersService.searchAllFriendsByAppUser(user);
         return new ResponseEntity<>(listUserFriend, HttpStatus.OK);
+    }
+
+    //Minh
+    @GetMapping("/api/searchFriendByName")
+    public ResponseEntity<List<AppUser>> getFriendsByName(@RequestParam(name = "name", required = false) String inputName){
+        List<AppUser> listFriendByName = usersService.searchAllFriendByNameContaining(inputName);
+        return new ResponseEntity<>(listFriendByName, HttpStatus.OK);
+    }
+
+    //Minh
+    @GetMapping("/searchfriendbyname")
+    public ModelAndView getFriendByName(@RequestParam(name = "input", required = false) String inputName){
+        ModelAndView modelAndView = new ModelAndView("friendlist");
+
+        return modelAndView;
     }
 }
 
