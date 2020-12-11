@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
@@ -140,7 +141,14 @@ public class AppUserService implements IAppUserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void removeFriendshipsByUser1IsAndUser2Is(int beRemoveFriendId) {
+        AppUser beRemoveFriend = appUserRepository.findById(beRemoveFriendId).get();
+        if (currentUser().getUserId() < beRemoveFriendId) {
+            friendshipRepository.deleteAllByUser1IsAndUser2Is(currentUser(), beRemoveFriend);
+        } else {
+            friendshipRepository.deleteAllByUser1IsAndUser2Is(beRemoveFriend, currentUser());
+        }
 
 
     }

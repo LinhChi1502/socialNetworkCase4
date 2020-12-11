@@ -7,7 +7,7 @@
 </head>
 
 
-<body class="w3-theme-l5" onload="loadUserFriend()">
+<body class="w3-theme-l5">
 <!--Narbar-->
 <nav th:fragment="menu">
     <div class="w3-top">
@@ -25,17 +25,14 @@
             <!--        TOAN QUẢ CHUÔNG-->
             <div class="w3-dropdown-hover w3-hide-small">
                 <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-bell"></i><span
-                        class="w3-badge w3-right w3-small w3-green" >3
-
-
-
-
+                        class="w3-badge w3-right w3-small w3-green" id="signalNumber">
 
                 </span></button>
                 <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
-                    <a href="#" class="w3-bar-item w3-button"><table id="table"></table></a>
+                    <span class="w3-bar-item w3-button" id="friendListRequest"></span>
                 </div>
             </div>
+
 
             <!--search post-->
             <div class="w3-dropdown-hover w3-hide-small">
@@ -84,7 +81,6 @@
     </div>
 </nav>
 <!--Narbar End-->
-
 
 
 <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
@@ -193,25 +189,67 @@
                         </tr>
                     </div>
 
-                <!--                    Comment area end-->
+                    <!--                    Comment area end-->
 
 
-                <!--                    post your comment-->
-                <div>
-                    <tr>
-                        <td><img  width="50px" height="50px" style="border-radius: 50%"></td>
-                        <td style="padding-left: 20px">
-                            <input type="text" placeholder="Post your comment" style="width: 350px">
-                            <button><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                        </td>
-                    </tr>
+                    <!--                    post your comment-->
+                    <div>
+                        <tr>
+                            <td><img width="50px" height="50px" style="border-radius: 50%"></td>
+                            <td style="padding-left: 20px">
+                                <input type="text" placeholder="Post your comment" style="width: 350px">
+                                <button><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+
+                    </div>
+                    <!--                    post your comment end-->
 
                 </div>
-                <!--                    post your comment end-->
 
-            </div>
+                <script>
 
-</th:block>
+                    let myVar = setInterval(toan_loadFriendStatus, 1000);
+
+                    function toan_loadFriendStatus() {
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/bell-notification/",
+                            success: function (data) {
+                                let content = "";
+                                for (let i = 0; i < data.length; i++) {
+                                    content += getUsers1(data[i]);
+                                }
+                                content = `<table id="friendListRequest"> <thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
+                                document.getElementById('friendListRequest').innerHTML = content;
+                                document.getElementById('signalNumber').innerHTML = data.length;
+                            }
+                        })
+                        event.preventDefault();
+
+                        function getUsers1(user) {
+                            let content = `<tr><td><img src="../${user.avatarURL}" alt="Avatar"
+                                      style="width:50px; height:50px; border-radius: 50%"></td>
+                    <td><a href="/show-personal-page/${user.userId}" style="padding-left: 10px" >${user.userName} </a> </td>
+                     <td>  <button style="margin-right: 150px" href="${user.userId}" onclick="toan_removeFriend2(this)" >Remove
+                    </button></td></tr>`;
+                            return content;
+                        }
+                    }
+                    function toan_removeFriend2(e) {
+                        let idFriend = e.getAttribute("href");
+                        $.ajax({
+                            type: "GET",
+                            url: "/remove-friend/" + idFriend,
+                            success: function () {
+                            }
+                        })
+                        event.preventDefault();
+                    }
+
+                </script>
+            </th:block>
 
         </div>
         <!-- Middle Column End-->
@@ -223,6 +261,8 @@
 </div>
 <br>
 <!--       Footer -->
+
+
 <footer th:replace="layout::footer"></footer>
 <!--       Footer End -->
 

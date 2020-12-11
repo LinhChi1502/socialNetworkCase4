@@ -38,10 +38,9 @@
                     <div style="width: fit-content;margin:auto; height: fit-content">
 
 
-                        <input type="text" th:name="searchContent" placeholder="Search post"
-                               style="color: black;width: 130px"/>
+                        <input type="text" th:name="searchContent" placeholder="Search post" style="color: black;width: 130px"/>
                         <label for="mySubmit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
-                        <input id="mySubmit" type="submit" class="hidden"/>
+                        <input id="mySubmit" type="submit" class="hidden" />
                     </div>
                 </form>
 
@@ -55,10 +54,9 @@
                     <div style="width: fit-content;margin:auto; height: fit-content">
 
 
-                        <input type="text" th:name="searchName" placeholder="Search user"
-                               style="color: black;width: 130px"/>
+                        <input id="searchHole" type="text" th:name="searchName" th:value="${keySearch}"  placeholder="Search user" style="color: black;width: 130px"/>
                         <label for="Submit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
-                        <input id="Submit" type="submit" class="hidden"/>
+                        <input id="Submit" type="submit" class="hidden" />
                     </div>
                 </form>
 
@@ -70,8 +68,7 @@
             <!--logout button-->
             <a th:href="@{/logout}" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large"
                title="Logout">
-                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px"
-                     alt="Avatar">
+                <img th:src="${'../'+user.getAvatarURL()}" class="w3-circle" style="height:30px;width:30px" alt="Avatar">
             </a>
             <!--logout button end-->
 
@@ -90,11 +87,9 @@
             <!-- Profile -->
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
-                    <a th:href="@{/show-personal-page/__${user.userId}__}"><h4 class="w3-center"
-                                                                               th:text="${user.userName}"></h4></a>
-                    <a th:href="@{/show-personal-page/__${user.userId}__}"><p class="w3-center"><img
-                            th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
-                            style="height:106px;width:106px" alt="Avatar"></p></a>
+                    <h4 class="w3-center" th:text="${user.userName}"></h4>
+                    <p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
+                                              style="height:106px;width:106px" alt="Avatar"></p>
                     <hr>
                     <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span
                             th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
@@ -128,7 +123,7 @@
                             <ul style="list-style-type: none">
                                 <li>
 
-                                    <table id="table">
+                                    <table id="table1">
                                         <thead>
                                         </thead>
 
@@ -142,17 +137,17 @@
 
                                             <td th:if="${user.getFlag()==1}">
                                                 <button style="margin-left: 150px" th:href="${user.userId}"
-                                                        onclick="removeFriend(this)">Unfriend
+                                                        onclick="toan_removeFriend(this)">Unfriend
                                                 </button>
                                             </td>
                                             <td th:if="${user.getFlag()==0}">
                                                 <button style="margin-left: 150px" th:href="${user.userId}"
-                                                        onclick="removeFriend(this)">Remove
+                                                        onclick="toan_removeFriend(this)">Remove
                                                 </button>
                                             </td>
                                             <td th:if="${user.getFlag()==2}">
                                                 <button style="margin-left: 150px" th:href="${user.userId}"
-                                                        onclick="addFriend(this)">AddFriend
+                                                        onclick="toan_addFriend(this)">AddFriend
                                                 </button>
                                             </td>
                                         </tr>
@@ -161,7 +156,6 @@
                                 </li>
                             </ul>
                         </div>
-
 
                     </div>
                 </div>
@@ -181,20 +175,19 @@
 </div>
 <br>
 <script rel="javascript" type="text/javascript" href="js/jquery-1.11.3.min.js">
-    function addFriend(e) {
+    function toan_addFriend(e) {
         let idFriend = e.getAttribute("href");
         $.ajax({
             type: "GET",
             url: "/sending-friend-request/" + idFriend,
             success: function () {
-                successHandler();
+                toan_successHandler1();
             }
         })
         event.preventDefault();
     }
 
-
-    function successHandler() {
+    function toan_successHandler1() {
         let searchName = $('#searchHole').val();
         $.ajax({
             type: "GET",
@@ -205,41 +198,41 @@
                 // hien thi danh sach o day
                 let content = "";
                 for (let i = 0; i < data.length; i++) {
-                    content += getUsers(data[i]);
+                    content += toan_getUsers1(data[i]);
 
                 }
-                content = `<table id="table"> <thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
-                document.getElementById('table').innerHTML = content;
+                content = `<table id="table1"> <thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
+                document.getElementById('table1').innerHTML = content;
             }
         });
     };
 
 
-    function getUsers(user) {
+    function toan_getUsers1(user) {
         let content = `<tr><td><img src="../${user.avatarURL}" alt="Avatar"
                           style="width:50px; height:50px; border-radius: 50%"></td>
         <td><a href="/show-personal-page/${user.userId}}" style="padding-left: 10px" >${user.userName} </a> </td>`;
         if (user.flag === 1) {
-            content += `<td> <button style="margin-left: 150px" href="${user.userId}" onclick="removeFriend(this)">Unfriend
+            content += `<td> <button style="margin-left: 150px" href="${user.userId}" onclick="toan_removeFriend(this)">Unfriend
         </button></td>`
         } else if (user.flag === 0) {
-            content += ` <td>  <button style="margin-left: 150px" href="${user.userId}" onclick="removeFriend(this)">Remove
+            content += ` <td>  <button style="margin-left: 150px" href="${user.userId}" onclick="toan_removeFriend(this)">Remove
         </button></td></tr>`
         } else if (user.flag === 2) {
-            content += ` <td>  <button style="margin-left: 150px" href="${user.userId}" onclick="addFriend(this)">Add friend
+            content += ` <td>  <button style="margin-left: 150px" href="${user.userId}" onclick="toan_addFriend(this)">Add friend
         </button></td></tr>`
         }
         return content;
     }
 
 
-    function removeFriend(e) {
+    function toan_removeFriend(e) {
         let idFriend = e.getAttribute("href");
         $.ajax({
             type: "GET",
             url: "/remove-friend/" + idFriend,
             success: function () {
-                successHandler();
+                toan_successHandler1();
             }
         })
         event.preventDefault();
@@ -263,14 +256,6 @@
             }
         });
     };
-
-    // let myVar = setInterval(myTimer, 1000);
-
-    // function myTimer() {
-    //     alert("Hello world!");
-    // }
-
-
 </script>
 <!-- Footer -->
 <footer th:replace="layout::footer"></footer>
