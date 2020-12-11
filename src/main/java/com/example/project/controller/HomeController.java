@@ -59,13 +59,12 @@ public class HomeController {
     // register // Chi
     @PostMapping("/register")
     public ModelAndView register(@Valid @ModelAttribute AppUser user) {
-        ModelAndView modelAndView;
+        ModelAndView modelAndView=new ModelAndView();
+        modelAndView.addObject("user", new AppUser());
+        modelAndView.setViewName("login");
         try {
             usersService.signUpUser(user);
-            modelAndView = new ModelAndView("login");
         } catch (Exception e) {
-            modelAndView = new ModelAndView("login");
-            modelAndView.addObject("user", new AppUser());
             modelAndView.addObject("message", "Username has already exist");
         }
         return modelAndView;

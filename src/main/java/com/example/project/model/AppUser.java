@@ -21,7 +21,7 @@ public class AppUser {
     @Column(name = "password")
     private String password;
     @Column(name = "avatarURL", nullable = true)
-    private String avatarURL;
+    private String avatarURL="5.jpg";
     @Transient
     private int flag;
 
