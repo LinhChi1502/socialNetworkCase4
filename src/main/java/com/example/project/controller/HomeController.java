@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-@Controller
+@RestController
 public class HomeController {
 
     @Autowired
@@ -311,7 +311,7 @@ public class HomeController {
     }
 
     //Toan
-    @GetMapping("/remove-friend/{friendId}")
+    @DeleteMapping("/remove-friend/{friendId}")
     public ResponseEntity<AppUser> removeFriendRequestAndRemoveFriend(@PathVariable(name = "friendId") int id) {
         usersService.removeFriendshipsByUser1IsAndUser2Is(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -323,8 +323,6 @@ public class HomeController {
         return "layout2";
     }
 
-
-
     @GetMapping("/api/getuserfriend/")
     public ResponseEntity<Iterable<AppUser>> getUserFriends() {
         AppUser user = user();
@@ -332,11 +330,22 @@ public class HomeController {
         return new ResponseEntity<>(listUserFriend, HttpStatus.OK);
     }
 
-
+        //toan
     @GetMapping("/bell-notification")
     public ResponseEntity<Iterable<AppUser>> bellNotification() {
-        List<AppUser> pendingUsers = usersService.searchAllPendingFriendsByUser(user());
+        List<AppUser> pendingUsers = usersService.searchAllUserByPendingRequestToCurrentUser();
         return new ResponseEntity<>(pendingUsers, HttpStatus.OK);
     }
+      //toan
+      @PutMapping("/accept-friend-request/{friendId}")
+      public ResponseEntity<AppUser> acceptFriendRequest(@PathVariable(name = "friendId",required = true) int id) {
+          friendshipService.acceptFriendRequest(usersService.findById(id));
+          return new ResponseEntity<>(HttpStatus.OK);
+      }
+      @GetMapping("/accept")
+    public ResponseEntity<AppUser> accept(@RequestParam(name = "name")int id){
+          friendshipService.acceptFriendRequest(usersService.findById(id));
+          return new ResponseEntity<>(HttpStatus.OK);
+      }
 }
 

@@ -80,4 +80,44 @@ public class FriendshipService implements IFriendshipService {
 
 
     }
+
+    @Override
+    public void acceptFriendRequest(AppUser user) {
+        try{
+            if (currentUser().getUserId()<user.getUserId()){
+                Friendship friendship = friendshipRepository.getByUser1IsAndUser2Is(currentUser(), user);
+                friendship.setFriendStatus(1);
+                friendship.setActionUser(currentUser());
+                friendshipRepository.save(friendship);
+            }else
+            {
+                Friendship friendship = friendshipRepository.getByUser1IsAndUser2Is(user,currentUser());
+                friendship.setFriendStatus(1);
+                friendship.setActionUser(currentUser());
+                friendshipRepository.save(friendship);
+            }
+
+        }catch (Exception e){
+
+            Friendship friendship=new Friendship();
+            if (currentUser().getUserId()<user.getUserId()){
+                friendship.setUser1( currentUser());
+                friendship.setUser2(user);
+                friendship.setFriendStatus(1);
+                friendship.setActionUser(currentUser());
+            }else
+            {
+                friendship.setUser1(user);
+                friendship.setUser2(currentUser());
+                friendship.setFriendStatus(1);
+                friendship.setActionUser(currentUser());
+            }
+
+        }
+
+
+
+
+
+    }
 }

@@ -16,6 +16,7 @@ public interface IAppUserService extends IService<AppUser> {
     List<AppUser>searchAllUserByNameAndGiveFlagToFriend(String keySearch);
     List<AppUser>searchAllPendingFriendsByUser(AppUser user);
     void removeFriendshipsByUser1IsAndUser2Is(int beRemoveFriendId);
+    List<AppUser>searchAllUserByPendingRequestToCurrentUser();
 
 
 }

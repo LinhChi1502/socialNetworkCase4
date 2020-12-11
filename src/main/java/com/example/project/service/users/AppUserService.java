@@ -153,6 +153,26 @@ public class AppUserService implements IAppUserService, UserDetailsService {
 
     }
 
+    @Override
+    public List<AppUser> searchAllUserByPendingRequestToCurrentUser() {
+         Iterable<Friendship> list1 = friendshipRepository.getAllByFriendStatusIsAndUser1IsAndActionUserIsNot(0, currentUser(), currentUser());
+        Iterable<Friendship> list2 = friendshipRepository.getAllByFriendStatusIsAndUser2IsAndActionUserIsNot(0, currentUser(), currentUser());
+        List<AppUser> pendingFriends = new ArrayList<>();
+        for (Friendship friendship :list1
+                ) {
+            pendingFriends.add(friendship.getUser2());
+        }
+        for (Friendship friendship :list2
+                ) {
+            pendingFriends.add(friendship.getUser1());
+        }
+
+        return pendingFriends;
+
+
+
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
