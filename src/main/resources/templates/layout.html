@@ -53,7 +53,7 @@
 </head>
 
 
-<body class="w3-theme-l5">
+<body class="w3-theme-l5" >
 
 <!-- Navbar -->
 <nav th:fragment="menu">
@@ -69,10 +69,12 @@
 
 
             <div class="w3-dropdown-hover w3-hide-small">
+<!--            ################################-->
                 <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-bell"></i><span
-                        class="w3-badge w3-right w3-small w3-green">3</span></button>
+                        class="w3-badge w3-right w3-small w3-green"><div id="signalNumber"></div></span></button>
                 <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
-                    <a href="#" class="w3-bar-item w3-button">One new friend request</a>
+<!--             #####################-->
+                    <div id="friendListRequest"></div>
                 </div>
             </div>
 
@@ -165,8 +167,8 @@
         <!-- End Middle Column -->
 
         <!-- Right Column -->
-        <div th:fragment="rightcolumn" class="w3-col m2" >
-<!--            <script src="../static/js/rightbarfriend.js"></script>-->
+        <div th:fragment="rightcolumn" class="w3-col m2">
+            <!--            <script src="../static/js/rightbarfriend.js"></script>-->
             <div class="w3-card w3-round w3-white w3-center">
                 <div class="w3-container">
                     <!--                    search friends-->
@@ -214,10 +216,10 @@
                             }
 
                             function fillFriendTable(friend) {
-                                return  `<tr class="spaceUnder">`+
-                                    `<td><img src="${'../' + friend.avatarURL}" alt="" width="30px" height="30px" style="border-radius: 50%">`+
-                                    `</td>`+
-                                    `<td style="padding-left: 2px"><a href="#"><span style="font-size: 13px">${friend.userName}</span></a>` +
+                                return `<tr class="spaceUnder">` +
+                                    `<td><img src="${'../' + friend.avatarURL}" alt="" width="30px" height="30px" style="border-radius: 50%">` +
+                                    `</td>` +
+                                    `<td style="padding-left: 2px"><a href="${'/show-personal-page/' + friend.userId}"><span style="font-size: 13px">${friend.userName}</span></a>` +
                                     `</td>` +
                                     `<td style="padding-left: 5px">` +
                                     `<button style="font-size: xx-small">Unfriend</button>` +
@@ -238,7 +240,8 @@
                         <tr class="spaceUnder">
                             <td><img src="../default.png" alt="" width="30px" height="30px" style="border-radius: 50%">
                             </td>
-                            <td style="padding-left: 2px"><a href="#"><span style="font-size: 13px" th:text="${user.userName}">David Beckham</span></a>
+                            <td style="padding-left: 2px"><a href="#"><span style="font-size: 13px"
+                                                                            th:text="${user.userName}">David Beckham</span></a>
                             </td>
                             <td style="padding-left: 5px">
                                 <button style="font-size: xx-small">Unfriend</button>
@@ -274,7 +277,6 @@
 </div>
 <!-- End Page Container -->
 <br>
-
 <!-- Footer -->
 <footer th:fragment="footer" class="w3-container w3-theme-d3 w3-padding-16">
     <h5>C0720I2</h5>

@@ -5,6 +5,8 @@
 <head th:replace="layout::head"></head>
 
 
+
+
 <body class="w3-theme-l5">
 <!--Narbar-->
 <nav th:fragment="menu">
@@ -16,18 +18,29 @@
                                                                                                   alt=""
                                                                                                   width="35px"
                                                                                                   height="35px"></a>
-            <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
-               title="Friend Requests"><i class="fa fa-user"></i><span
-                    class="w3-badge w3-right w3-small w3-green">3</span></a>
+            <!--        TOAN QUẢ CHUÔNG-->
+            <div class="w3-dropdown-hover w3-hide-small" >
+                <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-user"></i><span
+                        class="w3-badge w3-right w3-small w3-green" id="signalNumber">
 
+                </span></button>
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:500px">
+                    <span class="w3-bar-item w3-button" id="friendListRequest"></span>
+                </div>
+            </div>
 
             <div class="w3-dropdown-hover w3-hide-small">
                 <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-bell"></i><span
-                        class="w3-badge w3-right w3-small w3-green">3</span></button>
+                        class="w3-badge w3-right w3-small w3-green">
+
+                </span></button>
                 <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
-                    <a href="#" class="w3-bar-item w3-button">One new friend request</a>
+                    <span class="w3-bar-item w3-button"></span>
                 </div>
+
             </div>
+
+
 
             <!--search post-->
             <div class="w3-dropdown-hover w3-hide-small">
@@ -35,10 +48,9 @@
                     <div style="width: fit-content;margin:auto; height: fit-content">
 
 
-                        <input type="text" th:name="searchContent" placeholder="Search post"
-                               style="color: black;width: 130px"/>
-                        <label for="mySubmit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
-                        <input id="mySubmit" type="submit" class="hidden"/>
+                            <input type="text" th:name="searchContent" placeholder="Search post" style="color: black;width: 130px"/>
+                            <label for="mySubmit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
+                            <input id="mySubmit" type="submit" class="hidden"/>
                     </div>
                 </form>
 
@@ -76,6 +88,7 @@
     </div>
 </nav>
 <!--Narbar End-->
+
 
 
 <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
@@ -153,16 +166,15 @@
             <th:block th:each="post:${posts}">
 
                 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                    <img th:src="${'../'+post.appUser.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px"
+                    <img th:src="${'../'+post.users.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px"
                          height="65px">
                     <span class="w3-right w3-opacity" th:text="${post.date}"></span>
-                    <a th:href="@{/show-personal-page/__${post.appUser.userId}__}"><h4
-                            th:text="${post.appUser.userName}"></h4></a><br>
+                    <a th:href="@{/show-personal-page/__${post.users.userId}__}"><h4
+                            th:text="${post.users.userName}"></h4></a><br>
                     <hr class="w3-clear">
-                    <!--                <p>#<a th:href="@{/find-by-tag/__${post.postID}__}"><span th:text="${post.tags}"></span></a></p>-->
-                    <div class="entry">
-                        <p style="white-space: pre;" th:utext="${post.content}"></p>
-                    </div>
+                    <p>#<a th:href="@{/find-by-tag/__${post.postID}__}"><span th:text="${post.tag}"></span></a></p>
+                    <p style="white-space: pre;" th:utext="${post.content}"></p>
+
                     <p th:if="${!#strings.isEmpty(post.imageUrl)}">
                         <img th:src="${'../'+post.imageUrl}" class="postimage"/>
                     </p>
@@ -202,7 +214,64 @@
                     <!--                    post your comment end-->
 
                 </div>
+                    //toan
+                <script >
 
+                     let myVar = setInterval(toan_loadFriendStatus, 2000);
+
+                    function toan_loadFriendStatus() {
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/bell-notification/",
+                            success: function (data) {
+                                let content = "";
+                                for (let i = 0; i < data.length; i++) {
+                                    content += getUsers1(data[i]);
+                                }
+                                content = `<table id="friendListRequest"> <thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
+                                document.getElementById('friendListRequest').innerHTML = content;
+                                document.getElementById('signalNumber').innerHTML = data.length;
+                            }
+                        })
+                        event.preventDefault();
+
+                        function getUsers1(user) {
+                            let content = `<tr><td><img src="../${user.avatarURL}" alt="Avatar"
+                                      style="width:50px; height:50px; border-radius: 50%"></td>
+                    <td><a href="/show-personal-page/${user.userId}" style="padding-left: 10px" >${user.userName} </a> </td>
+                     <td>  <button style="margin-right: 150px" a="${user.userId}" onclick="acceptFriendRequest(this)" >accept
+                    </button></td>
+                     <td>  <button style="margin-right: 150px" a="${user.userId}" onclick="toan_removeFriend2(this)" >Refuse
+                    </button></td>
+
+                    </tr>`;
+                            return content;
+                        }
+                    };
+                     function toan_removeFriend2(e) {
+                         let idFriend = e.getAttribute("a");
+                         $.ajax({
+                             type: "DELETE",
+                             url: "/remove-friend/" + idFriend,
+                             success: function () {
+                             }
+                         })
+                         event.preventDefault();
+                     }
+                     function acceptFriendRequest(e) {
+                         let idFriend = e.getAttribute("a");
+                         $.ajax({
+                             type: "GET",
+                             url: `/accept?name=${idFriend}`,
+                             success: function () {
+                             }
+                         })
+                         event.preventDefault();
+                     }
+
+
+                </script>
             </th:block>
 
         </div>
@@ -215,6 +284,8 @@
 </div>
 <br>
 <!--       Footer -->
+
+
 <footer th:replace="layout::footer"></footer>
 <!--       Footer End -->
 
@@ -222,6 +293,7 @@
     $('textarea').filter('[id*=content]').val('');
 </script>
 
+//chi find hashtag
 <script>
     (function (win,doc) {
         'use strict';

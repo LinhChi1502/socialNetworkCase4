@@ -6,6 +6,7 @@ import com.example.project.service.IService;
 
 public interface IFriendshipService extends IService<Friendship> {
     void sendFriendRequest(int beSendUserId);
+    void acceptFriendRequest(AppUser user);
 
 
 

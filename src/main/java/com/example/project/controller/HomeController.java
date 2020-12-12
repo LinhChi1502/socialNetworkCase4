@@ -99,7 +99,6 @@ public class HomeController {
         modelAndView.addObject("post", new Post());
         return modelAndView;
     }
-
     // anhnbt
     @GetMapping("/home2")
     public ModelAndView home2() {
@@ -156,6 +155,7 @@ public class HomeController {
     // Chi
     @PostMapping("/create-post")
     public ModelAndView createPost(@ModelAttribute Post post) {
+        // lấy ra tag
         String content = post.getContent();
         Pattern pattern = Pattern.compile("\\B(\\#[a-zA-Z]+\\b)(?!;)");
         Matcher matcher = pattern.matcher(content);
@@ -179,9 +179,7 @@ public class HomeController {
             e.printStackTrace();
         }
 
-        post.setAppUser(user());
-
-
+        post.setUsers(user());
         //lưu post
         postService.save(post);
         ModelAndView modelAndView = new ModelAndView("home");
@@ -202,13 +200,10 @@ public class HomeController {
         if (userID == user().getUserId()) {
             // chuyển sang trang cá nhân của mình
             modelAndView = new ModelAndView("personal");
-
-
         } else {
             // chuyển sang trang cá nhận của friend
             modelAndView = new ModelAndView("friendpage");
             modelAndView.addObject("friend", usersService.findById(userID));
-
         }
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
@@ -227,7 +222,7 @@ public class HomeController {
 
     @PostMapping("/edit-post/{postID}")
     public ModelAndView editPost(@ModelAttribute Post post) {
-        post.setAppUser(user());
+        post.setUsers(user());
         MultipartFile image = post.getImage();
         String imageURL = image.getOriginalFilename();
         // lấy link ảnh trong DB
@@ -296,6 +291,7 @@ public class HomeController {
         ModelAndView modelAndView = new ModelAndView("personal");
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
+
         return modelAndView;
     }
 
@@ -342,17 +338,49 @@ public class HomeController {
 
     //Toan
     @GetMapping("/search-user-by-name")
-    public ResponseEntity<List<AppUser>> searchUserByNameAPI() {
-        List<AppUser> appUserss = usersService.searchAllUserByNameAndGiveFlagToFriend("c");
+    public ResponseEntity<List<AppUser>> searchUserByNameAPI(@RequestParam(name = "name", required = false) String keySearch) {
+        List<AppUser> appUserss = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         return new ResponseEntity<>(appUserss, HttpStatus.OK);
     }
 
     //Toan
-    @GetMapping("/remove-friend/{friendId}")
+    @DeleteMapping("/remove-friend/{friendId}")
     public ResponseEntity<AppUser> removeFriendRequestAndRemoveFriend(@PathVariable(name = "friendId") int id) {
         usersService.removeFriendshipsByUser1IsAndUser2Is(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @GetMapping("/layout2")
+    public String layout2() {
+        return "layout2";
+    }
+
+    @GetMapping("/api/getuserfriend/")
+    public ResponseEntity<Iterable<AppUser>> getUserFriends() {
+        AppUser user = user();
+        Iterable<AppUser> listUserFriend = usersService.searchAllFriendsByAppUser(user);
+        return new ResponseEntity<>(listUserFriend, HttpStatus.OK);
+    }
+
+        //toan
+    @GetMapping("/bell-notification")
+    public ResponseEntity<Iterable<AppUser>> bellNotification() {
+        List<AppUser> pendingUsers = usersService.searchAllUserByPendingRequestToCurrentUser();
+        return new ResponseEntity<>(pendingUsers, HttpStatus.OK);
+    }
+      //toan ham` test ko dung`
+      @PutMapping("/accept-friend-request/{friendId}")
+      public ResponseEntity<AppUser> acceptFriendRequest(@PathVariable(name = "friendId",required = true) int id) {
+          friendshipService.acceptFriendRequest(usersService.findById(id));
+          return new ResponseEntity<>(HttpStatus.OK);
+      }
+
+    //toan accept friend request
+      @GetMapping("/accept")
+    public ResponseEntity<AppUser> accept(@RequestParam(name = "name")int id){
+          friendshipService.acceptFriendRequest(usersService.findById(id));
+          return new ResponseEntity<>(HttpStatus.OK);
+      }
 }
 

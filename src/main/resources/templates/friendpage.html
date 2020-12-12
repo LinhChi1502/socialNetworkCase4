@@ -5,7 +5,7 @@
 <head th:replace="layout::head"></head>
 
 
-<body class="w3-theme-l5">
+<body class="w3-theme-l5" onload="loadUserFriend()">
 <!--Narbar-->
 <nav th:fragment="menu">
     <div class="w3-top">
@@ -39,7 +39,7 @@
                     </div>
                 </form>
 
-                </form>
+
             </div>
             <!--search post end-->
 
@@ -106,12 +106,12 @@
             <th:block th:each="post:${posts}">
 
                 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                    <img th:src="${'../'+post.appUser.avatarURL}" class="w3-left w3-circle w3-margin-right"
+                    <img th:src="${'../'+post.users.getAvatarURL()}" class="w3-left w3-circle w3-margin-right"
                          width="65px" height="65px">
                     <span class="w3-right w3-opacity" th:text="${post.date}"></span><br>
 
-                    <a th:href="@{/show-personal-page/__${post.appUser.userId}__}"><h4
-                            th:text="${post.appUser.userName}"></h4></a><br>
+                    <a th:href="@{/show-personal-page/__${post.users.getUserId()}__}"><h4
+                            th:text="${post.users.userName}"></h4></a><br>
                     <hr class="w3-clear">
                     <div class="entry">
                         <p style="white-space: pre;" th:utext="${post.content}" ></p>
