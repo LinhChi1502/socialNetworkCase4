@@ -336,12 +336,14 @@ public class HomeController {
         List<AppUser> pendingUsers = usersService.searchAllUserByPendingRequestToCurrentUser();
         return new ResponseEntity<>(pendingUsers, HttpStatus.OK);
     }
-      //toan
+      //toan ham` test ko dung`
       @PutMapping("/accept-friend-request/{friendId}")
       public ResponseEntity<AppUser> acceptFriendRequest(@PathVariable(name = "friendId",required = true) int id) {
           friendshipService.acceptFriendRequest(usersService.findById(id));
           return new ResponseEntity<>(HttpStatus.OK);
       }
+
+    //toan accept friend request
       @GetMapping("/accept")
     public ResponseEntity<AppUser> accept(@RequestParam(name = "name")int id){
           friendshipService.acceptFriendRequest(usersService.findById(id));

@@ -19,18 +19,18 @@
                                                                                                   width="35px"
                                                                                                   height="35px"></a>
 
-            <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
-               title="Friend Requests"><i class="fa fa-user"></i><span
-                    class="w3-badge w3-right w3-small w3-green">3</span></a>
+            <!--        TOAN QUẢ CHUÔNG-->
+<!--            ##################################################-->
+            <div class="w3-dropdown-hover w3-hide-small" >
+                <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-user"></i><span
+                        class="w3-badge w3-right w3-small w3-green" id="signalNumber">
 
-
-            <div class="w3-dropdown-hover w3-hide-small">
-                <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-bell"></i><span
-                        class="w3-badge w3-right w3-small w3-green">3</span></button>
-                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
-                    <a href="#" class="w3-bar-item w3-button">One new friend request</a>
+                </span></button>
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:500px">
+                    <span class="w3-bar-item w3-button" id="friendListRequest"></span>
                 </div>
             </div>
+
 
             <!--search post-->
             <div class="w3-dropdown-hover w3-hide-small">
@@ -175,7 +175,7 @@
 </div>
 <br>
 
-//toan
+//toan hien thi danh sach search
 <script >
     function addFriend(e) {
         let idFriend = e.getAttribute("href");
@@ -238,6 +238,65 @@
         })
         event.preventDefault();
     }
+</script>
+
+//toan qua chuong
+<script >
+
+    let myVar = setInterval(toan_loadFriendStatus, 2000);
+
+    function toan_loadFriendStatus() {
+
+        $.ajax({
+            type: "GET",
+            url: "/bell-notification/",
+            success: function (data) {
+                let content = "";
+                for (let i = 0; i < data.length; i++) {
+                    content += getUsers1(data[i]);
+                }
+                content = `<table id="friendListRequest"> <thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
+                document.getElementById('friendListRequest').innerHTML = content;
+                document.getElementById('signalNumber').innerHTML = data.length;
+            }
+        })
+        event.preventDefault();
+
+        function getUsers1(user) {
+            let content = `<tr><td><img src="../${user.avatarURL}" alt="Avatar"
+                                      style="width:50px; height:50px; border-radius: 50%"></td>
+                    <td><a href="/show-personal-page/${user.userId}" style="padding-left: 10px" >${user.userName} </a> </td>
+                     <td>  <button style="margin-right: 150px" a="${user.userId}" onclick="acceptFriendRequest(this)" >accept
+                    </button></td>
+                     <td>  <button style="margin-right: 150px" a="${user.userId}" onclick="toan_removeFriend2(this)" >Refuse
+                    </button></td>
+
+                    </tr>`;
+            return content;
+        }
+    };
+    function toan_removeFriend2(e) {
+        let idFriend = e.getAttribute("a");
+        $.ajax({
+            type: "DELETE",
+            url: "/remove-friend/" + idFriend,
+            success: function () {
+            }
+        })
+        event.preventDefault();
+    }
+    function acceptFriendRequest(e) {
+        let idFriend = e.getAttribute("a");
+        $.ajax({
+            type: "GET",
+            url: `/accept?name=${idFriend}`,
+            success: function () {
+            }
+        })
+        event.preventDefault();
+    }
+
+
 </script>
 <!-- Footer -->
 <footer th:replace="layout::footer"></footer>
