@@ -1,6 +1,5 @@
 package com.example.project.model;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +12,7 @@ import java.util.Set;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="postID")
+    @Column(name = "postID")
     private int postID;
     @Column(name = "content", columnDefinition = "longtext")
     private String content;
@@ -30,14 +29,13 @@ public class Post {
     private MultipartFile image;
 
     //nhieu post co 1 user
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinColumn(name = "userID",nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "userID", nullable = false)
     private AppUser appUser;
 
     //postlike
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<PostLike> post;
-
 
 
     public Post() {
