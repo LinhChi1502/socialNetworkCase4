@@ -19,18 +19,18 @@
                                                                                                   width="35px"
                                                                                                   height="35px"></a>
 
-            <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
-               title="Friend Requests"><i class="fa fa-user"></i><span
-                    class="w3-badge w3-right w3-small w3-green">3</span></a>
+            <!--        TOAN QUẢ CHUÔNG-->
+<!--            ##################################################-->
+            <div class="w3-dropdown-hover w3-hide-small" >
+                <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-user"></i><span
+                        class="w3-badge w3-right w3-small w3-green" id="signalNumber">
 
-
-            <div class="w3-dropdown-hover w3-hide-small">
-                <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-bell"></i><span
-                        class="w3-badge w3-right w3-small w3-green">3</span></button>
-                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
-                    <a href="#" class="w3-bar-item w3-button">One new friend request</a>
+                </span></button>
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:500px">
+                    <span class="w3-bar-item w3-button" id="friendListRequest"></span>
                 </div>
             </div>
+
 
             <!--search post-->
             <div class="w3-dropdown-hover w3-hide-small">
@@ -123,7 +123,7 @@
                             <ul style="list-style-type: none">
                                 <li>
 
-                                    <table id="table">
+                                    <table id="table1">
                                         <thead>
                                         </thead>
 
@@ -156,22 +156,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <!-- user 1 end -->
 
-                        <!-- user 2-->
-<!--                        <div class="w3-container w3-padding">-->
-<!--                            <ul style="list-style-type: none">-->
-<!--                                <li>-->
-<!--                                    <div class="form-inline">-->
-<!--                                        <img src="/img/avatar.jpg" alt="Avatar"-->
-<!--                                             style="width:50px; height:50px; border-radius: 50%">-->
-<!--                                        <a href="" style="padding-left: 10px">Jane Doe</a>-->
-
-<!--                                    </div>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-                        <!-- user 2 end -->
                     </div>
                 </div>
             </div>
@@ -189,20 +174,22 @@
     </div>
 </div>
 <br>
-<script rel="javascript" type="text/javascript" href="js/jquery-1.11.3.min.js">
+
+<!--toan hien thi danh sach search-->
+<script >
     function addFriend(e) {
         let idFriend = e.getAttribute("href");
         $.ajax({
             type: "GET",
             url: "/sending-friend-request/" + idFriend,
             success: function () {
-                successHandler();
+                toan_successHandler1();
             }
         })
         event.preventDefault();
     }
 
-    function successHandler() {
+    function toan_successHandler1() {
         let searchName = $('#searchHole').val();
         $.ajax({
             type: "GET",
@@ -213,16 +200,17 @@
                 // hien thi danh sach o day
                 let content = "";
                 for (let i = 0; i < data.length; i++) {
-                    content += getUsers(data[i]);
+                    content += toan_getUsers1(data[i]);
 
                 }
-                content = `<table id="table"> <thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
-                document.getElementById('table').innerHTML = content;
+                content = `<table id="table1"> <thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
+                document.getElementById('table1').innerHTML = content;
             }
         });
     };
 
-    function getUsers(user) {
+
+    function toan_getUsers1(user) {
         let content = `<tr><td><img src="../${user.avatarURL}" alt="Avatar"
                           style="width:50px; height:50px; border-radius: 50%"></td>
         <td><a href="/show-personal-page/${user.userId}}" style="padding-left: 10px" >${user.userName} </a> </td>`;
@@ -239,43 +227,74 @@
         return content;
     }
 
-
     function removeFriend(e) {
         let idFriend = e.getAttribute("href");
         $.ajax({
-            type: "GET",
+            type: "DELETE",
             url: "/remove-friend/" + idFriend,
             success: function () {
-                successHandler();
+                toan_successHandler1();
             }
         })
         event.preventDefault();
     }
+</script>
 
-    function successHandler() {
-        let searchName = $('#searchHole').val();
+<!--toan qua chuong-->
+<script >
+
+    let myVar = setInterval(toan_loadFriendStatus, 2000);
+
+    function toan_loadFriendStatus() {
+
         $.ajax({
             type: "GET",
-            //tên API
-            url: `/search-user-by-name?name=${searchName}`,
-            //xử lý khi thành công5
+            url: "/bell-notification/",
             success: function (data) {
-                // hien thi danh sach o day
-                let content;
+                let content = "";
                 for (let i = 0; i < data.length; i++) {
-                    content += getUsers(data[i]);
+                    content += getUsers1(data[i]);
                 }
-                content = `<table id="table"><thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
-                document.getElementById('table').innerHTML = content;
+                content = `<table id="friendListRequest"> <thead> </thead> <tbody>` + content + `</tbody><tfoot></tfoot></table>`;
+                document.getElementById('friendListRequest').innerHTML = content;
+                document.getElementById('signalNumber').innerHTML = data.length;
             }
-        });
+        })
+        event.preventDefault();
+
+        function getUsers1(user) {
+            let content = `<tr><td><img src="../${user.avatarURL}" alt="Avatar"
+                                      style="width:50px; height:50px; border-radius: 50%"></td>
+                    <td><a href="/show-personal-page/${user.userId}" style="padding-left: 10px" >${user.userName} </a> </td>
+                     <td>  <button style="margin-right: 150px" a="${user.userId}" onclick="acceptFriendRequest(this)" >accept
+                    </button></td>
+                     <td>  <button style="margin-right: 150px" a="${user.userId}" onclick="toan_removeFriend2(this)" >Refuse
+                    </button></td>
+
+                    </tr>`;
+            return content;
+        }
     };
-
-    // let myVar = setInterval(myTimer, 1000);
-
-    // function myTimer() {
-    //     alert("Hello world!");
-    // }
+    function toan_removeFriend2(e) {
+        let idFriend = e.getAttribute("a");
+        $.ajax({
+            type: "DELETE",
+            url: "/remove-friend/" + idFriend,
+            success: function () {
+            }
+        })
+        event.preventDefault();
+    }
+    function acceptFriendRequest(e) {
+        let idFriend = e.getAttribute("a");
+        $.ajax({
+            type: "GET",
+            url: `/accept?name=${idFriend}`,
+            success: function () {
+            }
+        })
+        event.preventDefault();
+    }
 
 
 </script>

@@ -1,16 +1,20 @@
 package com.example.project.service.post;
 
 import com.example.project.model.AppUser;
+import com.example.project.model.Friendship;
+import com.example.project.model.Hashtag;
 import com.example.project.model.Post;
+import com.example.project.repository.FriendshipRepository;
 import com.example.project.repository.PostRepository;
 import com.example.project.service.friendship.FriendshipService;
+//import javafx.geometry.Pos;
+import com.example.project.service.hashtag.HashtagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.expression.Lists;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -20,6 +24,8 @@ public class PostService implements IPostService {
     private PostRepository postRepository;
     @Autowired
     private FriendshipService friendshipService;
+    @Autowired
+    private HashtagService hashtagService;
 
     @Override
     public Iterable<Post> findAll() {
@@ -41,7 +47,9 @@ public class PostService implements IPostService {
 
     @Override
     public void remove(Integer id) {
+
         postRepository.deleteById(id);
+
     }
 
     @Override
@@ -53,7 +61,7 @@ public class PostService implements IPostService {
     public List<Post> findAllByFriendAndUser(AppUser user) {
         List<Post> allPost = new ArrayList<Post>();
         Iterable<AppUser> friendList = friendshipService.findUserFriendByOtherUser(user);
-        for (AppUser friend : friendList
+        for (AppUser friend: friendList
         ) {
             List<Post> friendPosts;
             Iterable<Post> iterablePosts = this.getAllByAppUserIs(friend);
@@ -74,18 +82,46 @@ public class PostService implements IPostService {
         return allPost;
     }
 
-    @Override
-    public Iterable<Post> getAllByTag(String tag) {
-        return postRepository.getAllByTag(tag);
-    }
 
-    @Override
-    public Iterable<Post> getAllPostByTagIsAndAndAppUserIs(String tag, AppUser user) {
-        return postRepository.getAllByTagIsAndAndAppUserIs(tag, user);
-    }
+
+
 
     @Override
     public Iterable<Post> getAllPostByContentContaining(String searchContent) {
         return postRepository.getAllByContentContaining(searchContent);
+    }
+
+    @Override
+    public List<Post> findAllPostByTag(String name) {
+        List<Post> allPost = postRepository.findAll();
+        List<Post> posts = new ArrayList<>();
+        for (Post post:
+                allPost) {
+            Set<Hashtag> tags = post.getTags();
+            for (Hashtag hashtag:
+                    tags) {
+                if (hashtag.getName().equals(name)) {
+                    posts.add(post);
+                }
+            }
+        }
+        return posts;
+    }
+
+    @Override
+    public List<Post> findAllPostByTagIsAndAppUserIs(String name, AppUser appUser) {
+        Iterable<Post> allPost = this.getAllByAppUserIs(appUser);
+        List<Post> posts = new ArrayList<>();
+        for (Post post:
+                allPost) {
+            Set<Hashtag> tags = post.getTags();
+            for (Hashtag hashtag:
+                    tags) {
+                if (hashtag.getName().equals(name)) {
+                    posts.add(post);
+                }
+            }
+        }
+        return posts;
     }
 }

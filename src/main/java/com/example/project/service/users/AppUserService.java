@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
@@ -140,7 +141,36 @@ public class AppUserService implements IAppUserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void removeFriendshipsByUser1IsAndUser2Is(int beRemoveFriendId) {
+        AppUser beRemoveFriend = appUserRepository.findById(beRemoveFriendId).get();
+        if (currentUser().getUserId() < beRemoveFriendId) {
+            friendshipRepository.deleteAllByUser1IsAndUser2Is(currentUser(), beRemoveFriend);
+        } else {
+            friendshipRepository.deleteAllByUser1IsAndUser2Is(beRemoveFriend, currentUser());
+        }
+
+
+    }
+
+    @Override
+    public List<AppUser> searchAllUserByPendingRequestToCurrentUser() {
+         Iterable<Friendship> list1 = friendshipRepository.getAllByFriendStatusIsAndUser1IsAndActionUserIsNot(0, currentUser(), currentUser());
+        Iterable<Friendship> list2 = friendshipRepository.getAllByFriendStatusIsAndUser2IsAndActionUserIsNot(0, currentUser(), currentUser());
+        List<AppUser> pendingFriends = new ArrayList<>();
+        for (Friendship friendship :list1
+                ) {
+            pendingFriends.add(friendship.getUser2());
+        }
+        for (Friendship friendship :list2
+                ) {
+            pendingFriends.add(friendship.getUser1());
+        }
+
+        return pendingFriends;
+
+
+
     }
 
 
@@ -163,6 +193,8 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         AppRole appRole = new AppRole();
         appRole.setId(1);
         appUser.setRole(appRole);
+        appUser.setAvatarURL("default.png");
+
         appUserRepository.save(appUser);
     }
 

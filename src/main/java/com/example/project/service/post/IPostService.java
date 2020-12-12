@@ -11,9 +11,11 @@ public interface IPostService extends IService<Post> {
 
     List<Post> findAllByFriendAndUser(AppUser user);
 
-    Iterable<Post> getAllByTag(String tag);
 
-    Iterable<Post> getAllPostByTagIsAndAndAppUserIs(String tag, AppUser user);
+
 
     Iterable<Post> getAllPostByContentContaining(String searchContent);
+
+    List<Post> findAllPostByTag(String name);
+    List<Post> findAllPostByTagIsAndAppUserIs(String name, AppUser appUser);
 }

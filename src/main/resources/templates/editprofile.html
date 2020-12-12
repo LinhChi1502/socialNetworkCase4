@@ -79,9 +79,9 @@
             <!-- Profile -->
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
-                    <h4 class="w3-center" th:text="${user.userName}"></h4>
-                    <p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
-                                              style="height:106px;width:106px" alt="Avatar"></p>
+                    <a th:href="@{/show-personal-page/__${user.userId}__}"><h4 class="w3-center" th:text="${user.userName}"></h4></a>
+                    <a th:href="@{/show-personal-page/__${user.userId}__}"><p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
+                                              style="height:106px;width:106px" alt="Avatar"></p></a>
                     <hr>
                     <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span th:if="${user.firstName != null}" th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
                     <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.city}"></span></p>
@@ -115,18 +115,18 @@
                                     <input type="file" class="form-control" th:field="*{avatar}">
                                     <input type="text" th:field="*{avatarURL}" hidden>
                                     <label>FirstName</label>
-                                    <input type="text" class="form-control" th:field="*{firstName}">
+                                    <input type="text" class="form-control" th:field="*{firstName}" required>
                                     <label>LastName</label>
-                                    <input type="text" class="form-control" th:field="*{lastName}">
+                                    <input type="text" class="form-control" th:field="*{lastName}" required>
                                     <label>City</label>
-                                    <input type="text" class="form-control" th:field="*{city}">
+                                    <input type="text" class="form-control" th:field="*{city}" required>
                                     <label>Gender</label><br>
                                     <input type="radio" id="male" name="gender" value="male" th:field="*{gender}">
                                     <label for="male">Male</label>
                                     <input type="radio" id="female" name="gender" value="female" th:field="*{gender}">
                                     <label for="female">Female</label><br>
                                     <label>Phone</label>
-                                    <input type="text" class="form-control" th:field="*{phone}">
+                                    <input type="text" class="form-control" th:field="*{phone}" required>
                                     <label>Date of birth</label>
                                     <input type="text"  placeholder="YYYY-MM-DD"
                                            pattern="(?:19|20)(?:(?:[13579][26]|[02468][048])-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))|(?:[0-9]{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:29|30))|(?:(?:0[13578]|1[02])-31)))"

@@ -1,9 +1,11 @@
 package com.example.project.controller;
 
 import com.example.project.model.AppUser;
+import com.example.project.model.Hashtag;
 import com.example.project.model.Post;
 import com.example.project.service.commentlike.CommentLikeService;
 import com.example.project.service.friendship.FriendshipService;
+import com.example.project.service.hashtag.HashtagService;
 import com.example.project.service.post.PostService;
 import com.example.project.service.postcomment.PostCommentService;
 import com.example.project.service.postlike.PostlikeService;
@@ -21,7 +23,13 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 public class HomeController {
@@ -38,6 +46,8 @@ public class HomeController {
     private PostCommentService postCommentService;
     @Autowired
     private CommentLikeService commentLikeService;
+    @Autowired
+    private HashtagService hashtagService;
     @Autowired
     Environment env;
 
@@ -59,12 +69,14 @@ public class HomeController {
     // register // Chi
     @PostMapping("/register")
     public ModelAndView register(@Valid @ModelAttribute AppUser user) {
-        ModelAndView modelAndView=new ModelAndView();
-        modelAndView.addObject("user", new AppUser());
-        modelAndView.setViewName("login");
+        ModelAndView modelAndView;
         try {
             usersService.signUpUser(user);
+            modelAndView = new ModelAndView("login");
+            modelAndView.addObject("user", new AppUser());
         } catch (Exception e) {
+            modelAndView = new ModelAndView("login");
+            modelAndView.addObject("user", new AppUser());
             modelAndView.addObject("message", "Username has already exist");
         }
         return modelAndView;
@@ -86,7 +98,6 @@ public class HomeController {
         modelAndView.addObject("post", new Post());
         return modelAndView;
     }
-
     // anhnbt
     @GetMapping("/home2")
     public ModelAndView home2() {
@@ -145,16 +156,17 @@ public class HomeController {
     public ModelAndView createPost(@ModelAttribute Post post) {
         // lấy ra tag
         String content = post.getContent();
-        String[] splitContent = content.split("\r\n");
-        String splitTag = splitContent[0];
-        String tag = splitTag.substring(1, splitTag.length());
-        post.setTag(tag);
-        //lưu content
-        String concatContent = "";
-        for (int i = 1; i < splitContent.length; i++) {
-            concatContent += splitContent[i] + "\r\n";
+        Pattern pattern = Pattern.compile("\\B(\\#[a-zA-Z]+\\b)(?!;)");
+        Matcher matcher = pattern.matcher(content);
+        Set<Hashtag> hashtags = new HashSet<>();
+        while (matcher.find()) {
+            String match = matcher.group(1);
+            Hashtag hashtag = new Hashtag();
+            hashtag.setName(match);
+            hashtags.add(hashtag);
+            hashtagService.save(hashtag);
         }
-        post.setContent(concatContent);
+        post.setTags(hashtags);
         // lưu ảnh và set image cho post
         MultipartFile image = post.getImage();
         String imageURL = image.getOriginalFilename();
@@ -166,7 +178,7 @@ public class HomeController {
             e.printStackTrace();
         }
 
-        post.setUsers(user());
+        post.setAppUser(user());
         //lưu post
         postService.save(post);
         ModelAndView modelAndView = new ModelAndView("home");
@@ -182,6 +194,8 @@ public class HomeController {
     public ModelAndView showPersonalPage(@PathVariable(name = "userID") int userID) {
         ModelAndView modelAndView;
         Iterable<Post> posts = postService.getAllByAppUserIs(usersService.findById(userID));
+        List<Post> userPosts = StreamSupport.stream(posts.spliterator(), true).collect(Collectors.toList());
+        int size = userPosts.size();
         if (userID == user().getUserId()) {
             // chuyển sang trang cá nhân của mình
             modelAndView = new ModelAndView("personal");
@@ -192,6 +206,7 @@ public class HomeController {
         }
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
+        modelAndView.addObject("size", size);
         return modelAndView;
     }
 
@@ -206,7 +221,7 @@ public class HomeController {
 
     @PostMapping("/edit-post/{postID}")
     public ModelAndView editPost(@ModelAttribute Post post) {
-        post.setUsers(user());
+        post.setAppUser(user());
         MultipartFile image = post.getImage();
         String imageURL = image.getOriginalFilename();
         // lấy link ảnh trong DB
@@ -224,8 +239,20 @@ public class HomeController {
         } else {
             post.setImageUrl(imageUrlDB);
         }
-
-
+// lưu hashtag
+        String content = post.getContent();
+        Pattern pattern = Pattern.compile("\\B(\\#[a-zA-Z]+\\b)(?!;)");
+        Matcher matcher = pattern.matcher(content);
+        Set<Hashtag> hashtags = new HashSet<>();
+        while (matcher.find()) {
+            String match = matcher.group(1);
+            Hashtag hashtag = new Hashtag();
+            hashtag.setName(match);
+            hashtags.add(hashtag);
+            hashtagService.save(hashtag);
+        }
+        post.setTags(hashtags);
+// lưu post
         postService.save(post);
         Iterable<Post> posts = postService.getAllByAppUserIs(user());
         ModelAndView modelAndView = new ModelAndView("personal");
@@ -234,12 +261,24 @@ public class HomeController {
         return modelAndView;
     }
 
-    // CHi //Tìm tất cả bài viết theo tag
-    @GetMapping("/find-by-tag/{postID}")
-    public ModelAndView findByTag(@PathVariable(name = "postID") int postID) {
-        Post post = postService.findById(postID);
-        String tag = post.getTag();
-        Iterable<Post> posts = postService.getAllByTag(tag);
+    //Chi //delete post
+    @GetMapping("/delete-post/{postID}")
+    public ModelAndView deletePost(@PathVariable int postID) {
+        postService.remove(postID);
+        Iterable<Post> posts = postService.getAllByAppUserIs(user());
+        List<Post> userPosts = StreamSupport.stream(posts.spliterator(), true).collect(Collectors.toList());
+        int size = userPosts.size();
+        ModelAndView modelAndView = new ModelAndView("personal");
+        modelAndView.addObject("user", user());
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("size", size);
+        return modelAndView;
+    }
+
+    // Chi //Tìm tất cả bài viết theo tag
+    @GetMapping("/findtag")
+    public ModelAndView findByTag(@RequestParam String tag) {
+        List<Post> posts = postService.findAllPostByTag('#' + tag);
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
@@ -248,12 +287,9 @@ public class HomeController {
     }
 
     // CHi //Tìm tất cả bài viết theo tag trong trang cá nhân của mình
-    @GetMapping("/find-by-tag-personal/{postID}")
-    public ModelAndView findByTagPersonal(@PathVariable(name = "postID") int postID) {
-        Post post = postService.findById(postID);
-        String tag = post.getTag();
-        Iterable<Post> posts = postService.getAllPostByTagIsAndAndAppUserIs(tag, user());
-
+    @GetMapping("/find-by-tag-personal")
+    public ModelAndView findByTagPersonal(@RequestParam String tag) {
+        List<Post> posts = postService.findAllPostByTagIsAndAppUserIs('#' + tag, user());
         ModelAndView modelAndView = new ModelAndView("personal");
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
@@ -262,12 +298,10 @@ public class HomeController {
     }
 
     // CHi //Tìm tất cả bài viết theo tag trong trang cá nhân của friend
-    @GetMapping("/find-by-tag-friend/{postID}")
-    public ModelAndView findByTagFriend(@PathVariable(name = "postID") int postID) {
-        Post post = postService.findById(postID);
-        String tag = post.getTag();
-        Iterable<Post> posts = postService.getAllPostByTagIsAndAndAppUserIs(tag, post.getAppUser());
-
+    @GetMapping("/find-by-tag-friend")
+    public ModelAndView findByTagFriend(@RequestParam(name = "tag") String tag, @RequestParam(name = "id") String id) {
+        Post post = postService.findById(Integer.parseInt(id));
+        List<Post> posts = postService.findAllPostByTagIsAndAppUserIs('#' + tag, post.getAppUser());
         ModelAndView modelAndView = new ModelAndView("friendpage");
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("friend", post.getAppUser());
@@ -306,13 +340,13 @@ public class HomeController {
 
     //Toan
     @GetMapping("/search-user-by-name")
-    public ResponseEntity<List<AppUser>> searchUserByNameAPI(@RequestParam(name ="name",required = false)String keySearch) {
+    public ResponseEntity<List<AppUser>> searchUserByNameAPI(@RequestParam(name = "name", required = false) String keySearch) {
         List<AppUser> appUserss = usersService.searchAllUserByNameAndGiveFlagToFriend(keySearch);
         return new ResponseEntity<>(appUserss, HttpStatus.OK);
     }
 
     //Toan
-    @GetMapping("/remove-friend/{friendId}")
+    @DeleteMapping("/remove-friend/{friendId}")
     public ResponseEntity<AppUser> removeFriendRequestAndRemoveFriend(@PathVariable(name = "friendId") int id) {
         usersService.removeFriendshipsByUser1IsAndUser2Is(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -326,11 +360,31 @@ public class HomeController {
 
     //Minh
     @GetMapping("/api/getuserfriend/")
-    public ResponseEntity<Iterable<AppUser>> getUserFriends(){
+    public ResponseEntity<Iterable<AppUser>> getUserFriends() {
         AppUser user = user();
         Iterable<AppUser> listUserFriend = usersService.searchAllFriendsByAppUser(user);
         return new ResponseEntity<>(listUserFriend, HttpStatus.OK);
     }
+
+        //toan
+    @GetMapping("/bell-notification")
+    public ResponseEntity<Iterable<AppUser>> bellNotification() {
+        List<AppUser> pendingUsers = usersService.searchAllUserByPendingRequestToCurrentUser();
+        return new ResponseEntity<>(pendingUsers, HttpStatus.OK);
+    }
+      //toan ham` test ko dung`
+      @PutMapping("/accept-friend-request/{friendId}")
+      public ResponseEntity<AppUser> acceptFriendRequest(@PathVariable(name = "friendId",required = true) int id) {
+          friendshipService.acceptFriendRequest(usersService.findById(id));
+          return new ResponseEntity<>(HttpStatus.OK);
+      }
+
+    //toan accept friend request
+      @GetMapping("/accept")
+    public ResponseEntity<AppUser> accept(@RequestParam(name = "name")int id){
+          friendshipService.acceptFriendRequest(usersService.findById(id));
+          return new ResponseEntity<>(HttpStatus.OK);
+      }
 
     //Minh
     @GetMapping("/api/searchFriendByName")
