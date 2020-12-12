@@ -166,15 +166,16 @@
             <th:block th:each="post:${posts}">
 
                 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                    <img th:src="${'../'+post.users.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px"
+                    <img th:src="${'../'+post.appUser.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px"
                          height="65px">
                     <span class="w3-right w3-opacity" th:text="${post.date}"></span>
-                    <a th:href="@{/show-personal-page/__${post.users.userId}__}"><h4
-                            th:text="${post.users.userName}"></h4></a><br>
+                    <a th:href="@{/show-personal-page/__${post.appUser.userId}__}"><h4
+                            th:text="${post.appUser.userName}"></h4></a><br>
                     <hr class="w3-clear">
-                    <p>#<a th:href="@{/find-by-tag/__${post.postID}__}"><span th:text="${post.tag}"></span></a></p>
+<!--                    ở đây không có tag nữa và phải thêm class entry vào thẻ div-->
+                    <div class="entry">
                     <p style="white-space: pre;" th:utext="${post.content}"></p>
-
+                    </div>
                     <p th:if="${!#strings.isEmpty(post.imageUrl)}">
                         <img th:src="${'../'+post.imageUrl}" class="postimage"/>
                     </p>
@@ -214,7 +215,7 @@
                     <!--                    post your comment end-->
 
                 </div>
-                    //toan
+<!--                    toan-->
                 <script >
 
                      let myVar = setInterval(toan_loadFriendStatus, 2000);

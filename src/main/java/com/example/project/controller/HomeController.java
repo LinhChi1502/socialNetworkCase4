@@ -6,7 +6,6 @@ import com.example.project.model.Post;
 import com.example.project.service.commentlike.CommentLikeService;
 import com.example.project.service.friendship.FriendshipService;
 import com.example.project.service.hashtag.HashtagService;
-import com.example.project.service.hashtag.IHashtagService;
 import com.example.project.service.post.PostService;
 import com.example.project.service.postcomment.PostCommentService;
 import com.example.project.service.postlike.PostlikeService;
@@ -179,7 +178,7 @@ public class HomeController {
             e.printStackTrace();
         }
 
-        post.setUsers(user());
+        post.setAppUser(user());
         //lưu post
         postService.save(post);
         ModelAndView modelAndView = new ModelAndView("home");
@@ -222,7 +221,7 @@ public class HomeController {
 
     @PostMapping("/edit-post/{postID}")
     public ModelAndView editPost(@ModelAttribute Post post) {
-        post.setUsers(user());
+        post.setAppUser(user());
         MultipartFile image = post.getImage();
         String imageURL = image.getOriginalFilename();
         // lấy link ảnh trong DB

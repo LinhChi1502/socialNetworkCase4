@@ -75,9 +75,9 @@
             <div class="card shadow-sm mb-2">
                 <div class="card-header">
                     <div class="media">
-                        <img th:src="${'../'+post.users.avatarURL}" class="align-self-center mr-3 rounded-circle" style="width: 60px; height: 60px" alt="...">
+                        <img th:src="${'../'+post.appUser.avatarURL}" class="align-self-center mr-3 rounded-circle" style="width: 60px; height: 60px" alt="...">
                         <div class="media-body">
-                            <a th:href="@{/show-personal-page/__${post.users.userId}__}"><h5 class="mt-0 pt-3" th:text="${post.users.userName}"></h5></a>
+                            <a th:href="@{/show-personal-page/__${post.appUser.userId}__}"><h5 class="mt-0 pt-3" th:text="${post.appUser.userName}"></h5></a>
                         </div>
                         <span class="text-right" th:text="${post.date}"></span>
                     </div>
