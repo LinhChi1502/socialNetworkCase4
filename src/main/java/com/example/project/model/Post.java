@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,8 +25,7 @@ public class Post {
     private Date date;
     @Column(name = "imageURL")
     private String imageUrl;
-    @Column(name = "tag")
-    private String tag;
+
     @Transient
     private MultipartFile image;
 
@@ -38,21 +38,25 @@ public class Post {
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private Set<PostLike> post;
 
-
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "post_tags",
+            joinColumns = { @JoinColumn(name = "post_id") },
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") })
+    private Set<Hashtag> tags;
 
     public Post() {
     }
 
-    public Post(int postID, String content, boolean status, Date date, String imageUrl, String tag, MultipartFile image, AppUser appUser, Set<PostLike> post) {
+    public Post(int postID, String content, boolean status, Date date, String imageUrl, MultipartFile image, AppUser appUser, Set<PostLike> post, Set<Hashtag> tags) {
         this.postID = postID;
         this.content = content;
         this.status = status;
         this.date = date;
         this.imageUrl = imageUrl;
-        this.tag = tag;
         this.image = image;
         this.appUser = appUser;
         this.post = post;
+        this.tags = tags;
     }
 
     public int getPostID() {
@@ -103,11 +107,11 @@ public class Post {
         this.image = image;
     }
 
-    public AppUser getUsers() {
+    public AppUser getAppUser() {
         return appUser;
     }
 
-    public void setUsers(AppUser appUser) {
+    public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
     }
 
@@ -119,19 +123,11 @@ public class Post {
         this.post = post;
     }
 
-    public String getTag() {
-        return tag;
+    public Set<Hashtag> getTags() {
+        return tags;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public AppUser getAppUser() {
-        return appUser;
-    }
-
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
+    public void setTags(Set<Hashtag> tags) {
+        this.tags = tags;
     }
 }

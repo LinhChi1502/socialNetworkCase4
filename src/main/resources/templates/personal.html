@@ -5,7 +5,7 @@
 <head th:replace="layout::head"></head>
 
 
-<body class="w3-theme-l5" onload="loadUserFriend()">
+<body class="w3-theme-l5">
 <!--Narbar-->
 <nav th:fragment="menu">
     <div class="w3-top">
@@ -109,24 +109,25 @@
 
         <!-- Middle Column-->
         <div class="w3-col m7">
-<div th:if="${size == 0}">
-    <div class="w3-container w3-card w3-white w3-round w3-margin" style="height: 300px">
-        No Post Found!
-    </div>
-</div>
+            <div th:if="${size == 0}">
+                <div class="w3-container w3-card w3-white w3-round w3-margin" style="height: 300px">
+                    No Post Found!
+                </div>
+            </div>
             <th:block th:each="post:${posts}">
 
                 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                    <img th:src="${'../'+post.users.getAvatarURL()}" class="w3-left w3-circle w3-margin-right"
+                    <img th:src="${'../'+post.appUser.avatarURL}" class="w3-left w3-circle w3-margin-right"
                          width="65px" height="65px">
                     <span class="w3-right w3-opacity" th:text="${post.date}"></span><br>
                     <span class="w3-right w3-opacity"><a th:href="@{/edit-post/__${post.postID}__}"><button>edit</button></a></span>
-                    <a th:href="@{/show-personal-page/__${post.users.getUserId()}__}"><h4
-                            th:text="${post.users.userName}"></h4></a><br>
+                    <a th:href="@{/show-personal-page/__${post.appUser.userId}__}"><h4
+                            th:text="${post.appUser.userName}"></h4></a><br>
                     <hr class="w3-clear">
-                    <p>#<a th:href="@{/find-by-tag-personal/__${post.postID}__}"><span th:text="${post.tag}"></span></a></p>
-                    <p style="white-space: pre;" th:utext="${post.content}"></p>
-
+                    <!--                    <p>#<a th:href="@{/find-by-tag-personal/__${post.postID}__}"><span th:text="${post.tag}"></span></a></p>-->
+                    <div class="entry">
+                        <p style="white-space: pre;" th:utext="${post.content}"></p>
+                    </div>
                     <p th:if="${!#strings.isEmpty(post.imageUrl)}">
                         <img th:src="${'../'+post.imageUrl}" class="postimage"/>
                     </p>
@@ -181,5 +182,21 @@
 <!--       Footer -->
 <footer th:replace="layout::footer"></footer>
 <!--       Footer End -->
+
+<script>
+    (function (win,doc) {
+        'use strict';
+        var siteURL = '/find-by-tag-personal',
+            entries = doc.querySelectorAll('div.entry > p'),
+            i;
+
+        if ( entries.length > 0 ) {
+            for (i = 0; i < entries.length; i = i + 1) {
+                entries[i].innerHTML = entries[i].innerHTML.replace(/#(\S+)/g,'<a href="'+siteURL+'?tag=$1" title="Find more posts tagged with #$1">#$1</a>');
+            }
+        }
+
+    }(this, this.document));
+</script>
 </body>
 
