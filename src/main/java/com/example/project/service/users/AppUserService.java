@@ -195,6 +195,7 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         AppRole appRole = new AppRole();
         appRole.setId(1);
         appUser.setRole(appRole);
+        appUser.setAvatarURL("default.png");
 
         appUserRepository.save(appUser);
 

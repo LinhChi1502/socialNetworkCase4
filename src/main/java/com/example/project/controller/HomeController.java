@@ -266,9 +266,12 @@ public class HomeController {
     public ModelAndView deletePost(@PathVariable int postID) {
         postService.remove(postID);
         Iterable<Post> posts = postService.getAllByAppUserIs(user());
+        List<Post> userPosts = StreamSupport.stream(posts.spliterator(), true).collect(Collectors.toList());
+        int size = userPosts.size();
         ModelAndView modelAndView = new ModelAndView("personal");
         modelAndView.addObject("user", user());
         modelAndView.addObject("posts", posts);
+        modelAndView.addObject("size", size);
         return modelAndView;
     }
 
