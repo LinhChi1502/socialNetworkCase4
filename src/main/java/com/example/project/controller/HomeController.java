@@ -1,9 +1,6 @@
 package com.example.project.controller;
 
-import com.example.project.model.AppUser;
-import com.example.project.model.Hashtag;
-import com.example.project.model.Post;
-import com.example.project.model.PostComment;
+import com.example.project.model.*;
 import com.example.project.service.commentlike.CommentLikeService;
 import com.example.project.service.friendship.FriendshipService;
 import com.example.project.service.hashtag.HashtagService;
@@ -431,6 +428,13 @@ public class HomeController {
         comment.setPost(post);
         postCommentService.save(comment);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //Minh
+    @GetMapping("/api/getallpostlike")
+    public ResponseEntity<Iterable<PostLike>> getAllPostLike(){
+        Iterable<PostLike> postLikes = postlikeService.findAll();
+        return new ResponseEntity<>(postLikes, HttpStatus.OK);
     }
 }
 
