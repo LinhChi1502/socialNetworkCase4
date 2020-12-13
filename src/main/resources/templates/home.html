@@ -6,7 +6,7 @@
 
 
 
-<body class="w3-theme-l5" onload="loadUserFriend(), commentSuccess()">
+<body class="w3-theme-l5" onload="loadUserFriend(), commentSuccess(), likeSuccess()">
 <!--Narbar-->
 <nav th:fragment="menu">
     <div class="w3-top">
@@ -174,12 +174,16 @@
                     <p th:if="${!#strings.isEmpty(post.imageUrl)}">
                         <img th:src="${'../'+post.imageUrl}" class="postimage"/>
                     </p>
-                    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i
-                            class="fa fa-thumbs-up"></i><span>1000</span>
+
+                    <!--Minh Beos đã ở đây-->
+                    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" th:name="${post.postID}"
+                            onclick="likePost(this)">
+                        <i class="fa fa-thumbs-up"></i>
+                        <span th:id="'likeCount' + ${post.postID}">0</span>
                     </button>
                     <hr>
 
-                    <!--                    Comment area-->
+                    <!--Comment area-->
                     <div th:id=" 'postCommentArea' + ${post.getPostID()}">
                         <tr>
                             <td><img width="50px" height="50px" style="border-radius: 50%"></td>
@@ -191,7 +195,7 @@
                         </tr>
                     </div>
 
-                    <!--                    Comment area end-->
+                    <!--Minh Beos đã ở đây Comment area end-->
 
 
                     <!--                    post your comment-->
@@ -214,6 +218,53 @@
                             </form>
                         </tr>
                         <script>
+                            function likePost(element) {
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: "PUT",
+                                    url: '/api/likepost/' + element.name,
+                                    success: function () {
+                                        likeSuccess();
+                                    }
+                                })
+                            }
+
+                            function likeSuccess() {
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: "GET",
+                                    url: "/api/getallpostlike",
+                                    success: function (response) {
+                                        fillLikeField(response);
+                                    }
+                                })
+                            }
+                            function fillLikeField(list) {
+                                if (!list.isEmpty){
+                                    let numberOfLikeAreas = [`${list[0].post.postID}`];
+                                    for (let i = 0; i < list.length ; i++) {
+                                        if (!numberOfLikeAreas.includes(`${list[i].post.postID}`)){
+                                            numberOfLikeAreas.push(`${list[i].post.postID}`);
+                                        }
+                                    }
+                                    for (let i = 0; i < numberOfLikeAreas.length; i++) {
+                                        let likeCount = 0;
+                                        for (let j = 0; j < list.length; j++) {
+                                            if (numberOfLikeAreas[i] == `${list[j].post.postID}`){
+                                                likeCount++;
+                                            }
+                                        }
+                                        document.getElementById('likeCount' + numberOfLikeAreas[i]).innerText = likeCount;
+                                    }
+                                }
+                            }
+
                             function createPostComment2(element) {
                                 let postId = element.id;
                                 let json = {
@@ -300,7 +351,7 @@
                             }
                         </script>
                     </div>
-                    <!--                    post your comment end-->
+                    <!--Và Minh Beos đã rời khỏi đây post your comment end-->
 
                 </div>
 <!--                    toan-->

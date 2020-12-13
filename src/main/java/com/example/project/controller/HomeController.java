@@ -436,5 +436,16 @@ public class HomeController {
         Iterable<PostLike> postLikes = postlikeService.findAll();
         return new ResponseEntity<>(postLikes, HttpStatus.OK);
     }
+
+    //Minh
+    @PutMapping("/api/likepost/{postID}")
+    public ResponseEntity<PostLike> likePost(@PathVariable (name = "postID") int postID){
+        PostLike postLike = new PostLike();
+        Post post = postService.findById(postID);
+        postLike.setPost(post);
+        postLike.setUser(user());
+        postlikeService.save(postLike);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
 
