@@ -445,6 +445,7 @@ public class HomeController {
         List<PostLike> checkList = (List<PostLike>) postlikeService.findAll();
         boolean flag = false;
         int pos = 0;
+
         for (int i = 0; i < checkList.size(); i++) {
             if (checkList.get(i).getUser() == user() && checkList.get(i).getPost() == post){
                 flag = true;
