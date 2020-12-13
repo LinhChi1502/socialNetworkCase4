@@ -6,7 +6,7 @@
 
 
 
-<body class="w3-theme-l5" onload="loadUserFriend()">
+<body class="w3-theme-l5" onload="loadUserFriend(), commentSuccess()">
 <!--Narbar-->
 <nav th:fragment="menu">
     <div class="w3-top">
@@ -127,8 +127,7 @@
         <!-- Left Column End-->
 
         <!-- Middle Column-->
-        <div class="w3-col m7"
-        >
+        <div class="w3-col m7">
 
             <!--Write something-->
             <div class="w3-row-padding">
@@ -152,8 +151,6 @@
                                     <div class="radio" style="padding-left: 15px">
                                         <label><input type="radio" th:field="*{status}" value="false">Friend</label>
                                     </div>
-
-
                                 </div>
                             </div>
                             <br>
@@ -163,7 +160,6 @@
                 </div>
             </div>
             <th:block th:each="post:${posts}">
-
                 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
                     <img th:src="${'../'+post.appUser.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px"
                          height="65px">
@@ -178,15 +174,13 @@
                     <p th:if="${!#strings.isEmpty(post.imageUrl)}">
                         <img th:src="${'../'+post.imageUrl}" class="postimage"/>
                     </p>
-
-
                     <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i
                             class="fa fa-thumbs-up"></i><span>1000</span>
                     </button>
                     <hr>
 
                     <!--                    Comment area-->
-                    <div>
+                    <div th:id=" 'postCommentArea' + ${post.getPostID()}">
                         <tr>
                             <td><img width="50px" height="50px" style="border-radius: 50%"></td>
                             <td>
@@ -203,13 +197,78 @@
                     <!--                    post your comment-->
                     <div>
                         <tr>
-                            <td><img width="50px" height="50px" style="border-radius: 50%"></td>
+                            <td><img th:src="${'../' + user.getAvatarURL()}" +  width="50px" height="50px" style="border-radius: 50%"></td>
                             <td style="padding-left: 20px">
-                                <input type="text" placeholder="Post your comment" style="width: 350px">
-                                <button><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                                <input type="text" placeholder="Post your comment" style="width: 350px" th:id="'postCommentContent' + ${post.getPostID()}">
+                                <button th:id="${post.getPostID()}" onclick="createPostComment(this)"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
                             </td>
                         </tr>
+                        <script>
+                            function createPostComment(element) {
+                                let commentField;
+                                let input = element.id;
+                                if (input.includes('postCommentContent')){
+                                    commentField = document.getElementById(element);
+                                } else {
+                                    commentField = document.getElementById('postCommentContent' + element.id)
+                                }
+                                let commentData = commentField.value;
+                                let postId = element.id;
+                                let json = {
+                                    comment: commentData,
+                                }
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: 'PUT',
+                                    url: '/api/createpostcomment/' + postId,
+                                    data: JSON.stringify(json),
+                                    success:function (postId) {
+                                        commentSuccess(postId);
+                                        commentField.value = "";
+                                    }
+                                })
+                            }
 
+                            function commentSuccess() {
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: 'GET',
+                                    url: '/api/getallpostcomment',
+                                    success: function (response) {
+                                        let numberOfAreas = [`${response[0].post.postID}`]
+                                        for (let i = 1; i < response.length ; i++) {
+                                            if (!numberOfAreas.includes(`${response[i].post.postID}`)) numberOfAreas.push(`${response[i].post.postID}`)
+                                        }
+
+                                        for (let i = 0; i < numberOfAreas.length ; i++) {
+                                            let content = '';
+                                            for (let j = 0; j < response.length ; j++) {
+                                                if (numberOfAreas[i] == `${response[j].post.postID}`){
+                                                    content += getComment(response[j]);
+                                                }
+                                            }
+                                            document.getElementById('postCommentArea' + numberOfAreas[i]).innerHTML = content;
+                                        }
+                                    }
+                                })
+                            }
+
+                            function getComment(postComment) {
+                                return  `<tr>`+
+                                            `<td><img src="${postComment.user.avatarURL}" width="50px" height="50px" style="border-radius: 50%"></td>` +
+                                            `<td><span style="padding-left: 10px">${postComment.user.userName}</span>` +
+                                                `<span style="padding-left: 10px;font-size: small">${postComment.date}</span>` +
+                                                `<p style="padding-left: 100px">${postComment.comment}</p>` +
+                                            `</td>` +
+                                        `</tr>`
+                            }
+                        </script>
                     </div>
                     <!--                    post your comment end-->
 

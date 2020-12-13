@@ -3,6 +3,7 @@ package com.example.project.controller;
 import com.example.project.model.AppUser;
 import com.example.project.model.Hashtag;
 import com.example.project.model.Post;
+import com.example.project.model.PostComment;
 import com.example.project.service.commentlike.CommentLikeService;
 import com.example.project.service.friendship.FriendshipService;
 import com.example.project.service.hashtag.HashtagService;
@@ -15,6 +16,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -411,6 +413,24 @@ public class HomeController {
             friendshipService.deleteByUser1UserIdAndUser2UserId(id, user().getUserId());
         }
         return  new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //Minh
+    @GetMapping("/api/getallpostcomment")
+    public ResponseEntity<Iterable<PostComment>> getAllPostComment(){
+        Iterable<PostComment> allPostComment = postCommentService.findAll();
+        return new ResponseEntity<>(allPostComment, HttpStatus.OK);
+    }
+
+    //Minh
+    @PutMapping("/api/createpostcomment/{postId}")
+    public ResponseEntity<Iterable<PostComment>> createPostComment(@PathVariable(name = "postId") int postId, @RequestBody PostComment postComment){
+        PostComment comment = postComment;
+        Post post = postService.findById(postId);
+        comment.setUser(user());
+        comment.setPost(post);
+        postCommentService.save(comment);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 
