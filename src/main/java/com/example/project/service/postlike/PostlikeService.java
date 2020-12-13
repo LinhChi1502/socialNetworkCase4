@@ -14,15 +14,12 @@ public class PostlikeService implements IPostlikeService {
     @Override
     public Iterable<PostLike> findAll() {
         return postlikeRepository.findAll();
-
     }
 
     @Override
     public PostLike findById(Integer id) {
         return postlikeRepository.findById(id).get();
     }
-
-
 
     @Override
     public void save(PostLike model) {
