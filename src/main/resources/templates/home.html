@@ -196,14 +196,45 @@
 
                     <!--                    post your comment-->
                     <div>
+<!--                        <tr>-->
+<!--                            <td><img th:src="${'../' + user.getAvatarURL()}" +  width="50px" height="50px" style="border-radius: 50%"></td>-->
+<!--                            <td style="padding-left: 20px">-->
+<!--                                <input type="text" placeholder="Post your comment" style="width: 350px" th:id="'postCommentContent' + ${post.getPostID()}">-->
+<!--                                <button th:id="${post.getPostID()}" onclick="createPostComment(this)"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <!-- Tuan Anh Refactor Comment -->
                         <tr>
+                            <form th:id="${post.getPostID()}" onsubmit="createPostComment2(this); return false;">
                             <td><img th:src="${'../' + user.getAvatarURL()}" +  width="50px" height="50px" style="border-radius: 50%"></td>
                             <td style="padding-left: 20px">
-                                <input type="text" placeholder="Post your comment" style="width: 350px" th:id="'postCommentContent' + ${post.getPostID()}">
-                                <button th:id="${post.getPostID()}" onclick="createPostComment(this)"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                                <input name="comment" type="text" placeholder="Post your comment" style="width: 350px" th:id="'postCommentContent' + ${post.getPostID()}">
+                                <button type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
                             </td>
+                            </form>
                         </tr>
+                        <!-- End Tuan Anh Refactor Comment -->
                         <script>
+                            function createPostComment2(element) {
+                                let postId = element.id;
+                                let json = {
+                                    comment: element.comment.value,
+                                }
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: 'PUT',
+                                    url: '/api/createpostcomment/' + postId,
+                                    data: JSON.stringify(json),
+                                    success:function (postId) {
+                                        commentSuccess(postId);
+                                        element.comment.value = "";
+                                    }
+                                })
+                            }
+                            <!-- End Tuan Anh Refactor Comment -->
                             function createPostComment(element) {
                                 let commentField;
                                 let input = element.id;
