@@ -178,7 +178,7 @@
                     <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" th:id="'btnLike' + ${post.postID}" th:name="${post.postID}"
                             onclick="likePost(this)">
                         <i class="fa fa-thumbs-up"></i>
-                        <span th:text="${post.postLikes.size()}">0</span>
+<!--                        <span th:if="${post.postLikes.size() != null}" th:text="${post.postLikes.size()}"></span>-->
                     </button>
                     <hr>
                     <!--Comment area-->
