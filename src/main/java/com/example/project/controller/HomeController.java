@@ -445,7 +445,6 @@ public class HomeController {
         List<PostLike> checkList = (List<PostLike>) postlikeService.findAll();
         boolean flag = false;
         int pos = 0;
-
         for (int i = 0; i < checkList.size(); i++) {
             if (checkList.get(i).getUser() == user() && checkList.get(i).getPost() == post){
                 flag = true;
@@ -453,7 +452,6 @@ public class HomeController {
                 break;
             }
         }
-
         if (flag == false){
             postLike.setPost(post);
             postLike.setUser(user());
@@ -461,7 +459,39 @@ public class HomeController {
         } else {
             postlikeService.remove(pos);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
+    //Minh
+    @GetMapping("/api/getcommentlikes/{commentID}")
+    public ResponseEntity<Set<CommentLike>> getCommentLikes(@PathVariable (name = "commentID") int commentID){
+        PostComment comment = postCommentService.findById(commentID);
+        Set<CommentLike> commentLikes = comment.getLikes();
+        return new ResponseEntity<>(commentLikes, HttpStatus.OK);
+    }
+
+    //Minh
+    @PutMapping("/api/likecomment/{commentID}")
+    public ResponseEntity<CommentLike> likeComment(@PathVariable (name = "commentID") int commentID){
+        CommentLike commentLike = new CommentLike();
+        PostComment comment = postCommentService.findById(commentID);
+        List<CommentLike> checkList = (List<CommentLike>) commentLikeService.findAll();
+        boolean flag = false;
+        int com = 0;
+        for (int i = 0; i < checkList.size(); i++) {
+            if (checkList.get(i).getUser() == user() && checkList.get(i).getPostComment() == comment){
+                flag = true;
+                com = checkList.get(i).getCommentLikeID();
+                break;
+            }
+        }
+        if (flag == false){
+            commentLike.setPostComment(comment);
+            commentLike.setUser(user());
+            commentLikeService.save(commentLike);
+        } else {
+            commentLikeService.remove(com);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
