@@ -64,6 +64,12 @@ public class AppUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<CommentLike> likes;
 
+    //commentLike
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Notification> notifications;
+
+
     //role
     @ManyToOne
     private AppRole role;
@@ -71,7 +77,7 @@ public class AppUser {
     public AppUser() {
     }
 
-    public AppUser(int userId, String userName, String password, String avatarURL, MultipartFile avatar, String firstName, String lastName, String city, String gender, String about, String phone, String dateOfBirth, Set<Post> posts, Set<Friendship> user1, Set<Friendship> user2, Set<Friendship> actionUser, Set<PostLike> postLikes, Set<CommentLike> likes, AppRole role) {
+    public AppUser(int userId, String userName, String password, String avatarURL, MultipartFile avatar, String firstName, String lastName, String city, String gender, String about, String phone, String dateOfBirth, Set<Post> posts, Set<Friendship> user1, Set<Friendship> user2, Set<Friendship> actionUser, Set<PostLike> postLikes, Set<CommentLike> likes, Set<Notification> notifications, AppRole role) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
@@ -90,6 +96,7 @@ public class AppUser {
         this.actionUser = actionUser;
         this.postLikes = postLikes;
         this.likes = likes;
+        this.notifications = notifications;
         this.role = role;
     }
 
@@ -251,6 +258,14 @@ public class AppUser {
 
     public void setFlag(int flag) {
         this.flag = flag;
+    }
+
+    public Set<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<Notification> notifications) {
+        this.notifications = notifications;
     }
 
     @Transient
