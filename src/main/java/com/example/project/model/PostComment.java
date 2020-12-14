@@ -1,5 +1,6 @@
 package com.example.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,15 +19,15 @@ public class PostComment {
     @Column(name = "coment",columnDefinition = "longtext")
     private String comment;
 
- @CreationTimestamp
+    @CreationTimestamp
     @Column(name = "datecomment")
     private Date date;
-
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "userID")
     private AppUser user;
 
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "postID")
     private Post post;

@@ -5,6 +5,8 @@ import com.example.project.repository.PostlikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class PostlikeService implements IPostlikeService {
     @Autowired
@@ -22,6 +24,7 @@ public class PostlikeService implements IPostlikeService {
     }
 
     @Override
+    @Transactional
     public void save(PostLike model) {
         postlikeRepository.save(model);
     }

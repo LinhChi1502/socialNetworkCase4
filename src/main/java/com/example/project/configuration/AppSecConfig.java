@@ -53,6 +53,7 @@ public class AppSecConfig extends WebSecurityConfigurerAdapter {
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .and().exceptionHandling().accessDeniedPage("/page403");
         http.csrf().disable();
+//        http.cors();
     }
 
 

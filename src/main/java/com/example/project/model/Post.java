@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -35,8 +36,11 @@ public class Post {
 
     //postlike
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<PostLike> post;
+    private Set<PostLike> postLikes;
+
+    //postComment
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    private List<PostComment> postComments;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "post_tags",
@@ -47,7 +51,7 @@ public class Post {
     public Post() {
     }
 
-    public Post(int postID, String content, boolean status, Date date, String imageUrl, MultipartFile image, AppUser appUser, Set<PostLike> post, Set<Hashtag> tags) {
+    public Post(int postID, String content, boolean status, Date date, String imageUrl, MultipartFile image, AppUser appUser, Set<PostLike> postLikes, Set<Hashtag> tags) {
         this.postID = postID;
         this.content = content;
         this.status = status;
@@ -55,7 +59,7 @@ public class Post {
         this.imageUrl = imageUrl;
         this.image = image;
         this.appUser = appUser;
-        this.post = post;
+        this.postLikes = postLikes;
         this.tags = tags;
     }
 
@@ -115,12 +119,12 @@ public class Post {
         this.appUser = appUser;
     }
 
-    public Set<PostLike> getPost() {
-        return post;
+    public Set<PostLike> getPostLikes() {
+        return postLikes;
     }
 
-    public void setPost(Set<PostLike> post) {
-        this.post = post;
+    public void setPostLikes(Set<PostLike> post) {
+        this.postLikes = post;
     }
 
     public Set<Hashtag> getTags() {
@@ -129,5 +133,13 @@ public class Post {
 
     public void setTags(Set<Hashtag> tags) {
         this.tags = tags;
+    }
+
+    public List<PostComment> getPostComments() {
+        return postComments;
+    }
+
+    public void setPostComments(List<PostComment> postComments) {
+        this.postComments = postComments;
     }
 }

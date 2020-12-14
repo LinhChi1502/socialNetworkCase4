@@ -1,9 +1,6 @@
 package com.example.project.service.post;
 
-import com.example.project.model.AppUser;
-import com.example.project.model.Friendship;
-import com.example.project.model.Hashtag;
-import com.example.project.model.Post;
+import com.example.project.model.*;
 import com.example.project.repository.FriendshipRepository;
 import com.example.project.repository.PostRepository;
 import com.example.project.service.friendship.FriendshipService;
@@ -47,9 +44,7 @@ public class PostService implements IPostService {
 
     @Override
     public void remove(Integer id) {
-
         postRepository.deleteById(id);
-
     }
 
     @Override
@@ -120,4 +115,5 @@ public class PostService implements IPostService {
         }
         return posts;
     }
+
 }
