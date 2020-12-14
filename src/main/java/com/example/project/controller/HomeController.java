@@ -385,17 +385,17 @@ public class HomeController {
       }
 
     //Minh
-    @GetMapping("/api/searchFriendByName")
+    @GetMapping("/api/searchfriendbyname")
     public ResponseEntity<List<AppUser>> getFriendsByName(@RequestParam(name = "name", required = false) String inputName){
         List<AppUser> listFriendByName = usersService.searchAllFriendByNameContaining(inputName);
         return new ResponseEntity<>(listFriendByName, HttpStatus.OK);
     }
 
     //Minh
-    @GetMapping("/searchfriendbyname**")
-    public ModelAndView getFriendByName(@RequestParam(name = "input", required = false) String inputName){
+    @GetMapping("/searchfriendbyname")
+    public ModelAndView getFriendByName(@RequestParam (name = "inputSearch", required = false) String inputName){
         ModelAndView modelAndView = new ModelAndView("friendlist");
-        List<AppUser> listFriendByName = usersService.searchAllFriendByNameContaining(inputName);
+        List<AppUser> listFriendByName = usersService.searchAllUserByNameAndGiveFlagToFriend(inputName);
         modelAndView.addObject("listFriendByName", listFriendByName);
         return modelAndView;
     }

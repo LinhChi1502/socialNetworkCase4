@@ -149,13 +149,11 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         } else {
             friendshipRepository.deleteAllByUser1IsAndUser2Is(beRemoveFriend, currentUser());
         }
-
-
     }
 
     @Override
     public List<AppUser> searchAllUserByPendingRequestToCurrentUser() {
-         Iterable<Friendship> list1 = friendshipRepository.getAllByFriendStatusIsAndUser1IsAndActionUserIsNot(0, currentUser(), currentUser());
+        Iterable<Friendship> list1 = friendshipRepository.getAllByFriendStatusIsAndUser1IsAndActionUserIsNot(0, currentUser(), currentUser());
         Iterable<Friendship> list2 = friendshipRepository.getAllByFriendStatusIsAndUser2IsAndActionUserIsNot(0, currentUser(), currentUser());
         List<AppUser> pendingFriends = new ArrayList<>();
         for (Friendship friendship :list1
@@ -168,11 +166,7 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         }
 
         return pendingFriends;
-
-
-
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -210,11 +204,16 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         Iterable<AppUser> allUser = this.getAllByUserNameContaining(inputName);
         AppUser currentUser = this.getCurrentUser();
         List<AppUser> allFriend = this.searchAllFriendsByAppUser(currentUser);
+
         List<AppUser> result = new ArrayList<>();
 
-        for (AppUser user : allUser) {
-            if (allFriend.contains(user)) result.add(user);
+        while (allUser.iterator().hasNext()){
+            AppUser user = allUser.iterator().next();
+            if (allFriend.contains(user)){
+                result.add(user);
+            }
         }
+        
         return result;
     }
 

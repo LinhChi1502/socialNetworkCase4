@@ -45,14 +45,10 @@
             <div class="w3-dropdown-hover w3-hide-small">
                 <form th:action="@{/search-post-by-content}" method="post">
                     <div style="width: fit-content;margin:auto; height: fit-content">
-
-
                             <input type="text" th:name="searchContent" placeholder="Search post" style="color: black;width: 130px"/>
                             <label for="mySubmit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
                             <input id="mySubmit" type="submit" class="hidden"/>
                     </div>
-                </form>
-
                 </form>
             </div>
             <!--search post end-->
@@ -61,8 +57,6 @@
             <div class="w3-dropdown-hover w3-hide-small">
                 <form th:action="@{/search-user-by-name}" method="post">
                     <div style="width: fit-content;margin:auto; height: fit-content">
-
-
                         <input type="text" th:name="searchName" placeholder="Search user"
                                style="color: black;width: 130px"/>
                         <label for="Submit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
@@ -178,7 +172,7 @@
                     <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" th:id="'btnLike' + ${post.postID}" th:name="${post.postID}"
                             onclick="likePost(this)">
                         <i class="fa fa-thumbs-up"></i>
-<!--                        <span th:if="${post.postLikes.size() != null}" th:text="${post.postLikes.size()}"></span>-->
+                        <span th:text="${post.postLikes} == null ? 0 : ${post.postLikes.size()}">0</span>
                     </button>
                     <hr>
                     <!--Comment area-->

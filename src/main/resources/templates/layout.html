@@ -162,9 +162,9 @@
                 <div class="w3-container">
                     <!--search friends-->
                     <div style="width: auto;margin:auto; height: auto">
-                        <form th:action="@{/searchfriendbyname}" method="get">
+                        <form th:action="@{/searchfriendbyname}">
                             <div class="input-icons">
-                                <input class="input-field" type="text" placeholder="Search friend" th:name="input">
+                                <input class="input-field" type="text" placeholder="Search friend" th:name="inputSearch">
                                 <label for="searchFriend" style="float: left">
                                     <i class="fa fa-search icon fa-lg" style="padding-bottom: 25px"></i>
                                 </label>
@@ -199,13 +199,13 @@
                                         }
                                         document.getElementById('listUserFriend').innerHTML = content;
 
-                                        if (document.getElementById("friendListTableMiddle")){
-                                            content = '';
-                                            for (let i = 0; i < list.length; i++) {
-                                                content += fillFriendTableMiddle(list[i]);
-                                            }
-                                            document.getElementById("friendListTableMiddle").innerHTML = content;
-                                        }
+                                        // if (document.getElementById("friendListTableMiddle")){
+                                        //     content = '';
+                                        //     for (let i = 0; i < list.length; i++) {
+                                        //         content += fillFriendTableMiddle(list[i]);
+                                        //     }
+                                        //     document.getElementById("friendListTableMiddle").innerHTML = content;
+                                        // }
                                     }
                                 })
                             }
@@ -250,7 +250,7 @@
                     <!--list 5 friends end-->
                     <br>
                     <div>
-                        <a href="/searchfriendbyname/?input=" style="alignment: right">Go to friend list</a>
+                        <a href="/searchfriendbyname" style="alignment: right">Go to friend list</a>
                     </div>
                 </div>
             </div>
@@ -269,8 +269,6 @@
             <!-- End Right Column -->
         </div>
         <!-- Right Column End -->
-
-
     </div>
 </div>
 <!-- End Page Container -->
