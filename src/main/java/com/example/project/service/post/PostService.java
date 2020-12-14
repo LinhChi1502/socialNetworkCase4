@@ -82,10 +82,6 @@ public class PostService implements IPostService {
         return allPost;
     }
 
-
-
-
-
     @Override
     public Iterable<Post> getAllPostByContentContaining(String searchContent) {
         return postRepository.getAllByContentContaining(searchContent);

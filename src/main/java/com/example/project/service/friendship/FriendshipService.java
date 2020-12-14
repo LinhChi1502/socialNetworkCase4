@@ -46,7 +46,8 @@ public class FriendshipService implements IFriendshipService {
     }
 
 
-    public Iterable<AppUser> findUserFriendByOtherUser(AppUser user) {
+    public Iterable<AppUser>
+    findUserFriendByOtherUser(AppUser user) {
         Iterable<Friendship> friendshipList = friendshipRepository.findAllByFriendStatusIsAndUser1IsOrUser2Is(1, user, user);
         List<AppUser> appUsers = new ArrayList<>();
         for (Friendship friendship : friendshipList

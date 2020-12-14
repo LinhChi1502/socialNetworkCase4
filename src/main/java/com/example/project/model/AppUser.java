@@ -28,13 +28,13 @@ public class AppUser {
     private MultipartFile avatar;
 
     @Column(name = "firstname", nullable = true)
-    @NotEmpty
+    @NotEmpty(message = "Firstname must not be empty")
     private String firstName;
     @Column(name = "lastname", nullable = true)
-    @NotEmpty
+    @NotEmpty(message = "Lastname must not be empty")
     private String lastName;
     @Column(name = "city", nullable = true)
-    @NotEmpty
+    @NotEmpty(message = "City must not be empty")
     private String city;
     @Column(name = "gender", nullable = true)
     private String gender;
@@ -43,7 +43,7 @@ public class AppUser {
 
 
     @Column(name = "phone", nullable = true)
-    @Pattern(regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$")
+    @Pattern(regexp = "\\d{10}", message = "Phone must be 10 digits")
     private String phone;
     @Column(name = "dob", nullable = true)
     private String dateOfBirth;

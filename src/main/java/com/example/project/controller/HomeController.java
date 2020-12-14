@@ -71,18 +71,18 @@ public class HomeController {
 
     // register // Chi
     @PostMapping("/register")
-    public ModelAndView register( @ModelAttribute AppUser user, BindingResult bindingResult) {
+    public ModelAndView register(@ModelAttribute AppUser user, BindingResult bindingResult) {
         ModelAndView modelAndView;
 
-            try {
-                usersService.signUpUser(user);
-                modelAndView = new ModelAndView("login");
-                modelAndView.addObject("user", new AppUser());
-            } catch (Exception e) {
-                modelAndView = new ModelAndView("login");
-                modelAndView.addObject("user", new AppUser());
-                modelAndView.addObject("message", "Username has already exist");
-            }
+        try {
+            usersService.signUpUser(user);
+            modelAndView = new ModelAndView("login");
+            modelAndView.addObject("user", new AppUser());
+        } catch (Exception e) {
+            modelAndView = new ModelAndView("login");
+            modelAndView.addObject("user", new AppUser());
+            modelAndView.addObject("message", "Username has already exist");
+        }
 
 
         return modelAndView;
@@ -104,6 +104,7 @@ public class HomeController {
         modelAndView.addObject("post", new Post());
         return modelAndView;
     }
+
     // anhnbt
     @GetMapping("/home2")
     public ModelAndView home2() {
@@ -127,10 +128,13 @@ public class HomeController {
     @PostMapping("/editprofile")
     public ModelAndView editProfile(@Validated @ModelAttribute AppUser appUser, BindingResult bindingResult) {
         ModelAndView modelAndView;
+        boolean isValidated = true;
         if (bindingResult.hasFieldErrors()) {
-
+            isValidated = false;
             modelAndView = new ModelAndView("editprofile");
             modelAndView.addObject("user", user());
+            modelAndView.addObject("isValidated", isValidated);
+            return modelAndView;
         }
 
         AppUser appUserDB = usersService.findById(appUser.getUserId());
@@ -155,12 +159,12 @@ public class HomeController {
 
         usersService.save(appUser);
 
-         modelAndView = new ModelAndView("home");
+        modelAndView = new ModelAndView("home");
         List<Post> posts = postService.findAllByFriendAndUser(user());
         modelAndView.addObject("user", user());
         modelAndView.addObject("post", new Post());
         modelAndView.addObject("posts", posts);
-
+        modelAndView.addObject("isValidated", isValidated);
         return modelAndView;
     }
 
@@ -378,24 +382,25 @@ public class HomeController {
         return new ResponseEntity<>(listUserFriend, HttpStatus.OK);
     }
 
-        //toan
+    //toan
     @GetMapping("/bell-notification")
     public ResponseEntity<Iterable<AppUser>> bellNotification() {
         List<AppUser> pendingUsers = usersService.searchAllUserByPendingRequestToCurrentUser();
         return new ResponseEntity<>(pendingUsers, HttpStatus.OK);
     }
-      //toan ham` test ko dung`
-      @PutMapping("/accept-friend-request/{friendId}")
-      public ResponseEntity<AppUser> acceptFriendRequest(@PathVariable(name = "friendId",required = true) int id) {
-          friendshipService.acceptFriendRequest(usersService.findById(id));
-          return new ResponseEntity<>(HttpStatus.OK);
-      }
+
+    //toan ham` test ko dung`
+    @PutMapping("/accept-friend-request/{friendId}")
+    public ResponseEntity<AppUser> acceptFriendRequest(@PathVariable(name = "friendId", required = true) int id) {
+        friendshipService.acceptFriendRequest(usersService.findById(id));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     //toan accept friend request
-      @GetMapping("/accept")
-    public ResponseEntity<AppUser> accept(@RequestParam(name = "name")int id){
-          friendshipService.acceptFriendRequest(usersService.findById(id));
-          return new ResponseEntity<>(HttpStatus.OK);
-      }
+    @GetMapping("/accept")
+    public ResponseEntity<AppUser> accept(@RequestParam(name = "name") int id) {
+        friendshipService.acceptFriendRequest(usersService.findById(id));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
 
