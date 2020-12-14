@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -199,21 +200,29 @@ public class HomeController {
         return modelAndView;
     }
 
-    // show trang cá nhân của mình hoặc của bạn bè // Chi
+    // show trang cá nhân của mình hoặc của friend hoặc chưa phải friend // Chi
     @GetMapping("/show-personal-page/{userID}")
     public ModelAndView showPersonalPage(@PathVariable(name = "userID") int userID) {
-        ModelAndView modelAndView;
-        Iterable<Post> posts = postService.getAllByAppUserIs(usersService.findById(userID));
-        List<Post> userPosts = StreamSupport.stream(posts.spliterator(), true).collect(Collectors.toList());
-        int size = userPosts.size();
+        ModelAndView modelAndView = null;
+        Iterable<Post> posts = new ArrayList<>();
+
         if (userID == user().getUserId()) {
             // chuyển sang trang cá nhân của mình
             modelAndView = new ModelAndView("personal");
-        } else {
+            posts = postService.getAllByAppUserIs(usersService.findById(userID));
+        } else if (friendshipService.checkIsFriend(user(), usersService.findById(userID))) {
             // chuyển sang trang cá nhận của friend
             modelAndView = new ModelAndView("friendpage");
             modelAndView.addObject("friend", usersService.findById(userID));
+            posts = postService.getAllByAppUserIs(usersService.findById(userID));
+        } else {
+            // chuyen sang trang ca nhan cua nguoi khong phai friend
+            modelAndView = new ModelAndView("friendpage");
+            modelAndView.addObject("friend", usersService.findById(userID));
+            posts = postService.getAllPostByStatusIsAndAppUserIs(true, usersService.findById(userID));
         }
+        List<Post> userPosts = StreamSupport.stream(posts.spliterator(), true).collect(Collectors.toList());
+        int size = userPosts.size();
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("user", user());
         modelAndView.addObject("size", size);

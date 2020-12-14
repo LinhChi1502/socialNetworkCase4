@@ -14,4 +14,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Iterable<Post> getAllByAppUserIs(AppUser user);
 
     Iterable<Post> getAllByContentContaining(String searchContent);
+
+    Iterable<Post> getAllByStatusIsAndAppUserIs(boolean status, AppUser user);
 }

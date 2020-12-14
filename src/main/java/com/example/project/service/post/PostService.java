@@ -116,4 +116,8 @@ public class PostService implements IPostService {
         return posts;
     }
 
+    @Override
+    public Iterable<Post> getAllPostByStatusIsAndAppUserIs(boolean status, AppUser user) {
+        return postRepository.getAllByStatusIsAndAppUserIs(status, user);
+    }
 }

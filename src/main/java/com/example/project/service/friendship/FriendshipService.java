@@ -116,4 +116,9 @@ public class FriendshipService implements IFriendshipService {
 
         }
     }
+
+    @Override
+    public boolean checkIsFriend(AppUser user1, AppUser user2) {
+        return friendshipRepository.existsFriendshipByFriendStatusIsAndUser1IsAndUser2Is(1, user1, user2);
+    }
 }

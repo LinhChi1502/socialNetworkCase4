@@ -21,4 +21,6 @@ public interface IPostService extends IService<Post> {
     List<Post> findAllPostByTag(String name);
     List<Post> findAllPostByTagIsAndAppUserIs(String name, AppUser appUser);
 
+    Iterable<Post> getAllPostByStatusIsAndAppUserIs(boolean status, AppUser user);
+
 }
