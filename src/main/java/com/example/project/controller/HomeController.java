@@ -15,7 +15,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -68,17 +71,20 @@ public class HomeController {
 
     // register // Chi
     @PostMapping("/register")
-    public ModelAndView register(@Valid @ModelAttribute AppUser user) {
+    public ModelAndView register( @ModelAttribute AppUser user, BindingResult bindingResult) {
         ModelAndView modelAndView;
-        try {
-            usersService.signUpUser(user);
-            modelAndView = new ModelAndView("login");
-            modelAndView.addObject("user", new AppUser());
-        } catch (Exception e) {
-            modelAndView = new ModelAndView("login");
-            modelAndView.addObject("user", new AppUser());
-            modelAndView.addObject("message", "Username has already exist");
-        }
+
+            try {
+                usersService.signUpUser(user);
+                modelAndView = new ModelAndView("login");
+                modelAndView.addObject("user", new AppUser());
+            } catch (Exception e) {
+                modelAndView = new ModelAndView("login");
+                modelAndView.addObject("user", new AppUser());
+                modelAndView.addObject("message", "Username has already exist");
+            }
+
+
         return modelAndView;
     }
 
@@ -119,7 +125,14 @@ public class HomeController {
 
     //Chi
     @PostMapping("/editprofile")
-    public ModelAndView editProfile(@ModelAttribute AppUser appUser) {
+    public ModelAndView editProfile(@Validated @ModelAttribute AppUser appUser, BindingResult bindingResult) {
+        ModelAndView modelAndView;
+        if (bindingResult.hasFieldErrors()) {
+
+            modelAndView = new ModelAndView("editprofile");
+            modelAndView.addObject("user", user());
+        }
+
         AppUser appUserDB = usersService.findById(appUser.getUserId());
         String avatarURLDB = appUserDB.getAvatarURL();
 
@@ -142,7 +155,7 @@ public class HomeController {
 
         usersService.save(appUser);
 
-        ModelAndView modelAndView = new ModelAndView("home");
+         modelAndView = new ModelAndView("home");
         List<Post> posts = postService.findAllByFriendAndUser(user());
         modelAndView.addObject("user", user());
         modelAndView.addObject("post", new Post());

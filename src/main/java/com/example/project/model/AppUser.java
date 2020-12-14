@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.util.Set;
 
 @Entity
@@ -23,17 +26,24 @@ public class AppUser {
     private int flag;
     @Transient
     private MultipartFile avatar;
+
     @Column(name = "firstname", nullable = true)
+    @NotEmpty
     private String firstName;
     @Column(name = "lastname", nullable = true)
+    @NotEmpty
     private String lastName;
     @Column(name = "city", nullable = true)
+    @NotEmpty
     private String city;
     @Column(name = "gender", nullable = true)
     private String gender;
     @Column(name = "about", columnDefinition = "longtext", nullable = true)
     private String about;
+
+
     @Column(name = "phone", nullable = true)
+    @Pattern(regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$")
     private String phone;
     @Column(name = "dob", nullable = true)
     private String dateOfBirth;
@@ -251,12 +261,5 @@ public class AppUser {
 
     public void setFlag(int flag) {
         this.flag = flag;
-    }
-
-    @Transient
-    public String getPhotosImagePath() {
-        if (avatarURL == null) return null;
-
-        return "/user-photos/" + userId + "/" + avatarURL;
     }
 }
