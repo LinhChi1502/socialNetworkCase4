@@ -28,13 +28,11 @@ public class AppUser {
     private MultipartFile avatar;
 
     @Column(name = "firstname", nullable = true)
-    @NotEmpty(message = "Firstname must not be empty")
     private String firstName;
     @Column(name = "lastname", nullable = true)
-    @NotEmpty(message = "Lastname must not be empty")
     private String lastName;
     @Column(name = "city", nullable = true)
-    @NotEmpty(message = "City must not be empty")
+
     private String city;
     @Column(name = "gender", nullable = true)
     private String gender;
