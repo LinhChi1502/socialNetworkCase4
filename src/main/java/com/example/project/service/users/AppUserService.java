@@ -188,9 +188,7 @@ public class AppUserService implements IAppUserService, UserDetailsService {
     }
 
     public void signUpUser(AppUser appUser) {
-
         String encryptedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
-
         appUser.setPassword(encryptedPassword);
         AppRole appRole = new AppRole();
         appRole.setId(1);
@@ -198,7 +196,6 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         appUser.setAvatarURL("default.png");
 
         appUserRepository.save(appUser);
-
     }
 
     public AppUser getCurrentUser() {
@@ -208,5 +205,17 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         return appUser;
     }
 
+    //Minh
+    public List<AppUser> searchAllFriendByNameContaining(String inputName){
+        Iterable<AppUser> allUser = this.getAllByUserNameContaining(inputName);
+        AppUser currentUser = this.getCurrentUser();
+        List<AppUser> allFriend = this.searchAllFriendsByAppUser(currentUser);
+        List<AppUser> result = new ArrayList<>();
+
+        for (AppUser user : allUser) {
+            if (allFriend.contains(user)) result.add(user);
+        }
+        return result;
+    }
 
 }

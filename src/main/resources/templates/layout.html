@@ -53,7 +53,7 @@
 </head>
 
 
-<body class="w3-theme-l5" >
+<body class="w3-theme-l5">
 
 <!-- Navbar -->
 <nav th:fragment="menu">
@@ -121,33 +121,22 @@
 <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
     <!-- The Grid -->
     <div class="w3-row">
-
-
         <!-- Left Column -->
         <div th:fragment="leftcolumn" class="w3-col m3">
             <!-- Profile -->
             <div class="w3-card w3-round w3-white">
                 <div class="w3-container">
                     <h4 class="w3-center" th:text="${user.userName}"></h4>
-                    <p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle"
-                                              style="height:106px;width:106px" alt="Avatar"></p>
+                    <p class="w3-center"><img th:src="${'../' + user.getAvatarURL()}" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
                     <hr>
-                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span
-                            th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
-                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span
-                            th:text="${user.city}"></span></p>
-                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span
-                            th:text="${user.dateOfBirth}"></span></p>
-                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span
-                            th:text="${user.gender}"></span></p>
-                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span
-                            th:text="${user.phone}"></span></p>
-                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span
-                            th:text="${user.about}"></span></p>
+                    <p><i class="fa fa-id-card fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.firstName} + ' ' + ${user.lastName}"></span></p>
+                    <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.city}"></span></p>
+                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.dateOfBirth}"></span></p>
+                    <p><i class="fa fa-venus-mars fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.gender}"></span></p>
+                    <p><i class="fa fa-mobile fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.phone}"></span></p>
+                    <p><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i><span th:text="${user.about}"></span></p>
                     <br>
-                    <i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><a
-                        th:href="@{/editprofile}">edit</a>
-
+                    <i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><a th:href="@{/editprofile}">edit</a>
                 </div>
             </div>
         </div>
@@ -171,23 +160,21 @@
             <!--            <script src="../static/js/rightbarfriend.js"></script>-->
             <div class="w3-card w3-round w3-white w3-center">
                 <div class="w3-container">
-                    <!--                    search friends-->
-                    <form>
-                        <div style="width: auto;margin:auto; height: auto">
+                    <!--search friends-->
+                    <div style="width: auto;margin:auto; height: auto">
+                        <form th:action="@{/searchfriendbyname}" method="get">
                             <div class="input-icons">
-                                <a href="#">
+                                <input class="input-field" type="text" placeholder="Search friend" th:name="input">
+                                <label for="searchFriend" style="float: left">
                                     <i class="fa fa-search icon fa-lg" style="padding-bottom: 25px"></i>
-                                </a>
-                                <input class="input-field" type="text" placeholder="Search friend">
-
+                                </label>
+                                <input type="submit" id="searchFriend" class="hidden">
                             </div>
-                        </div>
-                    </form>
-                    <!--
-                                      end search friends-->
+                        </form>
+                    </div>
+
+                    <!--end search friends-->
                     <br>
-
-
                     <!--list 5 friends-->
                     <table id="listUserFriend">
                         <script>
@@ -208,24 +195,57 @@
                                             length = 5
                                         }
                                         for (let i = 0; i < length; i++) {
-                                            content += fillFriendTable(list[i]);
+                                            content += fillFriendTableRight(list[i]);
                                         }
                                         document.getElementById('listUserFriend').innerHTML = content;
+
+                                        if (document.getElementById("friendListTableMiddle")){
+                                            content = '';
+                                            for (let i = 0; i < list.length; i++) {
+                                                content += fillFriendTableMiddle(list[i]);
+                                            }
+                                            document.getElementById("friendListTableMiddle").innerHTML = content;
+                                        }
                                     }
                                 })
                             }
 
-                            function fillFriendTable(friend) {
+                            function fillFriendTableMiddle(friend) {
+                                return `<tr>
+                                    <td><img src="${'../' + friend.avatarURL}" alt="Avatar" style="width:50px; height:50px; border-radius: 50%"></td>
+                                    <td><a href="${'/show-personal-page/' + friend.userId}" style="padding-left: 10px">${friend.userName}</a></td>
+                                    <td><button style="margin-left: 150px" href="${friend.userId}" onclick="removeFriendInList(this)">Unfriend</button></td>
+                                </tr>`
+                            }
+
+                            function fillFriendTableRight(friend) {
                                 return `<tr class="spaceUnder">` +
                                     `<td><img src="${'../' + friend.avatarURL}" alt="" width="30px" height="30px" style="border-radius: 50%">` +
                                     `</td>` +
                                     `<td style="padding-left: 2px"><a href="${'/show-personal-page/' + friend.userId}"><span style="font-size: 13px">${friend.userName}</span></a>` +
                                     `</td>` +
                                     `<td style="padding-left: 5px">` +
-                                    `<button style="font-size: xx-small">Unfriend</button>` +
+                                    `<button style="font-size: xx-small" href="${friend.userId}" onclick="removeFriendInList(this)">Unfriend</button>` +
                                     `</td>` +
                                     `</tr>`
                             }
+
+                            function removeFriendInList(friend) {
+                                let idFriend = friend.getAttribute("href");
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: "GET",
+                                    url: "/api/removefriend/" + idFriend,
+                                    success: function () {
+                                        loadUserFriend();
+                                    }
+                                })
+                                event.preventDefault();
+                            }
+
                         </script>
                         <tr class="spaceUnder">
                             <td><img src="../default.png" alt="" width="30px" height="30px" style="border-radius: 50%">
@@ -236,11 +256,10 @@
                                 <button style="font-size: xx-small">Unfriend</button>
                             </td>
                         </tr>
-
                         <tr class="spaceUnder">
                             <td><img src="../default.png" alt="" width="30px" height="30px" style="border-radius: 50%">
                             </td>
-                            <td style="padding-left: 2px"><a href="#"><span style="font-size: 13px">David Beckham</span></a>
+                            <td style="padding-left: 2px"><a href="#"><span style="font-size: 13px" th:text="${user.userName}">David Beckham</span></a>
                             </td>
                             <td style="padding-left: 5px">
                                 <button style="font-size: xx-small">Unfriend</button>
@@ -251,7 +270,7 @@
                     <!--list 5 friends end-->
                     <br>
                     <div>
-                        <a href="" style="alignment: right">Go to friend list</a>
+                        <a href="/searchfriendbyname/?input=" style="alignment: right">Go to friend list</a>
                     </div>
                 </div>
             </div>
@@ -276,8 +295,9 @@
 </div>
 <!-- End Page Container -->
 <br>
+
 <!-- Footer -->
-<footer th:fragment="footer" class="w3-container w3-theme-d3 w3-padding-16">
+<footer th:fragment="footer" class="w3-container w3-theme-d3 w3-padding-16" style="position: fixed; bottom: 0px; width: 100%">
     <h5>C0720I2</h5>
 </footer>
 <!--Footer end-->

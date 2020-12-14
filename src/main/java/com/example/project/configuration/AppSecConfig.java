@@ -40,11 +40,11 @@ public class AppSecConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/register", "/login").permitAll()
+                .antMatchers("/register", "/login", "/api/**").permitAll()
                 .antMatchers("/**").hasRole("USER")
                 .and()
-                .formLogin().
-                loginPage("/login")
+                .formLogin().permitAll().
+                loginPage("/login").permitAll()
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .loginProcessingUrl("/login")

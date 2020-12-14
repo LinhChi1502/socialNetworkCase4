@@ -1,5 +1,6 @@
 package com.example.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +35,7 @@ public class Post {
 
     //postlike
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<PostLike> post;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

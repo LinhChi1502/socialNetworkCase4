@@ -71,9 +71,8 @@ public class HomeController {
 
     // register // Chi
     @PostMapping("/register")
-    public ModelAndView register(@ModelAttribute AppUser user, BindingResult bindingResult) {
+    public ModelAndView register(@Valid @ModelAttribute AppUser user) {
         ModelAndView modelAndView;
-
         try {
             usersService.signUpUser(user);
             modelAndView = new ModelAndView("login");
@@ -83,8 +82,6 @@ public class HomeController {
             modelAndView.addObject("user", new AppUser());
             modelAndView.addObject("message", "Username has already exist");
         }
-
-
         return modelAndView;
     }
 
@@ -104,7 +101,6 @@ public class HomeController {
         modelAndView.addObject("post", new Post());
         return modelAndView;
     }
-
     // anhnbt
     @GetMapping("/home2")
     public ModelAndView home2() {
@@ -375,6 +371,7 @@ public class HomeController {
         return "layout2";
     }
 
+    //Minh
     @GetMapping("/api/getuserfriend/")
     public ResponseEntity<Iterable<AppUser>> getUserFriends() {
         AppUser user = user();
@@ -382,24 +379,103 @@ public class HomeController {
         return new ResponseEntity<>(listUserFriend, HttpStatus.OK);
     }
 
-    //toan
+        //toan
     @GetMapping("/bell-notification")
     public ResponseEntity<Iterable<AppUser>> bellNotification() {
         List<AppUser> pendingUsers = usersService.searchAllUserByPendingRequestToCurrentUser();
         return new ResponseEntity<>(pendingUsers, HttpStatus.OK);
     }
+      //toan ham` test ko dung`
+      @PutMapping("/accept-friend-request/{friendId}")
+      public ResponseEntity<AppUser> acceptFriendRequest(@PathVariable(name = "friendId",required = true) int id) {
+          friendshipService.acceptFriendRequest(usersService.findById(id));
+          return new ResponseEntity<>(HttpStatus.OK);
+      }
 
-    //toan ham` test ko dung`
-    @PutMapping("/accept-friend-request/{friendId}")
-    public ResponseEntity<AppUser> acceptFriendRequest(@PathVariable(name = "friendId", required = true) int id) {
-        friendshipService.acceptFriendRequest(usersService.findById(id));
+    //toan accept friend request
+      @GetMapping("/accept")
+    public ResponseEntity<AppUser> accept(@RequestParam(name = "name")int id){
+          friendshipService.acceptFriendRequest(usersService.findById(id));
+          return new ResponseEntity<>(HttpStatus.OK);
+      }
+
+    //Minh
+    @GetMapping("/api/searchFriendByName")
+    public ResponseEntity<List<AppUser>> getFriendsByName(@RequestParam(name = "name", required = false) String inputName){
+        List<AppUser> listFriendByName = usersService.searchAllFriendByNameContaining(inputName);
+        return new ResponseEntity<>(listFriendByName, HttpStatus.OK);
+    }
+
+    //Minh
+    @GetMapping("/searchfriendbyname**")
+    public ModelAndView getFriendByName(@RequestParam(name = "input", required = false) String inputName){
+        ModelAndView modelAndView = new ModelAndView("friendlist");
+        List<AppUser> listFriendByName = usersService.searchAllFriendByNameContaining(inputName);
+        modelAndView.addObject("listFriendByName", listFriendByName);
+        return modelAndView;
+    }
+
+    //Minh
+    @GetMapping("/api/removefriend/{friendId}")
+    public ResponseEntity<AppUser> deleteFriendInList(@PathVariable (name = "friendId") int id){
+        if (user().getUserId() < id){
+            friendshipService.deleteByUser1UserIdAndUser2UserId(user().getUserId(), id);
+        } else {
+            friendshipService.deleteByUser1UserIdAndUser2UserId(id, user().getUserId());
+        }
+        return  new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //Minh
+    @GetMapping("/api/getallpostcomment")
+    public ResponseEntity<Iterable<PostComment>> getAllPostComment(){
+        Iterable<PostComment> allPostComment = postCommentService.findAll();
+        return new ResponseEntity<>(allPostComment, HttpStatus.OK);
+    }
+
+    //Minh
+    @PutMapping("/api/createpostcomment/{postId}")
+    public ResponseEntity<Iterable<PostComment>> createPostComment(@PathVariable(name = "postId") int postId, @RequestBody PostComment postComment){
+        PostComment comment = postComment;
+        Post post = postService.findById(postId);
+        comment.setUser(user());
+        comment.setPost(post);
+        postCommentService.save(comment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //toan accept friend request
-    @GetMapping("/accept")
-    public ResponseEntity<AppUser> accept(@RequestParam(name = "name") int id) {
-        friendshipService.acceptFriendRequest(usersService.findById(id));
+    //Minh
+    @GetMapping("/api/getallpostlike")
+    public ResponseEntity<Iterable<PostLike>> getAllPostLike(){
+        Iterable<PostLike> postLikes = postlikeService.findAll();
+        return new ResponseEntity<>(postLikes, HttpStatus.OK);
+    }
+
+    //Minh
+    @PutMapping("/api/likepost/{postID}")
+    public ResponseEntity<PostLike> likePost(@PathVariable (name = "postID") int postID){
+        PostLike postLike = new PostLike();
+        Post post = postService.findById(postID);
+        List<PostLike> checkList = (List<PostLike>) postlikeService.findAll();
+        boolean flag = false;
+        int pos = 0;
+
+        for (int i = 0; i < checkList.size(); i++) {
+            if (checkList.get(i).getUser() == user() && checkList.get(i).getPost() == post){
+                flag = true;
+                pos = checkList.get(i).getPostLikeID();
+                break;
+            }
+        }
+
+        if (flag == false){
+            postLike.setPost(post);
+            postLike.setUser(user());
+            postlikeService.save(postLike);
+        } else {
+            postlikeService.remove(pos);
+        }
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.project.model;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -63,6 +64,7 @@ public class PostComment {
         return user;
     }
 
+    @Transactional
     public void setUser(AppUser user) {
         this.user = user;
     }
@@ -71,6 +73,7 @@ public class PostComment {
         return post;
     }
 
+    @Transactional
     public void setPost(Post post) {
         this.post = post;
     }
