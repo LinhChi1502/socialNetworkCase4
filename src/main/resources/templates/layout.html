@@ -164,7 +164,7 @@
                     <div style="width: auto;margin:auto; height: auto">
                         <form th:action="@{/searchfriendbyname}">
                             <div class="input-icons">
-                                <input class="input-field" type="text" placeholder="Search friend" th:name="inputSearch">
+                                <input class="input-field" type="text" placeholder="Search friend" th:name="'input'">
                                 <label for="searchFriend" style="float: left">
                                     <i class="fa fa-search icon fa-lg" style="padding-bottom: 25px"></i>
                                 </label>
@@ -176,7 +176,7 @@
                     <!--end search friends-->
                     <br>
                     <!--list 5 friends-->
-                    <table id="listUserFriend">
+                    <table th:id="'listUserFriend'">
                         <script>
                             function loadUserFriend() {
                                 $.ajax({
@@ -189,15 +189,27 @@
                                     success: function (list) {
                                         let content = '';
                                         let length;
-                                        if (list.length < 5) {
-                                            length = list.length
+                                        if (list.length == 0){
+                                            content = '<p> Chưa có bạn bè, hãy kết bạn!!</p>';
+                                            document.getElementById('listUserFriend').innerHTML = content;
+                                            if (document.getElementById("friendListTableMiddle")){
+                                                document.getElementById("friendListTableMiddle").innerHTML = content;
+                                            }
+                                        }
+                                        else if (list.length > 5) {
+                                            length = 5;
+                                            for (let i = 0; i < length; i++) {
+                                                content += fillFriendTableRight(list[i]);
+                                            }
+                                            document.getElementById('listUserFriend').innerHTML = content;
                                         } else {
-                                            length = 5
+                                            length = list.length;
+                                            for (let i = 0; i < length; i++) {
+                                                content += fillFriendTableRight(list[i]);
+                                            }
+                                            document.getElementById('listUserFriend').innerHTML = content;
                                         }
-                                        for (let i = 0; i < length; i++) {
-                                            content += fillFriendTableRight(list[i]);
-                                        }
-                                        document.getElementById('listUserFriend').innerHTML = content;
+
 
                                         // if (document.getElementById("friendListTableMiddle")){
                                         //     content = '';
@@ -208,6 +220,7 @@
                                         // }
                                     }
                                 })
+                                event.preventDefault();
                             }
 
                             function fillFriendTableMiddle(friend) {
@@ -240,9 +253,55 @@
                                     type: "GET",
                                     url: "/api/removefriend/" + idFriend,
                                     success: function () {
-                                        loadUserFriend();
+                                        loadUserFriendRemoved();
                                     }
                                 })
+                                event.preventDefault();
+                            }
+
+                            function loadUserFriendRemoved() {
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: 'GET',
+                                    url: "/api/getuserfriend/",
+                                    success: function (list) {
+                                        let content = '';
+                                        let length;
+                                        if (list.length == 0){
+                                            content = '<p> Chưa có bạn bè, hãy kết bạn!!</p>'
+                                            document.getElementById('listUserFriend').innerHTML = content;
+                                            if (document.getElementById("friendListTableMiddle")){
+                                                document.getElementById("friendListTableMiddle").innerHTML = content;
+                                            }
+                                        }
+                                        else if (list.length > 5) {
+                                            length = 5;
+                                            fillFriends(length, list);
+                                        } else {
+                                            length = list.length
+                                            fillFriends(length, list);
+                                        }
+                                    }
+                                })
+                                event.preventDefault();
+                            }
+
+                            function fillFriends(length, list) {
+                                let content = '';
+                                for (let i = 0; i < length; i++) {
+                                    content += fillFriendTableRight(list[i]);
+                                }
+                                document.getElementById('listUserFriend').innerHTML = content;
+                                if (document.getElementById("friendListTableMiddle")){
+                                    content = '';
+                                    for (let i = 0; i < list.length; i++) {
+                                        content += fillFriendTableMiddle(list[i]);
+                                    }
+                                    document.getElementById("friendListTableMiddle").innerHTML = content;
+                                }
                                 event.preventDefault();
                             }
                         </script>
@@ -250,7 +309,7 @@
                     <!--list 5 friends end-->
                     <br>
                     <div>
-                        <a href="/searchfriendbyname" style="alignment: right">Go to friend list</a>
+                        <a href="/searchfriendbyname?input=" style="alignment: right">Go to friend list</a>
                     </div>
                 </div>
             </div>

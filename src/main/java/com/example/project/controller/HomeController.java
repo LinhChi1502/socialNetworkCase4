@@ -393,7 +393,7 @@ public class HomeController {
 
     //Minh
     @GetMapping("/searchfriendbyname")
-    public ModelAndView getFriendByName(@RequestParam (name = "inputSearch", required = false) String inputName){
+    public ModelAndView getFriendByName(@RequestParam (name = "input", required = false) String inputName){
         ModelAndView modelAndView = new ModelAndView("friendlist");
         List<AppUser> listFriendByName = usersService.searchAllUserByNameAndGiveFlagToFriend(inputName);
         modelAndView.addObject("listFriendByName", listFriendByName);
