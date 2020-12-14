@@ -47,14 +47,10 @@
             <div class="w3-dropdown-hover w3-hide-small">
                 <form th:action="@{/search-user-by-name}" method="post">
                     <div style="width: fit-content;margin:auto; height: fit-content">
-
-
                         <input type="text" th:name="searchName" placeholder="Search user" style="color: black;width: 130px"/>
                         <label for="Submit" class="btn"><i class="fa fa-search icon fa-lg"></i></label>
                         <input id="Submit" type="submit" class="hidden" />
                     </div>
-                </form>
-
                 </form>
             </div>
             <!--search user end-->
@@ -104,7 +100,6 @@
                 </div>
             </div>
             <th:block th:each="post:${posts}">
-
                 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
                     <img th:src="${'../'+post.appUser.getAvatarURL()}" class="w3-left w3-circle w3-margin-right"
                          width="65px" height="65px">
@@ -116,49 +111,128 @@
                     <div class="entry">
                         <p style="white-space: pre;" th:utext="${post.content}" ></p>
                     </div>
-                    <input type="text" id="postid" th:value="*{post.postID}" hidden>
+<!--                    <input type="text" th:id="*{post.postID}" hidden>-->
                     <p th:if="${!#strings.isEmpty(post.imageUrl)}">
                         <img th:src="${'../'+post.imageUrl}" class="postimage"/>
                     </p>
 
-
-                    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i
-                            class="fa fa-thumbs-up"></i><span>1000</span>
+                    <!--Minh Beos đã ở đây-->
+                    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" th:id="'btnLike' + ${post.postID}" th:name="${post.postID}"
+                            onclick="likePost(this)">
+                        <i class="fa fa-thumbs-up"></i>
+                        <span th:text="${post.postLikes.size()}">0</span>
                     </button>
                     <hr>
-
-                    <!--                    Comment area-->
-                    <div>
-                        <tr>
-                            <td><img src="/img/avatar.jpg" width="50px" height="50px" style="border-radius: 50%"></td>
-                            <td>
-                                <span style="padding-left: 10px">Bi Rain</span><span
-                                    style="padding-left: 10px;font-size: small">3 phút trước</span>
-                                <p style="padding-left: 100px">Tớ cũng buồn</p>
-                            </td>
-                        </tr>
+                    <!--Comment area-->
+                    <div th:id=" 'postCommentArea' + ${post.getPostID()}">
+                        <th:block th:each="comment:${post.getPostComments()}">
+                            <tr>
+                                <td><img th:src="'../' + ${comment.user.avatarURL}" width="50px" height="50px" style="border-radius: 50%"></td>
+                                <td><span style="padding-left: 10px" th:text="${comment.user.userName}"></span>
+                                    <span style="padding-left: 10px;font-size: small" th:text="${comment.date}"></span>
+                                    <p style="padding-left: 100px" th:text="${comment.comment}"></p>
+                                </td>
+                            </tr>
+                        </th:block>
                     </div>
 
-                    <!--                    Comment area end-->
-
-
-                    <!--                    post your comment-->
+                    <!--Minh Beos đã ở đây Comment area end-->
+                    <!--post your comment-->
                     <div>
+                        <!-- Tuan Anh Refactor Comment -->
                         <tr>
-                            <td><img src="/img/avatar.jpg" width="50px" height="50px" style="border-radius: 50%"></td>
-                            <td style="padding-left: 20px">
-                                <input type="text" placeholder="Post your comment" style="width: 350px">
-                                <button><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                            </td>
+                            <form th:id="${post.getPostID()}" onsubmit="createPostComment(this); return false;">
+                                <td><img th:src="${'../' + post.getAppUser().getAvatarURL()}" +  width="50px" height="50px" style="border-radius: 50%"></td>
+                                <td style="padding-left: 20px">
+                                    <input name="comment" type="text" placeholder="Post your comment" style="width: 350px" th:id="'postCommentContent' + ${post.getPostID()}">
+                                    <button type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                                </td>
+                            </form>
                         </tr>
+                        <script>
+                            function likePost(element) {
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: "PUT",
+                                    url: '/api/likepost/' + element.name,
+                                    success: function () {
+                                        likePostSuccess(element);
+                                    }
+                                })
+                            }
 
+                            function likePostSuccess(element) {
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: "GET",
+                                    url: "/api/getpostlikebypost/" + element.name,
+                                    success: function (response) {
+                                        let content = `<i class="fa fa-thumbs-up"></i>
+                                                       <span>${response.length}</span>`;
+                                        document.getElementById(element.id).innerHTML = content;
+                                    }
+                                })
+                            }
+
+                            function createPostComment(element) {
+                                let postId = element.id;
+                                let json = {
+                                    comment: element.comment.value,
+                                }
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: 'PUT',
+                                    url: '/api/createpostcomment/' + postId,
+                                    data: JSON.stringify(json),
+                                    success:function () {
+                                        commentSuccess(postId);
+                                        element.comment.value = "";
+                                    }
+                                })
+                            }
+                            <!-- End Tuan Anh Refactor Comment -->
+                            function commentSuccess(postID) {
+                                alert(postID);
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: 'GET',
+                                    url: '/api/getpostcommentbypost/' + postID,
+                                    success: function (response) {
+                                        let content = '';
+                                        for (let j = 0; j < response.length ; j++) {
+                                            content += getComment(response[j]);
+                                        }
+                                        document.getElementById('postCommentArea' + postID).innerHTML = content;
+                                    }
+                                })
+                            }
+
+                            function getComment(postComment) {
+                                return  `<tr>`+
+                                    `<td><img src="../${postComment.user.avatarURL}" width="50px" height="50px" style="border-radius: 50%"></td>` +
+                                    `<td><span style="padding-left: 10px">${postComment.user.userName}</span>` +
+                                    `<span style="padding-left: 10px;font-size: small">${postComment.date}</span>` +
+                                    `<p style="padding-left: 100px">${postComment.comment}</p>` +
+                                    `</td>` +
+                                    `</tr>`
+                            }
+                        </script>
                     </div>
-                    <!--                    post your comment end-->
-
+                    <!--Và Minh Beos đã rời khỏi đây post your comment end-->
                 </div>
-
             </th:block>
-
         </div>
         <!-- Middle Column End-->
 

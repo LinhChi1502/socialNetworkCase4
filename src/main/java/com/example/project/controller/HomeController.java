@@ -13,7 +13,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -413,10 +412,10 @@ public class HomeController {
     }
 
     //Minh
-    @GetMapping("/api/getallpostcomment")
-    public ResponseEntity<Iterable<PostComment>> getAllPostComment(){
-        Iterable<PostComment> allPostComment = postCommentService.findAll();
-        return new ResponseEntity<>(allPostComment, HttpStatus.OK);
+    @GetMapping("/api/getpostcommentbypost/{postID}")
+    public ResponseEntity<List<PostComment>> getAllPostComment(@PathVariable (name = "postID") int postID){
+        List<PostComment> postComments = postService.findById(postID).getPostComments();
+        return new ResponseEntity<>(postComments, HttpStatus.OK);
     }
 
     //Minh
@@ -431,9 +430,10 @@ public class HomeController {
     }
 
     //Minh
-    @GetMapping("/api/getallpostlike")
-    public ResponseEntity<Iterable<PostLike>> getAllPostLike(){
-        Iterable<PostLike> postLikes = postlikeService.findAll();
+    @GetMapping("/api/getpostlikebypost/{postID}")
+    public ResponseEntity<Set<PostLike>> getPostLikes(@PathVariable (name = "postID") int postID){
+        Post post = postService.findById(postID);
+        Set<PostLike> postLikes = post.getPostLikes();
         return new ResponseEntity<>(postLikes, HttpStatus.OK);
     }
 
