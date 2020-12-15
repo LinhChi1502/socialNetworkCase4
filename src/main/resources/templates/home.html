@@ -155,7 +155,8 @@
             </div>
             <th:block th:each="post:${posts}">
                 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-                    <img th:src="${'../'+post.appUser.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px"
+                    <img th:sr
+                         c="${'../'+post.appUser.avatarURL}" class="w3-left w3-circle w3-margin-right" width="65px"
                          height="65px">
                     <span class="w3-right w3-opacity" th:text="${post.date}"></span>
                     <a th:href="@{/show-personal-page/__${post.appUser.userId}__}"><h4
@@ -310,7 +311,7 @@
                                 return  `<button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" id="likeComment${postComment.postCommentID}" name="${postComment.postCommentID}"
                                     onclick="likeComment(this)">
                                 <i class="fa fa-thumbs-up"></i>
-                                <span text="${postComment.likes.length}">0</span>
+                                <span text="${postComment.likes.constructor}">0</span>
                             </button>`+
                                 `<tr>`+
                                     `<td><img src="../${postComment.user.avatarURL}" width="50px" height="50px" style="border-radius: 50%"></td>` +
