@@ -4,6 +4,7 @@ import com.example.project.model.*;
 import com.example.project.service.commentlike.CommentLikeService;
 import com.example.project.service.friendship.FriendshipService;
 import com.example.project.service.hashtag.HashtagService;
+import com.example.project.service.notification.NotificationService;
 import com.example.project.service.post.PostService;
 import com.example.project.service.postcomment.PostCommentService;
 import com.example.project.service.postlike.PostlikeService;
@@ -46,6 +47,8 @@ public class HomeController {
     private CommentLikeService commentLikeService;
     @Autowired
     private HashtagService hashtagService;
+    @Autowired
+    private NotificationService notificationService;
     @Autowired
     Environment env;
 
@@ -493,6 +496,74 @@ public class HomeController {
             commentLikeService.remove(com);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //Minh
+    @GetMapping("/api/putnotification/{id}")
+    public ResponseEntity<Notification> putNotification(@PathVariable (name = "id") int id, @RequestParam String str){
+        Notification notification = new Notification();
+        AppUser current = this.user();
+        String notiContent = str;
+        switch (notiContent){
+            case "likeComment":
+                PostComment comment = postCommentService.findById(id);
+                AppUser commentUser = comment.getUser();
+                if (commentUser != current){
+                    String someLetter;
+                    if (comment.getComment().length() < 25){
+                        someLetter = comment.getComment().substring(0,comment.getComment().length()-1);
+                    } else {
+                        someLetter = comment.getComment().substring(0,25);
+                    }
+                    String userName = current.getUserName();
+                    notification.setContent(userName + " đã thích bình luận: " + someLetter + "... của bạn");
+                    notification.setUser(commentUser);
+                    notification.setNotiChecked(false);
+                    notificationService.save(notification);
+                }
+                break;
+            case "likePost":
+                Post post = postService.findById(id);
+                AppUser postAppUser = post.getAppUser();
+                if (postAppUser != current){
+                    String someLetter;
+                    if (post.getContent().length() < 25){
+                        someLetter = post.getContent().substring(0,post.getContent().length()-1);
+                    } else {
+                        someLetter = post.getContent().substring(0,25);
+                    }
+                    String userName = current.getUserName();
+                    notification.setContent(userName + " đã thích bài viết: " + someLetter + "... của bạn");
+                    notification.setUser(postAppUser);
+                    notification.setNotiChecked(false);
+                    notificationService.save(notification);
+                }
+                break;
+            case "createComment":
+                Post post1 = postService.findById(id);
+                AppUser commentUser1 = post1.getAppUser();
+                if (commentUser1 != current){
+                    String someLetter1;
+                    if (post1.getContent().length() < 25){
+                        someLetter1 = post1.getContent().substring(0,post1.getContent().length()-1);
+                    } else {
+                        someLetter1 = post1.getContent().substring(0,25);
+                    }
+                    String userName = current.getUserName();
+                    notification.setContent(userName + " đã bình luận bài viết: " + someLetter1 + "... của bạn");
+                    notification.setUser(commentUser1);
+                    notification.setNotiChecked(false);
+                    notificationService.save(notification);
+                }
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/api/pushnotification")
+    public ResponseEntity<List<Notification>> pushNotification(){
+        AppUser current = this.user();
+        List<Notification> notis = notificationService.getNotificationsByUser(user());
+        return new ResponseEntity<>(notis, HttpStatus.OK);
     }
 }
 

@@ -1,9 +1,12 @@
 package com.example.project.service.notification;
 
+import com.example.project.model.AppUser;
 import com.example.project.model.Notification;
 import com.example.project.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class NotificationService implements INotificationService{
@@ -28,5 +31,9 @@ public class NotificationService implements INotificationService{
     @Override
     public void remove(Integer id) {
         notificationRepository.deleteById(id);
+    }
+
+    public List<Notification> getNotificationsByUser(AppUser user){
+        return notificationRepository.getNotificationsByUser(user);
     }
 }

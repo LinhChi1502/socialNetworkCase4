@@ -39,6 +39,7 @@ public class Post {
     private Set<PostLike> postLikes;
 
     //postComment
+    @JsonIgnore
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private List<PostComment> postComments;
 

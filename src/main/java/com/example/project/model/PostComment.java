@@ -27,7 +27,6 @@ public class PostComment {
     @JoinColumn(name = "userID")
     private AppUser user;
 
-    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "postID")
     private Post post;

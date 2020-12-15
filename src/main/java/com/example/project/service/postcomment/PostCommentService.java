@@ -1,5 +1,6 @@
 package com.example.project.service.postcomment;
 
+import com.example.project.model.Notification;
 import com.example.project.model.PostComment;
 import com.example.project.repository.PostCommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class PostCommentService implements IPostCommnentService {
@@ -31,6 +33,6 @@ public class PostCommentService implements IPostCommnentService {
     @Override
     public void remove(Integer id) {
         postCommentRepository.deleteById(id);
-
     }
+
 }

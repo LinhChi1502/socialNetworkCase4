@@ -19,7 +19,7 @@ public class Notification {
     private Date date;
 
     @Column(name = "notiChecked")
-    private boolean notiChecked = false;
+    private boolean notiChecked;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "userID")

@@ -207,6 +207,32 @@
                             </form>
                         </tr>
                         <script>
+                            function putnotification(element, string) {
+                                let str = '';
+                                switch (string) {
+                                    case "likeComment":
+                                        str = "likeComment";
+                                         break;
+                                    case "likePost":
+                                        str = "likePost";
+                                        break;
+                                    case "createComment":
+                                        str = "createComment";
+                                        break;
+                                }
+
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: "GET",
+                                    url: "/api/putnotification/" + element +"?str=" + str,
+                                    success: function () {
+
+                                    }
+                                })
+                            }
                             function likeComment(element) {
                                 let commentID = element.name;
                                 $.ajax({
@@ -218,6 +244,7 @@
                                     url: '/api/likecomment/' + commentID,
                                     success: function () {
                                         likeCommentSuccess(element);
+                                        putnotification(commentID, "likeComment")
                                     }
                                 })
                             }
@@ -239,15 +266,17 @@
                             }
 
                             function likePost(element) {
+                                let id = element.name;
                                 $.ajax({
                                     headers: {
                                         'Accept': 'application/json',
                                         'Content-Type': 'application/json'
                                     },
                                     type: "PUT",
-                                    url: '/api/likepost/' + element.name,
+                                    url: '/api/likepost/' + id,
                                     success: function () {
                                         likePostSuccess(element);
+                                        putnotification(id, "likePost")
                                     }
                                 })
                             }
@@ -283,6 +312,7 @@
                                     data: JSON.stringify(json),
                                     success:function () {
                                         commentSuccess(postId);
+                                        putnotification(postId, "createComment")
                                         element.comment.value = "";
                                     }
                                 })
@@ -307,6 +337,7 @@
                             }
 
                             function getComment(postComment) {
+                                alert(`${postComment.likes}`);
                                 return  `<button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" id="likeComment${postComment.postCommentID}" name="${postComment.postCommentID}"
                                     onclick="likeComment(this)">
                                 <i class="fa fa-thumbs-up"></i>
