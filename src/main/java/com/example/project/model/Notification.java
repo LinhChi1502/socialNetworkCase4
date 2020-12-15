@@ -1,5 +1,7 @@
 package com.example.project.model;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -16,6 +18,7 @@ public class Notification {
     private String content;
 
     @Column(name = "notiDate")
+    @CreationTimestamp
     private Date date;
 
     @Column(name = "notiChecked")

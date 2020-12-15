@@ -562,8 +562,16 @@ public class HomeController {
     @GetMapping("/api/pushnotification")
     public ResponseEntity<List<Notification>> pushNotification(){
         AppUser current = this.user();
-        List<Notification> notis = notificationService.getNotificationsByUser(user());
+        List<Notification> notis = notificationService.getNotificationsByUser(current);
         return new ResponseEntity<>(notis, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/removecheck/{id}")
+    public ResponseEntity<Notification> removeCheck(@PathVariable (name = "id") int id){
+        Notification noti = notificationService.findById(id);
+        noti.setNotiChecked(true);
+        notificationService.save(noti);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 

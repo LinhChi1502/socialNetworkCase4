@@ -21,11 +21,57 @@
 
 
             <div class="w3-dropdown-hover w3-hide-small">
-                <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-bell"></i><span
-                        class="w3-badge w3-right w3-small w3-green">3</span></button>
+                <button class="w3-button w3-padding-large" title="Notifications">
+                    <i class="fa fa-bell"></i>
+                    <span class="w3-badge w3-right w3-small w3-green" id="signalNoti"></span>
+                </button>
                 <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
-                    <a href="#" class="w3-bar-item w3-button">One new friend request</a>
+                    <span class="w3-bar-item w3-button" id="notiContent"></span>
                 </div>
+                <!--Minh beos notification-->
+                <script>
+                    myVar = setInterval(pushNoti, 5000);
+                    function pushNoti() {
+
+                        $.ajax({
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            type: 'GET',
+                            url: "/api/pushnotification",
+                            success: function (data) {
+                                // alert(data.length)
+                                let signal = 0;
+                                let content = '';
+                                for (let i = 0; i < data.length; i++) {
+                                    if (data[i].notiChecked === false){
+                                        signal++;
+                                        content += `<hr><button class="w3-button w3-padding-small" onclick="removeCheck(${data[i].notiId})">` +
+                                            `${data[i].content}<hr>`
+                                    }
+                                }
+                                if (signal > 0) document.getElementById("signalNoti").innerHTML = signal;
+                                document.getElementById("notiContent").innerHTML = content;
+                            }
+                        })
+                    }
+
+                    function removeCheck(id) {
+                        $.ajax({
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            type: 'GET',
+                            url: "/api/removecheck/" + id,
+                            success: function () {
+                                pushNoti();
+                            }
+                        })
+                    }
+                </script>
+                <!--Minh Beos hết notification-->
             </div>
 
             <!--search post-->
