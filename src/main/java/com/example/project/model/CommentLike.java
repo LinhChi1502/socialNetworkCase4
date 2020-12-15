@@ -16,13 +16,13 @@ public class CommentLike {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "userID")
-    private PostComment user;
+    private AppUser user;
 
 
     public CommentLike() {
     }
 
-    public CommentLike(int commentLikeID, PostComment postComment, PostComment user) {
+    public CommentLike(int commentLikeID, PostComment postComment, AppUser user) {
         this.commentLikeID = commentLikeID;
         this.postComment = postComment;
         this.user = user;
@@ -44,11 +44,11 @@ public class CommentLike {
         this.postComment = postComment;
     }
 
-    public PostComment getUser() {
+    public AppUser getUser() {
         return user;
     }
 
-    public void setUser(PostComment user) {
+    public void setUser(AppUser user) {
         this.user = user;
     }
 

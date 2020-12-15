@@ -141,17 +141,21 @@
                     <p th:if="${!#strings.isEmpty(post.imageUrl)}">
                         <img th:src="${'../'+post.imageUrl}" class="postimage"/>
                     </p>
-
                     <!--Minh Beos đã ở đây-->
                     <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" th:id="'btnLike' + ${post.postID}" th:name="${post.postID}"
                             onclick="likePost(this)">
                         <i class="fa fa-thumbs-up"></i>
-                        <span th:text="${post.postLikes.size()}">0</span>
+                        <span th:text="${post.postLikes} == null ? 0 : ${post.postLikes.size()}">0</span>
                     </button>
                     <hr>
                     <!--Comment area-->
                     <div th:id=" 'postCommentArea' + ${post.getPostID()}">
                         <th:block th:each="comment:${post.getPostComments()}">
+                            <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" th:id="'likeComment' + ${comment.postCommentID}" th:name="${comment.postCommentID}"
+                                    onclick="likeComment(this)">
+                                <i class="fa fa-thumbs-up"></i>
+                                <span th:text="${comment.likes} == null ? 0 : ${comment.likes.size()}">0</span>
+                            </button>
                             <tr>
                                 <td><img th:src="'../' + ${comment.user.avatarURL}" width="50px" height="50px" style="border-radius: 50%"></td>
                                 <td><span style="padding-left: 10px" th:text="${comment.user.userName}"></span>
@@ -176,6 +180,37 @@
                             </form>
                         </tr>
                         <script>
+                            function likeComment(element) {
+                                let commentID = element.name;
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: "PUT",
+                                    url: '/api/likecomment/' + commentID,
+                                    success: function () {
+                                        likeCommentSuccess(element);
+                                    }
+                                })
+                            }
+
+                            function likeCommentSuccess(element) {
+                                $.ajax({
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    type: "GET",
+                                    url: "/api/getcommentlikes/" + element.name,
+                                    success: function (response) {
+                                        let content = `<i class="fa fa-thumbs-up"></i>
+                                                       <span>${response.length}</span>`;
+                                        document.getElementById(element.id).innerHTML = content;
+                                    }
+                                })
+                            }
+
                             function likePost(element) {
                                 $.ajax({
                                     headers: {
@@ -245,7 +280,12 @@
                             }
 
                             function getComment(postComment) {
-                                return  `<tr>`+
+                                return  `<button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" id="likeComment${postComment.postCommentID}" name="${postComment.postCommentID}"
+                                    onclick="likeComment(this)">
+                                <i class="fa fa-thumbs-up"></i>
+                                <span text="${postComment.likes.length}">0</span>
+                            </button>`+
+                                    `<tr>`+
                                     `<td><img src="../${postComment.user.avatarURL}" width="50px" height="50px" style="border-radius: 50%"></td>` +
                                     `<td><span style="padding-left: 10px">${postComment.user.userName}</span>` +
                                     `<span style="padding-left: 10px;font-size: small">${postComment.date}</span>` +
@@ -257,7 +297,6 @@
                     </div>
                     <!--Và Minh Beos đã rời khỏi đây post your comment end-->
                 </div>
-
             </th:block>
 
         </div>

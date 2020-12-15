@@ -32,10 +32,10 @@ public class PostComment {
     @JoinColumn(name = "postID")
     private Post post;
 
-    //    //commentLike
+    //commentLike
+    @JsonIgnore
     @OneToMany(mappedBy = "postComment",cascade = CascadeType.ALL)
     private Set<CommentLike> likes;
-
 
     public int getPostCommentID() {
         return postCommentID;
